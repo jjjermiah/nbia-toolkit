@@ -4,11 +4,11 @@ from pprint import pprint
 
 client = NBIAClient(log_level="INFO")
 
-response = client.getPatients(collection="LIDC-IDRI", modality="CT")
+# response = client.getPatients(collection="LIDC-IDRI", modality="CT")
 
-pprint(response[0:5])
+# pprint(response[0:5])
 
 
-response = client.getPatients(collection="LIDC-IDRI", modality="CR")
+response = client.getPatients(collection="LIDC-IDRI", modality="MRI")
 
 pprint(response[0:5])

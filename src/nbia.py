@@ -2,7 +2,7 @@ from src.utils.nbia_endpoints import NBIA_ENDPOINTS
 from src.auth import OAuth2
 from src.utils.logger import setup_logger
 import requests
-
+from requests.exceptions import JSONDecodeError as JSONDecodeError
 class NBIAClient:
     def __init__(self, 
                  username: str = "nbia_guest", 
@@ -14,7 +14,7 @@ class NBIAClient:
         self.logger = setup_logger(name = "NBIAClient", console_logging=True, log_level=log_level)
         
         # Setup OAuth2 client
-        self.logger.info("Setting up OAuth2 client...")
+        self.logger.info("Setting up OAuth2 client... with username %s", username)
         self._oauth2_client = OAuth2(username=username, password=password)
         self.api_headers = {'Authorization': f'Bearer {self._oauth2_client.getToken()}'}
         
@@ -35,13 +35,25 @@ class NBIAClient:
         
         self.logger.info("Querying API endpoint: %s", query_url)
         self.logger.debug("API headers: %s", (self._createDebugURL(endpoint, params)))
-        response = requests.get(
-            url=query_url, 
-            headers=self.api_headers,
-            params=params
-            ).json()
-
-        self.logger.debug("API response: %s", response)
+        
+        try:
+            response = requests.get(
+                url=query_url, 
+                headers=self.api_headers,
+                params=params
+                )
+            response = response.json()
+        except JSONDecodeError as j:
+            if (response.text==""):
+                self.logger.error("Response text is empty.")
+                return response
+            self.logger.error("Error parsing response as JSON: %s", j)
+            self.logger.debug("Response: %s", response.text)
+        except Exception as e:
+            self.logger.error("Error querying API: %s", e)
+            raise e
+        
+        
         return response
     
     def _createDebugURL(self, endpoint, params):
