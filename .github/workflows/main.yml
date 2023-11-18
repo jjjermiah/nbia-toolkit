@@ -1,27 +1,22 @@
 name: Run Python tests
 
-on: [push]
+on: push
 
 jobs:
-  build:
-    name: Run tests
-    runs-on: ubuntu-latest
+  test:
+    name: Run tests (setup-python)
     strategy:
       matrix:
-        python-version: ["3.x"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.x
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.x'
       - name: Install dependencies
-        run: pip install pytest pytest-md time requests
-      - uses: pavelzw/pytest-action@v2
-        with:
-          emoji: false
-          verbose: true
-          job-summary: true
-          click-to-expand: true
-          report-title: 'Test Report'
+        run: |
+          pip install pytest pytest-md time requests
+      - uses: ./.
