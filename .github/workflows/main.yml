@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: pip install pytest pytest-md pytest-emoji time requests
+        run: pip install pytest pytest-md time requests
       - uses: pavelzw/pytest-action@v2
         with:
           emoji: false
