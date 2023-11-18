@@ -20,16 +20,6 @@ class NBIAClient:
         
         
     def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
-        """
-        Queries the NBIA API with the specified endpoint and parameters.
-
-        Args:
-            endpoint (NBIA_ENDPOINTS): The endpoint to query.
-            params (dict, optional): The parameters to include in the query. Defaults to {}.
-
-        Returns:
-            dict: The JSON response from the API.
-        """
         base_url = "https://services.cancerimagingarchive.net/nbia-api/services/"
         query_url = base_url + endpoint.value
         
