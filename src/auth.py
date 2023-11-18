@@ -10,7 +10,6 @@ class OAuth2:
         self.password = password
         self.access_token = None
         self.api_headers = None
-        # self.expiry_time = None
 
     #username=nbia_guest&password=&client_id=NBIA&grant_type=password
     def getToken(self):
@@ -29,27 +28,29 @@ class OAuth2:
             }
             token_url = 'https://services.cancerimagingarchive.net/nbia-api/oauth/token'
             # Make a POST request to the token endpoint
-            response = requests.post(token_url, data=data)  # Disable SSL verification for simplicity
+            response = requests.post(token_url, data=data) 
             # response.raise_for_status()
+            
             # Check if the request was successful
             if response.status_code == 200:
                 token_data = response.json()               
-                self.access_token = token_data.get('access_token')                      # save access token to self for later use           
-                 # save api headers to self for later use
-                
+                self.access_token = token_data.get('access_token')                      
+                # save access token to self for later use           
+                # self.api_headers = {
+                #     'Authorization': f'Bearer {self.access_token}',
+                #     'Accept': 'application/json'
+                # }                
                 # TODO::implement refresh token functionality
-                self.expiry_time = time.ctime(time.time() + token_data.get('expires_in') )            
+                self.expiry_time = time.ctime(
+                    time.time() + token_data.get('expires_in') )            
                 self.refresh_token = token_data.get('refresh_token')
                 self.refresh_expiry = token_data.get('refresh_expires_in')
                 self.scope = token_data.get('scope')
                 return self.access_token
             else:
-                print(f"Failed to get access token. Status code: {response.status_code}")
+                print(f"Failed to get access token. Status code: \
+                    {response.status_code}")
+                
                 self.access_token = response.status_code
                 return response.status_code
         
-## Getting this warning:
-# InsecureRequestWarning: Unverified HTTPS request is being made to host 
-#  'services.cancerimagingarchive.net'. Adding certificate verification is
-#  strongly advised. See: https://urllib3.readthedocs.io/en/1.26.x/advanced-usage.html#ssl-warnings
-    #warnings.warn(

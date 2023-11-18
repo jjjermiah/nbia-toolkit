@@ -11,7 +11,8 @@ class NBIAClient:
                  ) -> None:
         
         # Setup logger
-        self.logger = setup_logger(name = "NBIAClient", console_logging=True, log_level=log_level)
+        self.logger = setup_logger(
+            name = "NBIAClient", console_logging=True, log_level=log_level)
         
         # Setup OAuth2 client
         self.logger.info("Setting up OAuth2 client... with username %s", username)
@@ -67,7 +68,10 @@ class NBIAClient:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
         patientCount = []
         for collection in response:
-            patientCount.append({"Collection": collection["criteria"], "PatientCount": collection["count"]})
+            patientCount.append({
+                "Collection": collection["criteria"], 
+                "PatientCount": collection["count"]})
+            
         return patientCount
     
     def getBodyPartCounts(self, collection: str = "", modality: str = "") -> list:
@@ -76,10 +80,15 @@ class NBIAClient:
             PARAMS["Collection"] = collection
         if modality:
             PARAMS["Modality"] = modality
-        response =  self.query_api(endpoint = NBIA_ENDPOINTS.GET_BODY_PART_PATIENT_COUNT, params = PARAMS)
+        response =  self.query_api(
+            endpoint = NBIA_ENDPOINTS.GET_BODY_PART_PATIENT_COUNT, 
+            params = PARAMS)
+        
         bodyparts=[]
         for bodypart in response:
-            bodyparts.append({"BodyPartExamined": bodypart["criteria"], "Count": bodypart["count"]})
+            bodyparts.append({
+                "BodyPartExamined": bodypart["criteria"], 
+                "Count": bodypart["count"]})
         return bodyparts
 
     def getPatients(self, collection: str, modality: str) -> list:
@@ -87,7 +96,9 @@ class NBIAClient:
         assert modality is not None
         
         PARAMS = {"Collection": collection,"Modality": modality}
-        response = self.query_api(endpoint = NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY, params = PARAMS)
+        response = self.query_api(
+            endpoint = NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY, 
+            params = PARAMS)
         patientList = [_["PatientId"] for _ in response]
         return patientList
 
