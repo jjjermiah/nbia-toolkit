@@ -17,8 +17,7 @@ class NBIAClient:
         # Setup OAuth2 client
         self.logger.info("Setting up OAuth2 client... with username %s", username)
         self._oauth2_client = OAuth2(username=username, password=password)
-        self.api_headers = {'Authorization': f'Bearer {self._oauth2_client.getToken()}'}
-        
+        self.api_headers = self._oauth2_client.getToken()
         
     def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
         base_url = "https://services.cancerimagingarchive.net/nbia-api/services/"

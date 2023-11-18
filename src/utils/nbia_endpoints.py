@@ -10,7 +10,7 @@ class NBIA_ENDPOINTS(Enum):
     GET_COLLECTIONS = 'v2/getCollectionValues'
     GET_BODY_PART_PATIENT_COUNT = 'getBodyPartValuesAndCounts'
     GET_PATIENT_BY_COLLECTION_AND_MODALITY = 'v2/getPatientByCollectionAndModality'
-
+    
 
     # Helper functions
     def __str__(self):
