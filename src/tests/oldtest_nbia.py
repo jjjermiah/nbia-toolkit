@@ -24,7 +24,7 @@ def test_nbiaclient_access_token(nbia_client):
 
 def test_nbia_getCollections(nbia_client_collections):
     collections = nbia_client_collections._collections
-    assert isinstance(collections, pd.DataFrame)
+    assert isinstance(collections, dict)
     assert collections.shape[0] > 0
     assert collections.shape[1] == 1
     assert collections.columns[0] == 'Collection'

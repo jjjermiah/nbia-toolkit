@@ -9,7 +9,7 @@ class NBIA_ENDPOINTS(Enum):
     GET_COLLECTION_PATIENT_COUNT = 'getCollectionValuesAndCounts'
     GET_COLLECTIONS = 'v2/getCollectionValues'
     GET_BODY_PART_PATIENT_COUNT = 'getBodyPartValuesAndCounts'
-    GET_PATIENT_BY_COLLECTION_AND_MODALITY = 'getPatientByCollectionAndModality'
+    GET_PATIENT_BY_COLLECTION_AND_MODALITY = 'v2/getPatientByCollectionAndModality'
 
 
     # Helper functions
