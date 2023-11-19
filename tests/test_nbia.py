@@ -1,7 +1,7 @@
 #####
 # pytest -v -n 8
 import pytest
-from ..nbia import NBIAClient
+from nbiatoolkit import NBIAClient
 
 @pytest.fixture(scope="session")
 def nbia_client():

@@ -8,14 +8,14 @@ See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more informat
 
 
 ### none of this works yet lol but it will soon
-# nbia_toolkit
+# nbiatoolkit
 
 A python package to query the National Biomedical Imaging Archive (NBIA) database.
 
 ## Installation
 
 ```bash
-$ pip install nbia_toolkit
+$ pip install nbiatoolkit
 ```
 
 ## Usage
@@ -28,8 +28,8 @@ Interested in contributing? Check out the contributing guidelines. Please note t
 
 ## License
 
-`nbia_toolkit` was created by Jermiah Joseph. It is licensed under the terms of the MIT license.
+`nbiatoolkit` was created by Jermiah Joseph. It is licensed under the terms of the MIT license.
 
 ## Credits
 
-`nbia_toolkit` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
+`nbiatoolkit` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).

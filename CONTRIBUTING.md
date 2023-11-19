@@ -40,10 +40,10 @@ If you are proposing a feature:
 
 ## Get Started!
 
-Ready to contribute? Here's how to set up `nbia_toolkit` for local development.
+Ready to contribute? Here's how to set up `nbiatoolkit` for local development.
 
-1. Download a copy of `nbia_toolkit` locally.
-2. Install `nbia_toolkit` using `poetry`:
+1. Download a copy of `nbiatoolkit` locally.
+2. Install `nbiatoolkit` using `poetry`:
 
     ```console
     $ poetry install
@@ -69,5 +69,5 @@ Before you submit a pull request, check that it meets these guidelines:
 
 ## Code of Conduct
 
-Please note that the `nbia_toolkit` project is released with a
+Please note that the `nbiatoolkit` project is released with a
 Code of Conduct. By contributing to this project you agree to abide by its terms.
