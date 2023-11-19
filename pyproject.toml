@@ -1,34 +1,26 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
-name = "tcia_utils"
-version = "1.7.1"
-authors = [
-  { name="Justin Kirby", email="justin.kirby@nih.gov" },
-]
-description = "A package to simplify common tasks one might perform when interacting with The Cancer Imaging Archive (TCIA) via Jupyter/Python."
+[tool.poetry]
+name = "nbia_toolkit"
+version = "0.1.0"
+description = "A python package to query the National Biomedical Imaging Archive (NBIA) database."
+authors = ["Jermiah Joseph"]
+license = "MIT"
 readme = "README.md"
-requires-python = ">=3.7"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-]
 
-dependencies = [
-  "pydicom",
-  "requests",
-  "pandas",
-  "matplotlib",
-  "plotly",
-  "numpy",
-  "ipywidgets", 
-  "pydicom-seg", 
-  "rt-utils"
-]
+[tool.poetry.dependencies]
+python = "^3.12"
 
-[project.urls]
-"Homepage" = "https://github.com/kirbyju/tcia_utils"
-"Bug Tracker" = "https://github.com/kirbyju/tcia_utils/issues"
+[tool.poetry.dev-dependencies]
+[tool.semantic_release]
+version_variable = "pyproject.toml:version" # version location
+branch = "main"                             # branch to make releases of
+changelog_file = "CHANGELOG.md"             # changelog file
+build_command = "poetry build"              # build dists
+dist_path = "dist/"                         # where to put dists
+upload_to_release = true                    # auto-create GitHub release
+upload_to_pypi = false                      # don't auto-upload to PyPI
+remove_dist = false                         # don't remove dists
+patch_without_tag = true                    # patch release by default
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
