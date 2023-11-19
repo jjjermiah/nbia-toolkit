@@ -4,6 +4,12 @@ from nbiatoolkit.utils.logger import setup_logger
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
 class NBIAClient:
+    """
+    TODO:: Add docstring
+    FIXME:: logger prints duplicate logs if you instantiate the class more than once
+    """
+    
+    
     def __init__(self, 
                  username: str = "nbia_guest", 
                  password: str = "",
