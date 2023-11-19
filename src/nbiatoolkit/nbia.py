@@ -1,6 +1,6 @@
-from src.utils.nbia_endpoints import NBIA_ENDPOINTS
-from src.auth import OAuth2
-from src.utils.logger import setup_logger
+from nbiatoolkit.auth import OAuth2
+from nbiatoolkit.utils.nbia_endpoints import NBIA_ENDPOINTS
+from nbiatoolkit.utils.logger import setup_logger
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
 class NBIAClient:

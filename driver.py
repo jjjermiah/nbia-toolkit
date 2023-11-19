@@ -1,4 +1,4 @@
-from src.nbia import NBIAClient
+from nbiatoolkit import NBIAClient
 import requests
 from pprint import pprint
 
