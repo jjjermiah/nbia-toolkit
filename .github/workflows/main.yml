@@ -1,4 +1,4 @@
-name: Unit Testsfrom nbiatoolkit import NBIAClient 
+name: Unit Tests
   
 on: [push]  
   

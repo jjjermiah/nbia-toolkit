@@ -137,3 +137,4 @@ old_src
 resources/*
 dicomsort.py
 NBIA-toolkit.code-workspace
+docs/data/*
