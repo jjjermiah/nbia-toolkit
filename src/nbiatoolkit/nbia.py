@@ -4,6 +4,11 @@ from nbiatoolkit.utils.logger import setup_logger
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
 class NBIAClient:
+    """
+    TODO:: Add docstring
+    FIXME:: logger prints duplicate logs if you instantiate the class more than once
+    """
+        
     def __init__(self, 
                  username: str = "nbia_guest", 
                  password: str = "",
@@ -32,7 +37,12 @@ class NBIAClient:
                 headers=self.api_headers,
                 params=params
                 )
-            response = response.json()
+             # Check if response is likely to be JSON
+            if response.headers.get('Content-Type') == 'application/json':
+                response_data = response.json()
+            else:
+                # If response is binary data, return raw response
+                response_data = response.content
         except JSONDecodeError as j:
             if (response.text==""):
                 self.logger.error("Response text is empty.")
@@ -43,8 +53,7 @@ class NBIAClient:
             self.logger.error("Error querying API: %s", e)
             raise e
         
-        
-        return response
+        return response_data
     
     def _createDebugURL(self, endpoint, params):
         auth = "'Authorization:" + self.api_headers["Authorization"] + "' -k "
@@ -101,3 +110,91 @@ class NBIAClient:
         patientList = [_["PatientId"] for _ in response]
         return patientList
 
+    def getSeries(self,
+        Collection: str = "", 
+        PatientID: str = "",
+        StudyInstanceUID: str = "",
+        Modality: str = "",
+        SeriesInstanceUID: str = "",
+        BodyPartExamined: str = "",
+        ManufacturerModelName: str = "",
+        Manufacturer: str = "",
+        ) -> list:
+        
+        params = dict()
+        
+        for key, value in locals().items():
+            if (value != "") and (key != "self"):
+                params[key] = value
+        
+        
+        response = self.query_api(
+            endpoint = NBIA_ENDPOINTS.GET_SERIES,
+            params = params)
+        
+        return response
+        
+    def downloadSeries(self,
+        SeriesInstanceUID: str,
+        downloadDir: str,
+        ) -> list:
+        
+        import io, zipfile, os
+        
+        params = dict()
+        params["SeriesInstanceUID"] = SeriesInstanceUID
+        
+
+        response = self.query_api(
+            endpoint = NBIA_ENDPOINTS.DOWNLOAD_SERIES,
+            params = params)
+        
+        if isinstance(response, bytes):
+            file = zipfile.ZipFile(io.BytesIO(response))
+            seriesDir = os.path.join(downloadDir, SeriesInstanceUID)
+            file.extractall(path=seriesDir)
+        
+            self.validateMD5(seriesDir=seriesDir)
+        else:
+        # Handle the case where the expected binary data is not received
+        # Log error or raise an exception
+            pass
+
+        return response
+        
+    
+    def _calculateMD5(self,
+        filepath: str
+        ) -> str:
+        
+        import hashlib
+        hash_md5 = hashlib.md5()
+        with open(filepath, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+    
+    def validateMD5(self,
+        seriesDir: str
+        ) -> bool:
+        import os
+        md5File = os.path.join(seriesDir, "md5hashes.csv")
+        assert os.path.isfile(md5File), "MD5 hash file not found in download directory."
+                
+        with open(md5File, "r") as f:
+            lines = f.readlines()
+            
+        for line in lines[1:]:           
+            filepath = os.path.join(seriesDir, line.split(",")[0])
+            if not os.path.isfile(filepath):
+                print(f"File not found in seriesDir: {filepath}")
+                return False
+            
+            md5hash = line.split(",")[1].strip().lower()
+            md5 = self._calculateMD5(filepath)
+            
+            assert md5 == md5hash, f"MD5 hash mismatch for file: {filepath}"       
+        # delete the md5 file if all hashes match
+        os.remove(md5File)
+        return True
+        
