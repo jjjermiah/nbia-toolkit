@@ -1,4 +1,5 @@
 [![PyTests](https://github.com/jjjermiah/NBIA-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/jjjermiah/NBIA-toolkit/actions/workflows/main.yml)
+[![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 
 # none of this works yet lol but it will soon
 # NBIA Toolkit 
