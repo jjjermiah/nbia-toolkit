@@ -5,11 +5,9 @@ build:
   os: ubuntu-22.04
   tools:
     python: "3.12"
-
+sphinx:
+  configuration: docs/conf.py
 # Configuration
 python:
-  version: 3.12
   install:
     - requirements: docs/requirements.txt
-    - method: pip
-      path: .
