@@ -1,9 +1,11 @@
-https://github.com/jjjermiah/NBIA-toolkit/tree/main# Required
 version: 2
 
 # Image to use
 build:
   image: testing
+
+sphinx:
+  configuration: docs/conf.py
 
 # Configuration
 python:
