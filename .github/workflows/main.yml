@@ -3,7 +3,7 @@ name: Unit Tests
 on: [push]  
   
 jobs:  
-  build:  
+  Continuous-Integration:  
     runs-on: ${{ matrix.os }}  
     strategy:  
       matrix:  
@@ -27,3 +27,52 @@ jobs:
       - name: Test with pytest  
         run: poetry run pytest
 
+      - name: Use Codecov to track coverage
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./coverage.xml
+
+      - name: Build documentation
+        run: poetry run make html --directory docs/
+
+  # Continuous-Development:
+  #   needs: Continuous-Integration
+
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Set up Python 3.12
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: 3.12
+
+  #     - name: Install poetry
+  #       uses: snok/install-poetry@v1
+
+  #     - name: Install package
+  #       run: poetry install
+
+  #     - name: Build package
+  #       run: poetry build
+
+  #     - name: Publish package
+  #       uses: pypa/gh-action-pypi-publish@27a0a2a
+  #       with:
+  #         user: __token__
+  #         password: ${{ secrets.PYPI_TOKEN }}
+  #         repository_url: https://upload.pypi.org/legacy/
+  #         build_dir: ./dist
+
+  #     - name: Publish documentation
+  #       uses: maxheld83/ghpages@v0.2.1
+  #       with:
+  #         build_dir: docs/_build/html
+  #         target_branch: gh-pages
+  #         committer_name: "GitHub Actions"
+  #         committer_email: "  
