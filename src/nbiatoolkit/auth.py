@@ -48,15 +48,7 @@ class OAuth2:
     >>> oauth = OAuth2()
     To use a custom account:
     >>> oauth = OAuth2(username="my_username", password="my_password")
-    
-    From the REST API documentation, you need the Authentication
-    headers to access the API. You can get the headers by calling:
-    >>> api_headers = oauth.getToken()
-    
-    You can then use these headers with the `requests` library to 
-    access the API:
-    >>> requests.get(url=query_url, headers=api_headers)
-       
+
     """
 
     def __init__(self, username: str = "nbia_guest", password: str = "", client_id: str = "NBIA"):
@@ -123,8 +115,7 @@ class OAuth2:
         self.access_token = token_data.get('access_token')
 
         self.api_headers = {
-            'Authorization': f'Bearer {self.access_token}',
-            'Accept': 'application/json'
+            'Authorization':f'Bearer {self.access_token}'
         }
 
         self.expiry_time = time.ctime(time.time() + token_data.get('expires_in'))

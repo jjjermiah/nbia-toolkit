@@ -1,13 +1,11 @@
 [![PyTests](https://github.com/jjjermiah/NBIA-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/jjjermiah/NBIA-toolkit/actions/workflows/main.yml)
 
+# none of this works yet lol but it will soon
 # NBIA Toolkit 
 - Packaged code to access the NBIA REST API 
 
 See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more information.
 
-
-
-### none of this works yet lol but it will soon
 # nbiatoolkit
 
 A python package to query the National Biomedical Imaging Archive (NBIA) database.
