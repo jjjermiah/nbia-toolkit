@@ -4,6 +4,9 @@
 # NBIA Toolkit 
 - Packaged code to access the NBIA REST API 
 
+See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
+
+Wiki is empty for now:
 See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more information.
 
 # nbiatoolkit
