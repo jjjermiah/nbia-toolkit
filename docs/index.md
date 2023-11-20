@@ -5,6 +5,7 @@
 :maxdepth: 2
 :hidden:
 
+docs/wiki/NBIA.md
 example.ipynb
 changelog.md
 contributing.md
