@@ -1,11 +1,25 @@
 [![PyTests](https://github.com/jjjermiah/NBIA-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/jjjermiah/NBIA-toolkit/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 
-# none of this works yet lol but it will soon
 # NBIA Toolkit 
 - Packaged code to access the NBIA REST API 
 
 See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
+
+    TODO::readthedocs::error in the example first cell
+    TODO::auth.py::implement better access token handling
+    TODO::auth.py::implement better error handling
+    TODO::auth.py::implement refresh token functionality
+    TODO::auth.py::implement logout functionality
+    TODO::auth.py::implement encryption for username and password
+    TODO::nbia.py::implement better error handling
+    TODO::nbia.py::implement better logging & logger configuration
+    TODO::nbia.py::enforce type checking for all functions and add type hints
+    TODO::nbia.py::implement return formats for dict, and pandas.DataFrame
+    TODO::dicomsort.py::come up with more efficient algorithm for sorting
+    TODO::dicomsort.py::implement better error handling
+    TODO::dicomsort.py::come up with solution to only use part of UIDs (last 5 digits)?
+
 
 Wiki is empty for now:
 See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more information.
@@ -22,7 +36,7 @@ $ pip install nbiatoolkit
 
 ## Usage
 
-- TODO
+See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
 
 ## Contributing
 
