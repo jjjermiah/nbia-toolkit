@@ -3,6 +3,9 @@ from nbiatoolkit.utils.nbia_endpoints import NBIA_ENDPOINTS
 from nbiatoolkit.utils.logger import setup_logger
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
+import io, zipfile, os
+import hashlib
+
 class NBIAClient:
     """
     TODO:: Add docstring
@@ -20,7 +23,7 @@ class NBIAClient:
             name = "NBIAClient", console_logging=True, log_level=log_level)
         
         # Setup OAuth2 client
-        self.logger.info("Setting up OAuth2 client... with username %s", username)
+        self.logger.debug("Setting up OAuth2 client... with username %s", username)
         self._oauth2_client = OAuth2(username=username, password=password)
         self.api_headers = self._oauth2_client.getToken()
         
@@ -28,7 +31,7 @@ class NBIAClient:
         base_url = "https://services.cancerimagingarchive.net/nbia-api/services/"
         query_url = base_url + endpoint.value
         
-        self.logger.info("Querying API endpoint: %s", query_url)
+        self.logger.debug("Querying API endpoint: %s", query_url)
         self.logger.debug("API headers: %s", (self._createDebugURL(endpoint, params)))
         
         try:
@@ -137,9 +140,9 @@ class NBIAClient:
     def downloadSeries(self,
         SeriesInstanceUID: str,
         downloadDir: str,
-        ) -> list:
+        ) -> bool:
         
-        import io, zipfile, os
+        
         
         params = dict()
         params["SeriesInstanceUID"] = SeriesInstanceUID
@@ -160,14 +163,14 @@ class NBIAClient:
         # Log error or raise an exception
             pass
 
-        return response
+        return True
         
     
     def _calculateMD5(self,
         filepath: str
         ) -> str:
         
-        import hashlib
+        
         hash_md5 = hashlib.md5()
         with open(filepath, "rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):
@@ -177,7 +180,7 @@ class NBIAClient:
     def validateMD5(self,
         seriesDir: str
         ) -> bool:
-        import os
+        
         md5File = os.path.join(seriesDir, "md5hashes.csv")
         assert os.path.isfile(md5File), "MD5 hash file not found in download directory."
                 
