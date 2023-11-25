@@ -2,6 +2,8 @@ from nbiatoolkit.auth import OAuth2
 from nbiatoolkit.utils.nbia_endpoints import NBIA_ENDPOINTS
 from nbiatoolkit.utils.logger import setup_logger
 from nbiatoolkit.utils.md5 import validateMD5
+from nbiatoolkit.dicomsort import DICOMSorter
+
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
 import io, zipfile, os
@@ -141,9 +143,15 @@ class NBIAClient:
         
         return response
         
+    
     def downloadSeries(
-        self, SeriesInstanceUID: str, downloadDir: str,
+        self, SeriesInstanceUID: str, downloadDir: str, 
+        filePattern: str = '%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm',
+        overwrite: bool = False
         ) -> bool:
+        
+        # create temporary directory
+        from tempfile import TemporaryDirectory
         
         params = dict()
         params["SeriesInstanceUID"] = SeriesInstanceUID
@@ -152,16 +160,40 @@ class NBIAClient:
             endpoint = NBIA_ENDPOINTS.DOWNLOAD_SERIES,
             params = params)
         
-        if isinstance(response, bytes):
-            file = zipfile.ZipFile(io.BytesIO(response))
-            seriesDir = os.path.join(downloadDir, SeriesInstanceUID)
-            file.extractall(path=seriesDir)
+        if not isinstance(response, bytes):
+            # Handle the case where the expected binary data is not received
+            # Log error or raise an exception
+            return False
         
-            validateMD5(seriesDir=seriesDir)
-        else:
-        # Handle the case where the expected binary data is not received
-        # Log error or raise an exception
-            pass
+        file = zipfile.ZipFile(io.BytesIO(response))
+                
+        with TemporaryDirectory() as tempDir:
+            file.extractall(path=tempDir)
+            assert validateMD5(seriesDir=tempDir) == True
+
+            # Create an instance of DICOMSorter with the desired target pattern
+            sorter = DICOMSorter(
+                sourceDir = tempDir,
+                destinationDir=downloadDir,
+                targetPattern=filePattern,
+                truncateUID=True,
+                sanitizeFilename=True
+                )
+            
+            sorter.sortDICOMFiles(option="move", overwrite=overwrite)
+            
+        
+        
+        # if isinstance(response, bytes):
+        #     file = zipfile.ZipFile(io.BytesIO(response))
+        #     seriesDir = os.path.join(downloadDir, SeriesInstanceUID)
+        #     file.extractall(path=seriesDir)
+        
+        #     validateMD5(seriesDir=seriesDir)
+        # else:
+        # # Handle the case where the expected binary data is not received
+        # # Log error or raise an exception
+        #     pass
 
         return True
         

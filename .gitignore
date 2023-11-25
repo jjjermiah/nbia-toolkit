@@ -138,3 +138,5 @@ resources/*
 dicomsort.py
 NBIA-toolkit.code-workspace
 docs/data/*
+driver.py
+data/*
