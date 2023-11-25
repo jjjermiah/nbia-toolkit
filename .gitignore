@@ -134,3 +134,8 @@ dmypy.json
 tciaDownload*
 sandbox*
 old_src
+data/*
+resources/*
+olddicomsort.py
+docs/data/*
+NBIA-toolkit.code-workspace
