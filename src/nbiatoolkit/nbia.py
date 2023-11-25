@@ -21,7 +21,10 @@ class NBIAClient:
         
         # Setup logger
         self.logger = setup_logger(
-            name = "NBIAClient", console_logging=True, log_level=log_level)
+            name = "NBIAClient", 
+            console_logging=True, 
+            log_level=log_level,
+            log_file = None)
         
         # Setup OAuth2 client
         self.logger.debug("Setting up OAuth2 client... with username %s", username)
@@ -33,7 +36,7 @@ class NBIAClient:
         query_url = base_url + endpoint.value
         
         self.logger.debug("Querying API endpoint: %s", query_url)
-        self.logger.debug("API headers: %s", (self._createDebugURL(endpoint, params)))
+        # self.logger.debug("API headers: %s", (self._createDebugURL(endpoint, params)))
         
         try:
             response = requests.get(
