@@ -9,11 +9,17 @@ USERNAME = "sejinkim"
 PASSWORD = "q6mJyLD8cPeGTwg!"
 
 
-client = NBIAClient(username=USERNAME, password=PASSWORD)
+client = NBIAClient(
+    username=USERNAME, 
+    password=PASSWORD,
+    log_level="DEBUG")
+
 series = client.getSeries(Collection="RADCURE")
 
 seriesList = [_["SeriesInstanceUID"] for _ in series]
 seriesList = seriesList[0:5]
+
+
 
 
 def download(series) -> bool:
