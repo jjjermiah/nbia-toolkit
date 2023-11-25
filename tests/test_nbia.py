@@ -65,7 +65,7 @@ def test_getPatients(nbia_patients):
     assert isinstance(nbia_patients[0], str)
     assert len(nbia_patients[0]) > 0
 
-@pytest.mark.getSeries
+
 def test_getSeries(nbia_client, nbia_collections, nbia_patients):
     seriesList = nbia_client.getSeries(
         Collection=nbia_collections[0],
@@ -77,7 +77,7 @@ def test_getSeries(nbia_client, nbia_collections, nbia_patients):
     assert len(seriesList) > 0
     assert isinstance(seriesList[0], dict)
     
-@pytest.mark.getSeries
+
 def test_fail_getSeries(nbia_client, nbia_collections, nbia_patients):
     with pytest.raises(Exception):
         seriesList = nbia_client.getSeries(
