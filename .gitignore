@@ -139,3 +139,10 @@ resources/*
 olddicomsort.py
 docs/data/*
 NBIA-toolkit.code-workspace
+
+resources/*
+olddicomsort.py
+NBIA-toolkit.code-workspace
+docs/data/*
+driver.py
+data/*

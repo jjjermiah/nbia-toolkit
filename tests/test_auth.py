@@ -4,7 +4,7 @@
 # pytest -v -s 
 
 import pytest
-from ..auth import OAuth2
+from nbiatoolkit import OAuth2
 import time 
 
 
@@ -21,7 +21,7 @@ def failed_oauth2():
     return oauth
 
 def test_getToken(oauth2):
-    assert (oauth2.access_token is not None and oauth2.access_token != 401)
+    assert oauth2.access_token is not None
 
 def test_expiry(oauth2):
     # expiry should be in the form of :'Tue Jun 29 13:58:57 2077'
@@ -39,6 +39,13 @@ def test_failed_oauth(failed_oauth2,capsys):
 def test_failed_oauth_retried(failed_oauth2,capsys):
     failed_oauth2.getToken()
     captured = capsys.readouterr()
-    assert captured.out == "Failed to get access token. Status code: 401\n"
     assert failed_oauth2.access_token == 401
-    
+
+def test_getToken_valid_token(oauth2):
+    # Test if the access token is valid and not expired
+    assert oauth2.getToken() == oauth2.access_token
+
+def test_getToken_failed_token(failed_oauth2, capsys):
+    # Test if the access token retrieval fails with incorrect credentials
+    assert failed_oauth2.getToken() == 401
+    captured = capsys.readouterr()

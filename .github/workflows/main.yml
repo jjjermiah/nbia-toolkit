@@ -1,33 +1,78 @@
-name: Run Unit Test via Pytest  
+name: Unit Tests
   
 on: [push]  
   
 jobs:  
-  build:  
+  Continuous-Integration:  
     runs-on: ${{ matrix.os }}  
     strategy:  
       matrix:  
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.12", "3.11", "3.10"]
+        python-version: ["3.12"]
   
     steps:  
       - uses: actions/checkout@v3  
+
       - name: Set up Python ${{ matrix.python-version }}  
         uses: actions/setup-python@v4  
         with:  
           python-version: ${{ matrix.python-version }}  
-      - name: Install dependencies  
-        run: |  
-          python -m pip install --upgrade pip  
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi  
-      - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff --format=github --target-version=py310 .
-        continue-on-error: true
+
+      - name: Install poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install package
+        run: poetry install
+
       - name: Test with pytest  
-        run: |  
-          coverage run -m pytest -v -s  
-      - name: Generate Coverage Report  
-        run: |  
-          coverage report -m
+        run: poetry run pytest
+
+      - name: Use Codecov to track coverage
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./coverage.xml
+
+      - name: Build documentation
+        run: poetry run make html --directory docs/
+
+  # Continuous-Development:
+  #   needs: Continuous-Integration
+
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Set up Python 3.12
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: 3.12
+
+  #     - name: Install poetry
+  #       uses: snok/install-poetry@v1
+
+  #     - name: Install package
+  #       run: poetry install
+
+  #     - name: Build package
+  #       run: poetry build
+
+  #     - name: Publish package
+  #       uses: pypa/gh-action-pypi-publish@27a0a2a
+  #       with:
+  #         user: __token__
+  #         password: ${{ secrets.PYPI_TOKEN }}
+  #         repository_url: https://upload.pypi.org/legacy/
+  #         build_dir: ./dist
+
+  #     - name: Publish documentation
+  #       uses: maxheld83/ghpages@v0.2.1
+  #       with:
+  #         build_dir: docs/_build/html
+  #         target_branch: gh-pages
+  #         committer_name: "GitHub Actions"
+  #         committer_email: "  
