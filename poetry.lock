@@ -1687,6 +1687,20 @@ files = [
 ]
 
 [[package]]
+name = "pydicom"
+version = "2.4.3"
+description = "A pure Python package for reading and writing DICOM data"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pydicom-2.4.3-py3-none-any.whl", hash = "sha256:797e84f7b22e5f8bce403da505935b0787dca33550891f06495d14b3f6c70504"},
+    {file = "pydicom-2.4.3.tar.gz", hash = "sha256:51906e0b9fb6e184a0f56298cb43ed716b7cf7edc00f6b71d5c769bc1f982402"},
+]
+
+[package.extras]
+docs = ["matplotlib", "numpy", "numpydoc", "pillow", "sphinx", "sphinx-copybutton", "sphinx-gallery", "sphinx_rtd_theme", "sphinxcontrib-napoleon"]
+
+[[package]]
 name = "pygments"
 version = "2.17.1"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -2755,4 +2769,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "b89a9ed8a48db12e3a9ed43dfb46352384aca15f320caf4444cecc6338ff3a7d"
+content-hash = "c6d4fcd53c6a2ef31b2b23681cfd9c1886a1a527f9ab7b652f8d6e9f7ea827aa"

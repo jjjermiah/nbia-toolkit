@@ -135,6 +135,8 @@ tciaDownload*
 sandbox*
 old_src
 resources/*
-dicomsort.py
+olddicomsort.py
 NBIA-toolkit.code-workspace
 docs/data/*
+driver.py
+data/*

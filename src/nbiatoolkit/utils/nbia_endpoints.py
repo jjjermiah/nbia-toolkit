@@ -1,11 +1,11 @@
-from enum import Enum, auto
-
 from enum import Enum
 
 class NBIA_ENDPOINTS(Enum):
     """
     This enum class defines the NBIA endpoints used in the NBIA toolkit.
     """
+    BASE_URL = 'https://services.cancerimagingarchive.net/nbia-api/services/'
+    
     GET_COLLECTION_PATIENT_COUNT = 'getCollectionValuesAndCounts'
     GET_COLLECTIONS = 'v2/getCollectionValues'
     GET_BODY_PART_PATIENT_COUNT = 'getBodyPartValuesAndCounts'
