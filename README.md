@@ -21,9 +21,6 @@ See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedo
     TODO::nbia.py::add functionality for downloadSeries to take in a list of seriesUIDs
     TODO::md5.py::add tests
     TODO::md5.py::add logging and error handling for non-existent files
-    TODO::dicomsort.py::come up with more efficient algorithm for sorting
-    TODO::dicomsort.py::implement better error handling
-    TODO::dicomsort.py::come up with solution to only use part of UIDs (last 5 digits)?
 
 
 Wiki is empty for now:
