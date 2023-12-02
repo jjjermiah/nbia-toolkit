@@ -4,51 +4,48 @@ import os
 
 def setup_logger(
     name: str,
-    debug: bool = False,
-    console_logging: bool = False,
     log_level: str = 'INFO',
-    log_format: str = '%(asctime)s | %(name)s | %(levelname)s | %(message)s',
+    console_logging: bool = False,
     log_file: str = None,
-    log_dir: str = None
+    log_dir: str = None,
+    log_format: str = '%(asctime)s | %(name)s | %(levelname)s | %(message)s',
+    datefmt: str = '%y-%m-%d %H:%M'
 ) -> logging.Logger:
     """
     Set up a logger object that can be used to log messages to a file and/or console with daily log file rotation.
 
     Args:
-        name (str): The name of the logger. Defaults to 'root'.
-        debug (bool): Whether to enable debug logging. Defaults to False.
-        console_logging (bool): Whether to enable console logging. Defaults to False.
-        log_file (str): The name of the log file if logging to a file. 
-        log_level (str): The logging level for the logger. Defaults to 'INFO'.
-        log_format (str): The format of the log messages. Defaults to '%(asctime)s | %(name)s | %(levelname)s | %(message)s'.
-        log_dir (str): The directory where the log file will be saved.
+        name (str): The name of the logger.
+        log_level (str, optional): The log level. Defaults to 'INFO'.
+        console_logging (bool, optional): Whether to log to console. Defaults to False.
+        log_file (str, optional): The log file name. Defaults to None.
+        log_dir (str, optional): The log directory. Defaults to None.
+        log_format (str, optional): The log format. Defaults to '%(asctime)s | %(name)s | %(levelname)s | %(message)s'.
+        datefmt (str, optional): The date format. Defaults to '%y-%m-%d %H:%M'.
 
     Returns:
         logger (logging.Logger): The logger object.
     """
-    # Convert log_level string to logging level object
+    # Validate log level
     level = getattr(logging, log_level.upper(), None)
     if not isinstance(level, int):
         raise ValueError(f'Invalid log level: {log_level}')
 
+    # Create logger
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
     # Formatters
-    formatter = logging.Formatter(log_format)
+    formatter = logging.Formatter(fmt=log_format, datefmt=datefmt)
 
-    # Adding file handler with TimedRotatingFileHandler for daily rotation
+# Set up file handler with TimedRotatingFileHandler for daily rotation
     if log_file:
-        if log_dir:
-            # Ensure log directory exists
-            try:
-                os.makedirs(log_dir, exist_ok=True)
-            except Exception as e:
-                raise IOError(f"Error creating log directory: {log_dir}") from e
-
-            log_file = os.path.join(log_dir, log_file)
-
         try:
+            # Ensure log directory exists
+            if log_dir:
+                os.makedirs(log_dir, exist_ok=True)
+                log_file = os.path.join(log_dir, log_file)
+
             file_handler = TimedRotatingFileHandler(log_file, when='midnight', interval=1)
             file_handler.setFormatter(formatter)
             file_handler.setLevel(level)
@@ -56,9 +53,9 @@ def setup_logger(
         except Exception as e:
             raise IOError(f"Error setting up file handler for logger: {e}") from e
 
+    # Set up console handler if console_logging is True
     if console_logging:
         try:
-            # Setup console handler with the same formatter and level
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(formatter)
             console_handler.setLevel(level)

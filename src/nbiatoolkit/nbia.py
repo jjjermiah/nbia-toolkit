@@ -18,15 +18,17 @@ class NBIAClient:
     """
 
     def __init__(self,
-                 username: str = "nbia_guest",
-                 password: str = "",
-                 log_level: str = "INFO"
-                 ) -> None:
+                    username: str = "nbia_guest",
+                    password: str = "",
+                    log_level: str = "INFO"
+                    ) -> None:
 
         # Setup logger
         self.logger = setup_logger(
-            name="NBIAClient", console_logging=True,
-            log_level=log_level, log_file=None)
+            name="NBIAClient",
+            log_level=log_level,
+            console_logging=True,
+            log_file=None)
 
         # Setup OAuth2 client
         self.logger.debug(
@@ -34,6 +36,31 @@ class NBIAClient:
 
         self._oauth2_client = OAuth2(username=username, password=password)
         self.api_headers = self._oauth2_client.getToken()
+
+    # setter method to update logger with a new instance of setup_logger
+    def setLogger(
+        self,
+        log_level: str = "INFO",
+        console_logging: bool = False,
+        log_file: str = None,
+        log_dir: str = None,
+        log_format: str = '%(asctime)s | %(name)s | %(levelname)s | %(message)s',
+        datefmt: str = '%y-%m-%d %H:%M'
+    ) -> bool:
+        try:
+            self.logger = setup_logger(
+                name="NBIAClient",
+                log_level=log_level,
+                console_logging=console_logging,
+                log_file=log_file,
+                log_dir=log_dir,
+                log_format=log_format,
+                datefmt=datefmt
+            )
+            return True
+        except Exception as e:
+            self.logger.error("Error setting up logger: %s", e)
+            return False
 
     def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
 
@@ -81,13 +108,10 @@ class NBIAClient:
         return patientCount
 
     def getBodyPartCounts(
-        self, collection: str = "", modality: str = "") -> list:
+        self, Collection: str = "", Modality: str = "") -> list:
 
-        PARAMS = {}
-        if collection:
-            PARAMS["Collection"] = collection
-        if modality:
-            PARAMS["Modality"] = modality
+        PARAMS = self.parsePARAMS(locals())
+
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_BODY_PART_PATIENT_COUNT,
             params=PARAMS)
@@ -99,11 +123,13 @@ class NBIAClient:
                 "Count": bodypart["count"]})
         return bodyparts
 
-    def getPatients(self, collection: str, modality: str) -> list:
-        assert collection is not None
-        assert modality is not None
+    def getPatients(self, Collection: str, Modality: str) -> list:
+        assert Collection is not None
+        assert Modality is not None
 
-        PARAMS = {"Collection": collection, "Modality": modality}
+
+        PARAMS = self.parsePARAMS(locals())
+
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY,
             params=PARAMS)
@@ -122,22 +148,24 @@ class NBIAClient:
         Manufacturer: str = "",
         ) -> list:
 
-        params = dict()
+        PARAMS = dict()
 
         for key, value in locals().items():
             if (value != "") and (key != "self"):
-                params[key] = value
+                PARAMS[key] = value
 
 
         response = self.query_api(
             endpoint = NBIA_ENDPOINTS.GET_SERIES,
-            params = params)
+            params = PARAMS)
 
         return response
 
 
     def downloadSeries(
-        self, SeriesInstanceUID: str, downloadDir: str,
+        self,
+        SeriesInstanceUID: str,
+        downloadDir: str = "./NBIA-Download",
         filePattern: str = '%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm',
         overwrite: bool = False
         ) -> bool:
@@ -175,9 +203,17 @@ class NBIAClient:
                 )
 
             sorter.sortDICOMFiles(option="move", overwrite=overwrite)
-            
+
         return True
 
-
+    # parsePARAMS is a helper function that takes a locals() dict and returns
+    # a dict with only the non-empty values
+    def parsePARAMS(self, params: dict) -> dict:
+        self.logger.debug("Parsing params: %s", params)
+        PARAMS = dict()
+        for key, value in params.items():
+            if (value != "") and (key != "self"):
+                PARAMS[key] = value
+        return PARAMS
 
 

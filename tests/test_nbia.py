@@ -22,7 +22,7 @@ def nbia_collections(nbia_client):
 @pytest.fixture(scope="session")
 def nbia_patients(nbia_client, nbia_collections):
     patients = nbia_client.getPatients(
-        collection=nbia_collections[0], modality = "CT")
+        Collection=nbia_collections[0], Modality = "CT")
     return patients
 
 def test_nbiaclient_access_token(nbia_client):
@@ -41,7 +41,7 @@ def test_getBodyPartCounts_all(nbia_client):
     assert int(bodyparts[0]["Count"]) > 0
     
 def test_getBodyPartCounts_4DLung(nbia_client):
-    bodyparts = nbia_client.getBodyPartCounts(collection="4D-Lung")
+    bodyparts = nbia_client.getBodyPartCounts(Collection="4D-Lung")
     assert isinstance(bodyparts, list)
     assert len(bodyparts) > 0
     assert isinstance(bodyparts[0], dict)
