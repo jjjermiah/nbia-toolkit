@@ -15,22 +15,7 @@ A python package that provides programmatic access to query and download images 
 
 See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
 
-    TODO::readthedocs::error in the example first cell
-    TODO::auth.py::implement better access token handling
-    TODO::auth.py::implement better error handling
-    TODO::auth.py::implement refresh token functionality
-    TODO::auth.py::implement logout functionality
-    TODO::auth.py::implement encryption for username and password
-    TODO::nbia.py::implement better error handling
-    TODO::nbia.py::implement better logging & logger configuration
-    TODO::nbia.py::enforce type checking for all functions and add type hints
-    TODO::nbia.py::implement return formats for dict, and pandas.DataFrames
-    TODO::nbia.py::handle error case of if resposne is not bytes 
-    TODO::nbia.py::add tests for download Series
-    TODO::nbia.py::add functionality for downloadSeries to take in a list of seriesUIDs
-    TODO::md5.py::add tests
-    TODO::md5.py::add logging and error handling for non-existent files
-
+## Usage
 
 Wiki is empty for now:
 See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more information.
