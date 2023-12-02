@@ -2,7 +2,16 @@
 [![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 
 # NBIA Toolkit 
-- Packaged code to access the NBIA REST API 
+A python package that provides programmatic access to query the National Biomedical Imaging Archive (NBIA) database.
+
+## Features
+- Use NBIA Guest account to access public data OR authenticate using OAuth with user credentials for limited access data (requires approved data access).
+- Query NBIA database for metadata on collections, patients, studies, series, and images
+- Download images from NBIA
+  - Calculate MD5 checksums for downloaded images
+  - Auto-sort DICOM files using a user-defined pattern of DICOM tags
+
+
 
 See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
 
@@ -26,19 +35,17 @@ See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedo
 Wiki is empty for now:
 See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more information.
 
-# nbiatoolkit
 
-A python package to query the National Biomedical Imaging Archive (NBIA) database.
 
 ## Installation
 
+`nbiatoolkit` will be made available on PyPI and Conda Forge soon. Until then, you can install the latest development version from GitHub by cloning the repository and running the following commands in the root directory:
+
 ```bash
-$ pip install nbiatoolkit
+pip install poetry
+poetry install
 ```
 
-## Usage
-
-See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
 
 ## Contributing
 
@@ -48,6 +55,11 @@ Interested in contributing? Check out the contributing guidelines. Please note t
 
 `nbiatoolkit` was created by Jermiah Joseph. It is licensed under the terms of the MIT license.
 
-## Credits
+## User Agreements and Disclaimers
+The NBIA-toolkit is NOT a product of the National Cancer Institute (NCI) and is not endorsed by the NCI.
+The NBIA-toolkit is provided as an open-source tool based on the [NBIA REST API](https://wiki.cancerimagingarchive.net/display/Public/NBIA+Advanced+REST+API+Guide).
+The NBIA-toolkit is provided "AS IS" without warranty of any kind.
 
-`nbiatoolkit` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
+In no event shall the authors or contributors be liable for any claim, damages or other liability, arising from, out of or in connection with the NBIA-toolkit or the use or other dealings in the NBIA-toolkit.
+
+Users of the NBIA-toolkit are required to abide by the NBIA REST API Terms of Service and the [NBIA Data Usage Policies and Restrictions](https://www.cancerimagingarchive.net/data-usage-policies-and-restrictions/)
