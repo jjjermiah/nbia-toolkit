@@ -64,19 +64,6 @@ def setup_logger(
             raise IOError(f"Error setting up console handler for logger: {e}") from e
 
     return logger
-
-# Example Logger Setup
-
-# # Setup your logger
-# logger = setup_logger(
-#     name=__name__,
-#     debug=True,
-#     console_logging=True,
-#     log_level='DEBUG',
-#     log_format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
-#     log_file='daily_log.log',
-#     log_dir='logs',
-# )
-
-# # Example logging
-# logger.info('Logger is configured and ready to be used.')
+# Example usage
+# from nbiatoolkit.utils.logger import setup_logger
+# logger = setup_logger(name='my_logger', log_level='DEBUG', console_logging=True, log_file='my_log.log', log_dir='logs')

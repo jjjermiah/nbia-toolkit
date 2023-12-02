@@ -23,32 +23,31 @@ Import the `setup_logger` function from the `logger` module in your Python scrip
 from logger import setup_logger
 ```
 
-Configuration
+# Configuration
 The setup_logger function can be tailored to your needs by adjusting its parameters:
 ``` python
-name: The name of the logger (defaults to root).
-log_level: The logging level, e.g., 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL' (defaults to 'INFO').
-log_format: The format of the log messages (defaults to '%(asctime)s | %(name)s | %(levelname)s | %(message)s').
-log_file: The name of the log file to which messages will be logged.
-log_dir: The directory where the log file will be stored (defaults to the current working directory).
-console_logging: Enable logging to the console (defaults to False).
+name (str): The name of the logger.
+log_level (str, optional): The log level. Defaults to 'INFO'.
+console_logging (bool, optional): Whether to log to console. Defaults to False.
+log_file (str, optional): The log file name. Defaults to None.
+log_dir (str, optional): The log directory. Defaults to None.
+log_format (str, optional): The log format. Defaults to '%(asctime)s | %(name)s | %(levelname)s | %(message)s'.
+datefmt (str, optional): The date format. Defaults to '%y-%m-%d %H:%M'.
 
 ```
 
-Example Usage
+# Example Usage
 Here's an example of how to configure the logger to log DEBUG level messages to both the console and a file, with daily file rotation:
 
 ``` python
-# Example Logger Setup
 logger = setup_logger(
-    name=__name__,
-    debug=True,
-    console_logging=True,
+    name='my_logger',
     log_level='DEBUG',
-    log_format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
-    log_file='daily_log.log',
-    log_dir='/path/to/log/directory',
-)
+    console_logging=True,
+    log_file='my_log.log',
+    log_dir='logs')
+# log_file can include directories, but must be a relative path
+# log dir does not need to exist, it will be created if it doesn't exist
 ```
 
 ``` python
@@ -58,11 +57,10 @@ logger.info('Starting the application...')
 logger.warning('Warning message')
 logger.error('An error has occurred')
 logger.critical('Critical issue')
-Make sure to replace '/path/to/log/directory' with the actual path where you want your log files to be stored.
 ```
 
-Error Handling
+# Error Handling
 The setup_logger includes robust error handling to ensure the logging setup process is smooth. The function will raise informative exceptions if issues arise during configuration, such as invalid log level, problems with the log directory (e.g., doesn't exist, permission issues), or issues setting up handlers.
 
-Contributing
+# Contributing
 If you'd like to contribute to the development of this logger module, please feel free to submit pull requests or open issues with your suggestions and feedback.

@@ -1,6 +1,6 @@
 from nbiatoolkit.auth import OAuth2
 from nbiatoolkit.utils.nbia_endpoints import NBIA_ENDPOINTS
-from nbiatoolkit.utils.logger import setup_logger
+from nbiatoolkit.logger.logger import setup_logger
 from nbiatoolkit.utils.md5 import validateMD5
 from nbiatoolkit.dicomsort import DICOMSorter
 

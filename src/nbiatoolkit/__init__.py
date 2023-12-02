@@ -9,7 +9,7 @@
 # import the modules
 from .nbia import NBIAClient
 from .auth import OAuth2
-from .utils.logger import setup_logger
+from .logger.logger import setup_logger
 from .utils.nbia_endpoints import NBIA_ENDPOINTS
 
 # define the __all__ variable
