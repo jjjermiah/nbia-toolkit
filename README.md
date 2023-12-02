@@ -2,7 +2,7 @@
 [![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 
 # NBIA Toolkit 
-A python package that provides programmatic access to query the National Biomedical Imaging Archive (NBIA) database.
+A python package that provides programmatic access to query and download images from the National Biomedical Imaging Archive (**NBIA**) and The Cancer Imaging Archive (**TCIA**) databases.
 
 ## Features
 - Use NBIA Guest account to access public data OR authenticate using OAuth with user credentials for limited access data (requires approved data access).
