@@ -98,13 +98,13 @@ jobs:
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        user: jjjermiah
+        user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
 
-    - name: Publish documentation
-      uses: maxheld83/ghpages@v0.2.1
-      with:
-        build_dir: docs/_build/html
-        target_branch: gh-pages
-        committer_name: "GitHub Actions"
-        committer_email: "jermiahjoseph98@gmail.com"
+    # - name: Publish documentation
+    #   uses: maxheld83/ghpages@v0.2.1
+    #   with:
+    #     build_dir: docs/_build/html
+    #     target_branch: gh-pages
+    #     committer_name: "GitHub Actions"
+    #     committer_email: "jermiahjoseph98@gmail.com"
