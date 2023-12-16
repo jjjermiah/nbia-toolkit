@@ -24,11 +24,11 @@ See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more informat
 
 ## Installation
 
-`nbiatoolkit` will be made available on PyPI and Conda Forge soon. Until then, you can install the latest development version from GitHub by cloning the repository and running the following commands in the root directory:
+`nbiatoolkit` is currently under development.
+It is made available via PyPI and can be installed using pip:
 
 ```bash
-pip install poetry
-poetry install
+pip install nbiatoolkit
 ```
 
 
