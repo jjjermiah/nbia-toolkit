@@ -43,7 +43,7 @@ jobs:
   Continuous-Development:
     needs: Continuous-Integration
 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' # github.event_name == 'push' &&
 
     runs-on: ubuntu-latest
 
