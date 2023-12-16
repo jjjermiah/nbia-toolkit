@@ -19,8 +19,3 @@ __all__ = [
     'setup_logger',
     'NBIA_ENDPOINTS'
 ]
-
-
-
-## main.py
-# Path: projects/tcia_python_wrapper/tcia_python_wrapper/main.py
