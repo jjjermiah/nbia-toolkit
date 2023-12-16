@@ -68,12 +68,16 @@ jobs:
     - name: Install package
       run: poetry install
 
+
    # This action uses Python Semantic Release v8
     - name: Python Semantic Release
       id: release
       uses: python-semantic-release/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build package
+      run: poetry build
 
     - name: Publish package distributions to PyPI
       id: pypi-publish
