@@ -93,22 +93,13 @@ jobs:
           pip install \
           --index-url https://test.pypi.org/simple/ \
           --extra-index-url https://pypi.org/simple \
-          pycounts
+          nbiatoolkit
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        user: __token__
+        user: jjjermiah
         password: ${{ secrets.PYPI_API_TOKEN }}
-
-
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27a0a2a
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_TOKEN }}
-        repository_url: https://upload.pypi.org/legacy/
-        build_dir: ./dist
 
     - name: Publish documentation
       uses: maxheld83/ghpages@v0.2.1
