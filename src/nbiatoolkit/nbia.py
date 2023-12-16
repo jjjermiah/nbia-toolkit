@@ -15,6 +15,9 @@ class NBIAClient:
     The NBIAClient class is a wrapper around the NBIA REST API. It provides
     methods to query the API and download series.
     
+    The default authentication uses the guest account. If you have a username
+    and password, you can pass them to the constructor.
+    
     TODO:: Add docstring
     FIXME:: logger prints duplicate logs if you instantiate the class more
     than once
