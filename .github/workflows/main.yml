@@ -40,38 +40,71 @@ jobs:
       - name: Build documentation
         run: poetry run make html --directory docs/
 
-  Continuous-Development:
-    # needs: Continuous-Integration
-
+  release:
     if: github.ref == 'refs/heads/main' # github.event_name == 'push' &&
-
-    # Set up operating system
     runs-on: ubuntu-latest
 
-    # Define job steps
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      changelog: ${{ steps.release.outputs.changelog }}
+      tag: ${{ steps.release.outputs.tag }}
     steps:
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.12
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Check-out repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
 
-    - name: Install poetry
-      uses: snok/install-poetry@v1
+      - name: Install via poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.in-project true
 
-    - name: Install package
-      run: poetry install
+      - name: Release
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          poetry version $(git describe --tags --abbrev=0)
+          poetry build
+          poetry publish --build -u __token__ -p ${{ secrets.TEST_PYPI_API_TOKEN }}
 
-   # This action uses Python Semantic Release v8
-    - name: Python Semantic Release
-      id: release
-      uses: python-semantic-release/python-semantic-release@v8.0.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+  #   # needs: Continuous-Integration
+
+  #   if: github.ref == 'refs/heads/main' # github.event_name == 'push' &&
+
+  #   # Set up operating system
+  #   runs-on: ubuntu-latest
+
+  #   # Define job steps
+  #   steps:
+  #   - name: Set up Python 3.12
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: 3.12
+
+  #   - name: Check-out repository
+  #     uses: actions/checkout@v2
+  #     with:
+  #       fetch-depth: 0
+
+  #   - name: Install poetry
+  #     uses: snok/install-poetry@v1
+
+  #   - name: Install package
+  #     run: poetry install
+
+  #  # This action uses Python Semantic Release v8
+  #   - name: Python Semantic Release
+  #     id: release
+  #     uses: python-semantic-release/python-semantic-release@v8.0.0
+  #     with:
+  #       github_token: ${{ secrets.GITHUB_TOKEN }}
+
+
     # - name: Use Python Semantic Release to prepare release
     #   env:
     #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

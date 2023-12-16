@@ -26,12 +26,13 @@ python-semantic-release = "^8.5.1"
 version_toml = [
     "pyproject.toml:tool.poetry.version"
 ]
-
 branch = "main"
 upload_to_PyPI = false
 upload_to_release = true
-build_command = "echo 'Building...'"
-commit_author = "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+build_command = "pip install poetry && poetry build"
+version_source = "tag"
+commit_version_number = true
+commit_message = "chore(release): release {version}"
 
 [tool.semantic_release.commit_parser_options]
 allowed_tags = [
