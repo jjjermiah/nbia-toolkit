@@ -2,7 +2,18 @@
 
 
 
-## v0.3.0 (2023-12-16)
+## v0.3.1 (2023-12-16)
+
+### Fix
+
+* fix: error in gha ([`e1caac2`](https://github.com/jjjermiah/NBIA-toolkit/commit/e1caac241d1bcbd4429f76ed3542cf70799e0971))
+
+
+## v0.3.0 (2023-12-17)
+
+### Chore
+
+* chore(release): release 0.3.0 ([`d71f1b8`](https://github.com/jjjermiah/NBIA-toolkit/commit/d71f1b8bf8b294e5f4507d188a4bc5ae86413f91))
 
 ### Feature
 
