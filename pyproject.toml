@@ -30,6 +30,14 @@ version_variable = "setup.py:__version__"
 version_toml = [
     "pyproject.toml:tool.poetry.version",
 ]
+branch = "main"
+build_command = "poetry build"
+dist_path = "dist/"
+upload_to_release = true
+upload_to_pypi = false
+remove_dist = false
+commit_subject = "chore(release): {version}"
+patch_without_tag = true
 
 [tool.semantic_release.remote]
 ignore_token_for_push = true
