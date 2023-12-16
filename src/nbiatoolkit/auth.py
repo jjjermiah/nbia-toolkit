@@ -146,3 +146,27 @@ class OAuth2:
             self.scope = token_data.get('scope')
 
             return self.api_headers
+
+    @property
+    def token(self):
+        """
+        Returns the access token.
+
+        Returns
+        -------
+        access_token : str or None
+            The access token retrieved from the API.
+        """
+        return self.access_token
+
+    @property
+    def headers(self):
+        """
+        Returns the API headers.
+
+        Returns
+        -------
+        api_headers : dict or None
+            The authentication headers containing the access token.
+        """
+        return self.api_headers
