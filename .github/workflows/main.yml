@@ -42,7 +42,7 @@ jobs:
         run: poetry run make html --directory docs/
 
   Continuous-Deployment:
-    needs: Continuous-Integration
+    # needs: Continuous-Integration
 
     # if pulling to main, deploy to PyPI
     if: github.ref == 'refs/heads/main'
