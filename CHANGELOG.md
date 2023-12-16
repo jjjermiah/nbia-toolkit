@@ -2,6 +2,45 @@
 
 
 
+## v0.2.0 (2023-12-16)
+
+### Build
+
+* build: add CD workflow ([`06e8401`](https://github.com/jjjermiah/NBIA-toolkit/commit/06e8401b43295998eb9c0da269a41facfc9843bb))
+
+### Documentation
+
+* docs(auth): add some documentation ([`017bfae`](https://github.com/jjjermiah/NBIA-toolkit/commit/017bfaefc4fe31bb5d9d00718be5b21a0535c10f))
+
+* docs: Remove empty usage section and extra line breaks in README ([`f9c1c8a`](https://github.com/jjjermiah/NBIA-toolkit/commit/f9c1c8a46f7e0b05e6e6df2080ca606091eb11cc))
+
+### Feature
+
+* feat: add headers property to nbia client ([`52dafe8`](https://github.com/jjjermiah/NBIA-toolkit/commit/52dafe8e485cbc0cefafe9110e8983fc8ccda5b7))
+
+* feat(auth): added property decorators for token and headers ([`d4e914b`](https://github.com/jjjermiah/NBIA-toolkit/commit/d4e914b6e151b666aac505159c766907f6f9e636))
+
+### Fix
+
+* fix(gha): fix CD to activate on pull too ([`5141005`](https://github.com/jjjermiah/NBIA-toolkit/commit/51410053189b43be20164b4a33f0a6e1bc13dcca))
+
+* fix(tutorial): remove pip install ([`1ef5a0e`](https://github.com/jjjermiah/NBIA-toolkit/commit/1ef5a0eb04b9e4661d87011666e2810303b4500b))
+
+* fix(tutorial): add pip install ([`c1a36fa`](https://github.com/jjjermiah/NBIA-toolkit/commit/c1a36faeb46037c1d2e450835713399ab65763de))
+
+### Unknown
+
+* Update pyproject.toml ([`b9727a6`](https://github.com/jjjermiah/NBIA-toolkit/commit/b9727a62108ad00b77c8ea721f1bd1726295a206))
+
+* Merge pull request #31 from jjjermiah/docs/updateDocs
+
+Docs/update docs ([`359a30d`](https://github.com/jjjermiah/NBIA-toolkit/commit/359a30d7e5ed170e76ebdc0d526969cd61ab3789))
+
+* docs(auth):Add requests module and update test cases ([`43197fa`](https://github.com/jjjermiah/NBIA-toolkit/commit/43197fae10fccfdf6992f750398512313bbc7ada))
+
+* Update version number in pyproject.toml ([`c71ce49`](https://github.com/jjjermiah/NBIA-toolkit/commit/c71ce49e6466e651c125e7cf10de85c2d1630174))
+
+
 ## v0.1.0 (2023-12-16)
 
 ### Feature
