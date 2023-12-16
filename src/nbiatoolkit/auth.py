@@ -14,15 +14,11 @@ class OAuth2:
     to the collections tagged with "limited access" you can use those
     credentials to access those collections.
     
-    NOTE::This class is mainly for developers looking to add functionality 
+    Notes
+    -----
+    This class is mainly for developers looking to add functionality
     to the nbiatoolkit package. If you are a user looking to access the NBIA 
     API, you can use the `NBIAClient` class without knowledge of this class.
-    
-    TODO::implement better access token handling
-    TODO::implement better error handling
-    TODO::implement refresh token functionality
-    TODO::implement logout functionality
-    TODO::implement encryption for username and password
     
     Attributes
     ----------
@@ -43,12 +39,15 @@ class OAuth2:
 
     Example Usage
     -------------
-    >>> from nbiatoolkit import OAuth2
-    To use the NBIA Guest account:
-    >>> oauth = OAuth2()
-    To use a custom account:
-    >>> oauth = OAuth2(username="my_username", password="my_password")
+    >>> from nbiatoolkit.auth import OAuth2
 
+    To use the NBIA Guest account:
+
+    >>> oauth = OAuth2()
+
+    To use a custom account:
+
+    >>> oauth = OAuth2(username="my_username", password="my_password")
     """
 
     def __init__(self, username: str = "nbia_guest", password: str = "", client_id: str = "NBIA"):
