@@ -2,7 +2,34 @@
 
 
 
-## v0.4.1 (2023-12-16)
+## v0.4.2 (2023-12-16)
+
+### Fix
+
+* fix: error ([`b0f945c`](https://github.com/jjjermiah/NBIA-toolkit/commit/b0f945cfca72d9c44ed5a0c1cef233a9ca754994))
+
+* fix: forgot to install package ([`52804f4`](https://github.com/jjjermiah/NBIA-toolkit/commit/52804f4de9264b86ea1ddff869c71e7f38f0c8fa))
+
+* fix: error in gha ([`80afb8d`](https://github.com/jjjermiah/NBIA-toolkit/commit/80afb8de4ed801a49dbad9132a97131b2d451d0b))
+
+* fix: need to install poetry first ([`b8a0040`](https://github.com/jjjermiah/NBIA-toolkit/commit/b8a00400cb82ec4790d214735b89a904f168754b))
+
+* fix: error in cicd ([`e090a83`](https://github.com/jjjermiah/NBIA-toolkit/commit/e090a83241d2f88891327e81089d28b68ab87460))
+
+* fix: add dist to cicid ([`44be192`](https://github.com/jjjermiah/NBIA-toolkit/commit/44be19257ae2af18c95dd920a4492d787b4e1a9f))
+
+### Unknown
+
+* test ([`a49288f`](https://github.com/jjjermiah/NBIA-toolkit/commit/a49288fdf226d91e59c9bb653b4250e406596519))
+
+* use poetry run semantic-release publish ([`459efa9`](https://github.com/jjjermiah/NBIA-toolkit/commit/459efa9cc957bad5093bb7e1680bd30aad9d2197))
+
+* fix:add dist to cicid ([`cc40a71`](https://github.com/jjjermiah/NBIA-toolkit/commit/cc40a71f5969c2e3b338eb584839975b37ba516e))
+
+* add dist to cicid ([`6cd902e`](https://github.com/jjjermiah/NBIA-toolkit/commit/6cd902e8983bc6a95f9b2bc5b8dc7c31bf38a6a0))
+
+
+## v0.4.1 (2023-12-17)
 
 ### Fix
 
