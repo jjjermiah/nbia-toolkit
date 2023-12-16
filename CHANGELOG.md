@@ -2,7 +2,14 @@
 
 
 
-## v0.4.0 (2023-12-16)
+## v0.4.1 (2023-12-16)
+
+### Fix
+
+* fix: error in gha ([`6e3ac11`](https://github.com/jjjermiah/NBIA-toolkit/commit/6e3ac11175ead3736ff0f52c0092c59674789759))
+
+
+## v0.4.0 (2023-12-17)
 
 ### Feature
 
