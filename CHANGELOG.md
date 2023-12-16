@@ -2,6 +2,47 @@
 
 
 
+## v0.4.3 (2023-12-16)
+
+### Fix
+
+* fix: add poetry build ([`ef91e27`](https://github.com/jjjermiah/NBIA-toolkit/commit/ef91e27260be4b0bb76cd0d6eebda38a64aa4966))
+
+### Test
+
+* test: gha ([`a218529`](https://github.com/jjjermiah/NBIA-toolkit/commit/a21852949cd774f74e71cb667345c878372df53a))
+
+### Unknown
+
+* test ([`5919b9c`](https://github.com/jjjermiah/NBIA-toolkit/commit/5919b9c3b44d54133d30cff12c0a03a277a83a71))
+
+* Merge pull request #34 from jjjermiah/development
+
+small fixes ([`216af35`](https://github.com/jjjermiah/NBIA-toolkit/commit/216af35999323d5d4e652ce8faf0310d3b89fadc))
+
+* Merge branch &#39;main&#39; into development ([`21867d7`](https://github.com/jjjermiah/NBIA-toolkit/commit/21867d71ad0ac17e838611a9c8861c0de2321a5e))
+
+* update gha to push to pypi and add absolute path in docs conf ([`fdc07b4`](https://github.com/jjjermiah/NBIA-toolkit/commit/fdc07b4dff54234e6eafed3ef167aea28b76c55c))
+
+* Merge pull request #33 from jjjermiah/development
+
+Development ([`f7a2f2a`](https://github.com/jjjermiah/NBIA-toolkit/commit/f7a2f2a4f6599b5148249f4305d6e9335d10aacb))
+
+* Merge remote-tracking branch &#39;origin&#39; into development ([`a0acbb4`](https://github.com/jjjermiah/NBIA-toolkit/commit/a0acbb468555942a8d2d6241fa612fe9746dfb38))
+
+* Merge branch &#39;main&#39; into development ([`74041f4`](https://github.com/jjjermiah/NBIA-toolkit/commit/74041f4b453291d6641b3fd8513abe3332283469))
+
+* change to only pull requests ([`955832e`](https://github.com/jjjermiah/NBIA-toolkit/commit/955832e43d7f366bb6a4aea06b084527ab6753e3))
+
+* change version_variables after reading documentation ([`3cece12`](https://github.com/jjjermiah/NBIA-toolkit/commit/3cece12ab7eab2152f6c0ec36c713d98a561f04b))
+
+* add push to pypi as an option ([`4bccff9`](https://github.com/jjjermiah/NBIA-toolkit/commit/4bccff9e8ab168b089cbb4af2a2cf8e854565dca))
+
+* Merge pull request #32 from jjjermiah/development
+
+test: gha ([`92e90e2`](https://github.com/jjjermiah/NBIA-toolkit/commit/92e90e26e42a4ff047a3785d7d4e890cf55e9399))
+
+
 ## v0.4.2 (2023-12-16)
 
 ### Fix
