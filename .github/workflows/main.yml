@@ -62,7 +62,8 @@ jobs:
     - name: Install poetry
       uses: snok/install-poetry@v1
 
-
+    - name: Install package
+      run: poetry install
   #  # This action uses Python Semantic Release v8
   #   - name: Python Semantic Release
   #     id: release
