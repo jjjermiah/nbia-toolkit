@@ -42,13 +42,17 @@ jobs:
         run: poetry run make html --directory docs/
 
   Continuous-Deployment:
-    # needs: Continuous-Integration
+    needs: Continuous-Integration
 
+    # if pulling to main, deploy to PyPI
     if: github.ref == 'refs/heads/main'
 
     # Set up operating system
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     # Define job steps
     steps:
     - name: Set up Python 3.12
@@ -75,45 +79,25 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
-  Publish-Package:
-    needs: Continuous-Deployment
-
-    # if pulling to main, deploy to PyPI
-    if: github.ref == 'refs/heads/main'
-
-
-    # Set up operating system
-    runs-on: ubuntu-latest
-
-    # Define job steps
-    steps:
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.12
-
-    - name: Check-out repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - name: Install poetry
-      uses: snok/install-poetry@v1
-
-    - name: Install package
-      run: poetry install
-
-    - name: Build package
-      run: poetry build
-
-    - name: Publish package distributions to PyPI
-      id: pypi-publish
-
+    # - name: Publish package distributions to GitHub Releases
+    - name: Build and Publish
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        verbose: true
         user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        repository_url: https://test.pypi.org/legacy/
+        build: true
+        build_command: poetry build
+        build_command_postfix: dist/*
+
+    # - name: Publish package distributions to PyPI
+    #   id: pypi-publish
+
+    #   uses: pypa/gh-action-pypi-publish@release/v1
+    #   with:
+    #     verbose: true
+    #     user: __token__
+    #     password: ${{ secrets.PYPI_API_TOKEN }}
 
     # - name: Publish package distributions to GitHub Releases
     #   uses: python-semantic-release/upload-to-gh-release@main
