@@ -1,8 +1,19 @@
 # CHANGELOG
 
 
+## Unreleased
 
-## v0.3.1 (2023-12-16)
+### Unknown
+
+* update gha ([`1b6b8fc`](https://github.com/jjjermiah/NBIA-toolkit/commit/1b6b8fc4f2fdff40c18feb39d74ed5f60bd16d6a))
+
+
+
+## v0.3.1 (2023-12-17)
+
+### Chore
+
+* chore(release): release 0.3.1 ([`8a3aef7`](https://github.com/jjjermiah/NBIA-toolkit/commit/8a3aef7ced936981c54e7cf108a2b0fed10e7f47))
 
 ### Fix
 
