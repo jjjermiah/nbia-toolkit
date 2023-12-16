@@ -2,6 +2,13 @@
 
 
 
+## v0.1.0 (2023-12-16)
+
+### Feature
+
+* feat(nbia.py): add docstring ([`ffaa2f3`](https://github.com/jjjermiah/NBIA-toolkit/commit/ffaa2f3a323585b23c3d8ce30a6b2c69e3b7805a))
+
+
 ## v0.0.1 (2023-12-16)
 
 ### Fix
