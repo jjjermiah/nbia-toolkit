@@ -4,8 +4,7 @@ name: Unit Tests
 on:
   push:
     # push to any branch
-    branches:
-      - '*'
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   
