@@ -50,10 +50,10 @@ jobs:
 
     # Define job steps
     steps:
-    - name: Set up Python 3.9
+    - name: Set up Python 3.12
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.12
 
     - name: Check-out repository
       uses: actions/checkout@v2
@@ -86,7 +86,7 @@ jobs:
           pip install \
           --index-url https://test.pypi.org/simple/ \
           --extra-index-url https://pypi.org/simple \
-          nbiatoolkit
+          pycounts
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
