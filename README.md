@@ -15,12 +15,6 @@ A python package that provides programmatic access to query and download images 
 
 See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
 
-## Usage
-
-Wiki is empty for now:
-See the [Wiki](https://github.com/jjjermiah/NBIA-toolkit/wiki) for more information.
-
-
 
 ## Installation
 
@@ -30,7 +24,6 @@ It is made available via PyPI and can be installed using pip:
 ```bash
 pip install nbiatoolkit
 ```
-
 
 ## Contributing
 
