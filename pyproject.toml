@@ -32,6 +32,7 @@ version_toml = [
 ]
 branch = "main"
 build_command = "poetry build"
+changelog_file = "CHANGELOG.md"
 dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
