@@ -2,7 +2,18 @@
 
 
 
-## v0.3.2 (2023-12-16)
+## v0.4.0 (2023-12-16)
+
+### Feature
+
+* feat: add setup.py ([`09c4ffc`](https://github.com/jjjermiah/NBIA-toolkit/commit/09c4ffce7979704693fb46b75ceb8bce1aed5398))
+
+### Unknown
+
+* fix cicd ([`9db8a2e`](https://github.com/jjjermiah/NBIA-toolkit/commit/9db8a2e92858a52c2d6f6c9f79881fc5a3bab33a))
+
+
+## v0.3.2 (2023-12-17)
 
 ### Fix
 
