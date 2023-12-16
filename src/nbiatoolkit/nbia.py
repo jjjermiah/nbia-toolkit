@@ -43,6 +43,10 @@ class NBIAClient:
         self._oauth2_client = OAuth2(username=username, password=password)
         self.api_headers = self._oauth2_client.getToken()
 
+    @property
+    def headers(self):
+        return self.api_headers
+
     # setter method to update logger with a new instance of setup_logger
     def setLogger(
         self,
