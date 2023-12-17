@@ -2,6 +2,23 @@
 
 
 
+## v0.4.4 (2023-12-17)
+
+### Fix
+
+* fix: manual publish ([`929313c`](https://github.com/jjjermiah/NBIA-toolkit/commit/929313cfd5516efafb83fa152392ec624a821c53))
+
+* fix: publish error ([`134d9ca`](https://github.com/jjjermiah/NBIA-toolkit/commit/134d9caf6238cda81eff1ad148cbd531b466858f))
+
+### Unknown
+
+* test ([`7edd936`](https://github.com/jjjermiah/NBIA-toolkit/commit/7edd93680957d58e9567b0a2e265b031e16cdbe5))
+
+* test ([`76fd46f`](https://github.com/jjjermiah/NBIA-toolkit/commit/76fd46faaaa28430521aa5f345532d5177d49f36))
+
+* Merge branch &#39;main&#39; of github.com:jjjermiah/NBIA-toolkit ([`64980a1`](https://github.com/jjjermiah/NBIA-toolkit/commit/64980a138adb7a094b7c09ae53d59b92b19a47a9))
+
+
 ## v0.4.3 (2023-12-16)
 
 ### Fix
