@@ -2,6 +2,19 @@
 
 
 
+## v0.5.0 (2023-12-17)
+
+### Feature
+
+* feat: add publish package to gha ([`11e223e`](https://github.com/jjjermiah/NBIA-toolkit/commit/11e223ee9fb69286c4a5cb918975f78769a5a8d3))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of github.com:jjjermiah/NBIA-toolkit ([`1aabe13`](https://github.com/jjjermiah/NBIA-toolkit/commit/1aabe13ee3439d6671e09fa62fceae23f0b2026c))
+
+* test ([`39a39f3`](https://github.com/jjjermiah/NBIA-toolkit/commit/39a39f3135f8b86b1d6e3002d502fb69ca9107ae))
+
+
 ## v0.4.4 (2023-12-17)
 
 ### Fix
