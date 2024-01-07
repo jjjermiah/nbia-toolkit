@@ -30,14 +30,14 @@ class NBIAClient:
                     ) -> None:
 
         # Setup logger
-        self.logger = setup_logger(
+        self.log = setup_logger(
             name="NBIAClient",
             log_level=log_level,
             console_logging=True,
             log_file=None)
 
         # Setup OAuth2 client
-        self.logger.debug(
+        self.log.debug(
             "Setting up OAuth2 client... with username %s", username)
 
         self._oauth2_client = OAuth2(username=username, password=password)
@@ -58,7 +58,7 @@ class NBIAClient:
         datefmt: str = '%y-%m-%d %H:%M'
     ) -> bool:
         try:
-            self.logger = setup_logger(
+            self.log = setup_logger(
                 name="NBIAClient",
                 log_level=log_level,
                 console_logging=console_logging,
@@ -69,14 +69,14 @@ class NBIAClient:
             )
             return True
         except Exception as e:
-            self.logger.error("Error setting up logger: %s", e)
+            self.log.error("Error setting up logger: %s", e)
             return False
 
     def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
 
         query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
 
-        self.logger.debug("Querying API endpoint: %s", query_url)
+        self.log.debug("Querying API endpoint: %s", query_url)
         try:
             response = requests.get(
                 url=query_url,
@@ -90,12 +90,12 @@ class NBIAClient:
                 response_data = response.content
         except JSONDecodeError as j:
             if (response.text == ""):
-                self.logger.error("Response text is empty.")
+                self.log.error("Response text is empty.")
                 return response
-            self.logger.error("Error parsing response as JSON: %s", j)
-            self.logger.debug("Response: %s", response.text)
+            self.log.error("Error parsing response as JSON: %s", j)
+            self.log.debug("Response: %s", response.text)
         except Exception as e:
-            self.logger.error("Error querying API: %s", e)
+            self.log.error("Error querying API: %s", e)
             raise e
 
         return response_data
@@ -191,8 +191,7 @@ class NBIAClient:
             params=params)
 
         if not isinstance(response, bytes):
-            # Handle the case where the expected binary data is not received
-            # Log error or raise an exception
+            self.log.error(f"Expected binary data, but received: {type(response)}")
             return False
 
         file = zipfile.ZipFile(io.BytesIO(response))
@@ -200,7 +199,7 @@ class NBIAClient:
         with TemporaryDirectory() as tempDir:
             file.extractall(path=tempDir)
             if not validateMD5(seriesDir=tempDir) and not overwrite:
-                self.logger.error("MD5 validation failed. Exiting...")
+                self.log.error("MD5 validation failed. Exiting...")
                 return False
 
             # Create an instance of DICOMSorter with the desired target pattern
@@ -219,7 +218,7 @@ class NBIAClient:
     # parsePARAMS is a helper function that takes a locals() dict and returns
     # a dict with only the non-empty values
     def parsePARAMS(self, params: dict) -> dict:
-        self.logger.debug("Parsing params: %s", params)
+        self.log.debug("Parsing params: %s", params)
         PARAMS = dict()
         for key, value in params.items():
             if (value != "") and (key != "self"):
