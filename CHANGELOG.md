@@ -2,6 +2,35 @@
 
 
 
+## v0.6.0 (2024-01-07)
+
+### Documentation
+
+* docs: re-run  with new adds ([`36410f2`](https://github.com/jjjermiah/NBIA-toolkit/commit/36410f219327c11fab8f9dadfbd67308ca3226ae))
+
+### Feature
+
+* feat(downloadSeries): add parallel download option ([`b697aa9`](https://github.com/jjjermiah/NBIA-toolkit/commit/b697aa9fb590a799e0fcd4151247270af91a49d3))
+
+### Fix
+
+* fix(nbia): add error handling for downloadSeries ([`c6ab72b`](https://github.com/jjjermiah/NBIA-toolkit/commit/c6ab72b34442eb4a7a66d83be2e126058733e189))
+
+### Unknown
+
+* Merge pull request #35 from jjjermiah/24-nbiapyhandle-error-case-of-if-resposne-is-not-bytes-for-downloadseries
+
+fix(nbia): add error handling for downloadSeries ([`1f0a499`](https://github.com/jjjermiah/NBIA-toolkit/commit/1f0a499d2e3416a0ac1eac4dec501e3bbc2d70f8))
+
+* fix:Update .gitignore file to include docs/data/ directory ([`e6cc91e`](https://github.com/jjjermiah/NBIA-toolkit/commit/e6cc91ea1fc11e0fec4820f1c974c80aaa305898))
+
+* add parallel documentation and info on filepatterns ([`48174bd`](https://github.com/jjjermiah/NBIA-toolkit/commit/48174bd4a0151dd02449c49a0df749f0baafd7a5))
+
+* new run ([`e94e356`](https://github.com/jjjermiah/NBIA-toolkit/commit/e94e356b45239f0cb7fb8847df9dc63f3a0b6007))
+
+* add tqdm to dependency ([`fce0a42`](https://github.com/jjjermiah/NBIA-toolkit/commit/fce0a427298d9f98fa32137b668812981ff7c2f4))
+
+
 ## v0.5.0 (2023-12-17)
 
 ### Feature
