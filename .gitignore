@@ -147,3 +147,5 @@ docs/data/*
 driver.py
 data/*
 sandbox
+
+docs/data/*
