@@ -6,6 +6,7 @@ from nbiatoolkit.dicomsort import DICOMSorter
 
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
+from typing import Union
 import io
 import zipfile
 
@@ -30,14 +31,14 @@ class NBIAClient:
                     ) -> None:
 
         # Setup logger
-        self.logger = setup_logger(
+        self.log = setup_logger(
             name="NBIAClient",
             log_level=log_level,
             console_logging=True,
             log_file=None)
 
         # Setup OAuth2 client
-        self.logger.debug(
+        self.log.debug(
             "Setting up OAuth2 client... with username %s", username)
 
         self._oauth2_client = OAuth2(username=username, password=password)
@@ -58,7 +59,7 @@ class NBIAClient:
         datefmt: str = '%y-%m-%d %H:%M'
     ) -> bool:
         try:
-            self.logger = setup_logger(
+            self.log = setup_logger(
                 name="NBIAClient",
                 log_level=log_level,
                 console_logging=console_logging,
@@ -69,14 +70,14 @@ class NBIAClient:
             )
             return True
         except Exception as e:
-            self.logger.error("Error setting up logger: %s", e)
+            self.log.error("Error setting up logger: %s", e)
             return False
 
     def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
 
         query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
 
-        self.logger.debug("Querying API endpoint: %s", query_url)
+        self.log.debug("Querying API endpoint: %s", query_url)
         try:
             response = requests.get(
                 url=query_url,
@@ -90,12 +91,12 @@ class NBIAClient:
                 response_data = response.content
         except JSONDecodeError as j:
             if (response.text == ""):
-                self.logger.error("Response text is empty.")
+                self.log.error("Response text is empty.")
                 return response
-            self.logger.error("Error parsing response as JSON: %s", j)
-            self.logger.debug("Response: %s", response.text)
+            self.log.error("Error parsing response as JSON: %s", j)
+            self.log.debug("Response: %s", response.text)
         except Exception as e:
-            self.logger.error("Error querying API: %s", e)
+            self.log.error("Error querying API: %s", e)
             raise e
 
         return response_data
@@ -172,13 +173,57 @@ class NBIAClient:
         return response
 
 
+    from tqdm import tqdm
+
     def downloadSeries(
         self,
-        SeriesInstanceUID: str,
+        SeriesInstanceUID: Union[str, list],
         downloadDir: str = "./NBIA-Download",
         filePattern: str = '%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm',
-        overwrite: bool = False
-        ) -> bool:
+        overwrite: bool = False,
+        nParallel: int = 1
+    ) -> bool:
+        assert isinstance(SeriesInstanceUID, (str, list)), \
+            "SeriesInstanceUID must be a string or list"
+        assert isinstance(downloadDir, str), "downloadDir must be a string"
+        assert isinstance(filePattern, str), "filePattern must be a string"
+        assert isinstance(overwrite, bool), "overwrite must be a boolean"
+
+        import concurrent.futures as cf
+        from tqdm import tqdm
+
+        if isinstance(SeriesInstanceUID, str):
+            SeriesInstanceUID = [SeriesInstanceUID]
+
+        with cf.ThreadPoolExecutor(max_workers=nParallel) as executor:
+            futures = []
+            for seriesUID in SeriesInstanceUID:
+                future = executor.submit(
+                    self._downloadSingleSeries,
+                    SeriesInstanceUID=seriesUID,
+                    downloadDir=downloadDir,
+                    filePattern=filePattern,
+                    overwrite=overwrite)
+                futures.append(future)
+
+            # Use tqdm to create a progress bar
+            with tqdm(
+                total=len(futures),
+                desc=f"Downloading {len(futures)} series") as pbar:
+
+                for future in cf.as_completed(futures):
+                    pbar.update(1)
+
+            return True
+
+
+
+    # _downloadSingleSeries is a helper function that downloads a single series
+    # to simplify the code in downloadSeries and also allow for parallel
+    # downloads in the future
+    def _downloadSingleSeries(
+        self, SeriesInstanceUID: str, downloadDir: str,
+        filePattern: str, overwrite: bool) -> bool:
 
         # create temporary directory
         from tempfile import TemporaryDirectory
@@ -186,13 +231,13 @@ class NBIAClient:
         params = dict()
         params["SeriesInstanceUID"] = SeriesInstanceUID
 
+        self.log.debug("Downloading series: %s", SeriesInstanceUID)
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.DOWNLOAD_SERIES,
             params=params)
 
         if not isinstance(response, bytes):
-            # Handle the case where the expected binary data is not received
-            # Log error or raise an exception
+            self.log.error(f"Expected binary data, but received: {type(response)}")
             return False
 
         file = zipfile.ZipFile(io.BytesIO(response))
@@ -200,7 +245,7 @@ class NBIAClient:
         with TemporaryDirectory() as tempDir:
             file.extractall(path=tempDir)
             if not validateMD5(seriesDir=tempDir) and not overwrite:
-                self.logger.error("MD5 validation failed. Exiting...")
+                self.log.error("MD5 validation failed. Exiting...")
                 return False
 
             # Create an instance of DICOMSorter with the desired target pattern
@@ -219,7 +264,7 @@ class NBIAClient:
     # parsePARAMS is a helper function that takes a locals() dict and returns
     # a dict with only the non-empty values
     def parsePARAMS(self, params: dict) -> dict:
-        self.logger.debug("Parsing params: %s", params)
+        self.log.debug("Parsing params: %s", params)
         PARAMS = dict()
         for key, value in params.items():
             if (value != "") and (key != "self"):
@@ -227,3 +272,44 @@ class NBIAClient:
         return PARAMS
 
 
+# main
+if __name__ == "__main__":
+    from pprint import pprint
+    import os
+    client = NBIAClient(log_level='info')
+    # collections = client.getCollections()
+    # pprint(collections[0:5])
+    # seriesJSON = client.getSeries(Collection="4D-Lung")
+    # # first get a list of the SeriesInstanceUIDs
+    # seriesUIDS = [series['SeriesInstanceUID'] for series in seriesJSON]
+    # pprint(seriesUIDS[0:5])
+
+    seriesUIDS = [
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.189721824525842725510380467695',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.336250251691987239290048605884',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.227929163446067537882961857921',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.925990093742075237571072608963',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.139116724721865252687455544825',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.364787732307640672278270360328',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.384197169742944248273003912317',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.149750833495190982103087204448',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.300347070051003027185063750283',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.317831614083862743715273480521',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.736089011729021729851027177073',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.133381852562664457904201355429',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.909088026336573109170906532418',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.953079890279542310843831057254',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.427052348021168186336245283790',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.295010883410722294053941635303',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.263257070197787007872578860295',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.672179203515231442641005032212',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.184961274239908956209701869504',
+        '1.3.6.1.4.1.14519.5.2.1.6834.5010.797307942821711099898506950104']
+
+    downloadDir = "./data"
+    os.makedirs(downloadDir, exist_ok=True)
+
+    client.downloadSeries(
+        seriesUIDS, downloadDir, overwrite=True, nParallel=8)
+
+    pprint(os.listdir(downloadDir))
