@@ -1,4 +1,4 @@
-from nbiatoolkit.dicomsort.helper_functions import parseDICOMKeysFromFormat,sanitizeFileName,truncateUID
+from src.nbiatoolkit.dicomsort.helper_functions import parseDICOMKeysFromFormat,sanitizeFileName,truncateUID
 import pytest
 ###############################################################################
 # parseDICOMKeysFromFormat

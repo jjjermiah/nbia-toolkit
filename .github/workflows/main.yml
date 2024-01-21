@@ -34,7 +34,7 @@ jobs:
         run: |
           pip install pytest
           pip install pytest-cov
-          poetry run pytest --cov=./ --cov-report=xml
+          poetry run pytest --cov --cov-report=xml
 
       - name: Use Codecov to track coverage
         uses: codecov/codecov-action@v3
