@@ -41,8 +41,8 @@ def test_downloadSeries(nbia_client, nbia_collections, nbia_patients):
     filePattern = '%PatientID/%Modality/%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm'
     # create a temporary directory
 
-    tempdir = TemporaryDirectory()
-    tempdir = tempdir.name
+    tempdir_ = TemporaryDirectory()
+    tempdir = tempdir_.name
 
     nbia_client.downloadSeries(
         SeriesInstanceUID=seriesList[0]["SeriesInstanceUID"],

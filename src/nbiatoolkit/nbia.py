@@ -11,6 +11,8 @@ import io
 import zipfile
 from tqdm import tqdm
 
+
+
 class NBIAClient:
     """
     The NBIAClient class is a wrapper around the NBIA REST API. It provides
@@ -20,8 +22,6 @@ class NBIAClient:
     and password, you can pass them to the constructor.
     
     TODO:: Add docstring
-    FIXME:: logger prints duplicate logs if you instantiate the class more
-    than once
     """
 
     def __init__(self,
@@ -47,31 +47,6 @@ class NBIAClient:
     @property
     def headers(self):
         return self.api_headers
-
-    # setter method to update logger with a new instance of setup_logger
-    def setLogger(
-        self,
-        log_level: str = "INFO",
-        console_logging: bool = False,
-        log_file: str = None,
-        log_dir: str = None,
-        log_format: str = '%(asctime)s | %(name)s | %(levelname)s | %(message)s',
-        datefmt: str = '%y-%m-%d %H:%M'
-    ) -> bool:
-        try:
-            self.log = setup_logger(
-                name="NBIAClient",
-                log_level=log_level,
-                console_logging=console_logging,
-                log_file=log_file,
-                log_dir=log_dir,
-                log_format=log_format,
-                datefmt=datefmt
-            )
-            return True
-        except Exception as e:
-            self.log.error("Error setting up logger: %s", e)
-            return False
 
     def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
 
@@ -227,7 +202,8 @@ class NBIAClient:
     # downloads in the future
     def _downloadSingleSeries(
         self, SeriesInstanceUID: str, downloadDir: str,
-        filePattern: str, overwrite: bool) -> bool:
+        filePattern: str, overwrite: bool
+    ) -> bool:
 
         # create temporary directory
         from tempfile import TemporaryDirectory
@@ -248,8 +224,11 @@ class NBIAClient:
 
         with TemporaryDirectory() as tempDir:
             file.extractall(path=tempDir)
-            if not validateMD5(seriesDir=tempDir) and not overwrite:
-                self.log.error("MD5 validation failed. Exiting...")
+
+            try:
+                validateMD5(seriesDir=tempDir)
+            except Exception as e:
+                self.log.error("Error validating MD5 hash: %s", e)
                 return False
 
             # Create an instance of DICOMSorter with the desired target pattern
@@ -260,8 +239,12 @@ class NBIAClient:
                 truncateUID=True,
                 sanitizeFilename=True
                 )
-
-            sorter.sortDICOMFiles(option="move", overwrite=overwrite)
+            # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
+            if not sorter.sortDICOMFiles(option="move", overwrite=overwrite):
+                self.log.error(
+                    "Error sorting DICOM files for series %s\n \
+                        failed files located at %s", SeriesInstanceUID, tempDir)
+                return False
 
         return True
 
