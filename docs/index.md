@@ -7,7 +7,7 @@
 
 wiki/NBIA.md
 Tutorial.ipynb
-changelog.md
+../CONTRIBUTING.md
 contributing.md
 conduct.md
 autoapi/index
