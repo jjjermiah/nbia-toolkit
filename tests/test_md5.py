@@ -1,6 +1,6 @@
 import os
-from nbiatoolkit.utils.md5 import validateMD5, calculateMD5, MD5HashMismatchError
-from nbiatoolkit.utils.nbia_endpoints import NBIA_ENDPOINTS
+from src.nbiatoolkit.utils.md5 import validateMD5, calculateMD5, MD5HashMismatchError
+from src.nbiatoolkit.utils.nbia_endpoints import NBIA_ENDPOINTS
 import requests
 import pytest
 from tempfile import TemporaryDirectory

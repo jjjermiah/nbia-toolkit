@@ -2,6 +2,41 @@
 
 
 
+## v0.10.0 (2024-01-21)
+
+### Build
+
+* build: Update Codecov action and add coverage badge ([`c89f010`](https://github.com/jjjermiah/NBIA-toolkit/commit/c89f010c46c9f78404f3f31d0f991393375ca7e8))
+
+### Ci
+
+* ci: Update dependencies in main.yml and requirements.txt ([`76d9fa8`](https://github.com/jjjermiah/NBIA-toolkit/commit/76d9fa86688efb4736db62232a3e74662a902c0e))
+
+* ci: Update pytest command in GitHub Actions workflow ([`5ca643e`](https://github.com/jjjermiah/NBIA-toolkit/commit/5ca643e1ef907f251380b83a25fbec8b3d55f3f5))
+
+* ci: use poetry to run pytest ([`4894aec`](https://github.com/jjjermiah/NBIA-toolkit/commit/4894aec8eb6c01e2590cb3d9e5f3ac7d0f7124ca))
+
+* ci: install pytest and pytest-cov ([`1f2df96`](https://github.com/jjjermiah/NBIA-toolkit/commit/1f2df969691c3c9dac153f8d7ea457e0cadcb7f2))
+
+### Fix
+
+* fix: Refactor imports in nbia.py ([`9bf0f13`](https://github.com/jjjermiah/NBIA-toolkit/commit/9bf0f137f5ee42442491a722ce7890ab8486136d))
+
+### Test
+
+* test: Update pytest coverage command in GitHub workflow
+
+Add source directory for coverage in pyproject.toml
+
+Fix import statements in test files ([`f72c7d8`](https://github.com/jjjermiah/NBIA-toolkit/commit/f72c7d8c0aaeaff7da3f32b38cc821be1e0f7942))
+
+### Unknown
+
+* Merge pull request #42 from jjjermiah/39-add-code-coverage-to-gha
+
+build: Update Codecov action and add coverage badge ([`2114f3b`](https://github.com/jjjermiah/NBIA-toolkit/commit/2114f3b7e2dddebc3757b1282b2242771924f988))
+
+
 ## v0.9.0 (2024-01-21)
 
 ### Fix

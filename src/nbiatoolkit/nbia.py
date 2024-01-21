@@ -1,8 +1,8 @@
-from nbiatoolkit.auth import OAuth2
-from nbiatoolkit.utils.nbia_endpoints import NBIA_ENDPOINTS
-from nbiatoolkit.logger.logger import setup_logger
-from nbiatoolkit.utils.md5 import validateMD5
-from nbiatoolkit.dicomsort import DICOMSorter
+from .auth import OAuth2
+from .utils.nbia_endpoints import NBIA_ENDPOINTS
+from .logger.logger import setup_logger
+from .utils.md5 import validateMD5
+from .dicomsort import DICOMSorter
 
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError

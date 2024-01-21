@@ -27,16 +27,20 @@ jobs:
       - name: Install poetry
         uses: snok/install-poetry@v1
 
-      - name: Install package
-        run: poetry install
-
       - name: Test with pytest
-        run: poetry run pytest
+        run: |
+          pip install -r requirements.txt
+          poetry install
+          pytest --cov --cov-report=xml
 
       - name: Use Codecov to track coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
-          file: ./coverage.xml
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
+          name: codecov-umbrella
 
       - name: Build documentation
         run: poetry run make html --directory docs/
