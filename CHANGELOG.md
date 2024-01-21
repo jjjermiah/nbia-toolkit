@@ -2,19 +2,25 @@
 
 
 
+## v0.7.1 (2024-01-21)
+
+### Chore
+
+* chore: update toml ([`b00036a`](https://github.com/jjjermiah/NBIA-toolkit/commit/b00036afbea49f8959c0c6e378979d575a83879d))
+
+* chore: update pyproject ([`ecd79be`](https://github.com/jjjermiah/NBIA-toolkit/commit/ecd79bea789ee6af413d343a2ecc7a7d985da6a8))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit
+ops ([`559a980`](https://github.com/jjjermiah/NBIA-toolkit/commit/559a980f2dce3559207859b535485dedea9e9135))
+
+
 ## v0.7.0 (2024-01-21)
 
 ### Build
 
 * build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`8adc4e1`](https://github.com/jjjermiah/NBIA-toolkit/commit/8adc4e1de88476b498296ca103b627d79428bf48))
-
-### Documentation
-
-* docs: import changelog for readthedocs ([`3c650be`](https://github.com/jjjermiah/NBIA-toolkit/commit/3c650bee5e5663e353c39c6251416775e66c2e4e))
-
-* docs: Update dependencies and fix code execution counts ([`68e67e0`](https://github.com/jjjermiah/NBIA-toolkit/commit/68e67e0b0e3efee319acf14ae904568b8cfd3bb8))
-
-* docs: update documentation for new features and changelog to readthedocs ([`4a2af47`](https://github.com/jjjermiah/NBIA-toolkit/commit/4a2af470dffd6a8794875917b62e104ad0c04774))
 
 ### Feature
 
@@ -30,6 +36,12 @@
 
 Update documentation ([`c58ad3d`](https://github.com/jjjermiah/NBIA-toolkit/commit/c58ad3d6cccb02cd17a68a790c9ce5aca081e628))
 
+* docs: import changelog for readthedocs ([`3c650be`](https://github.com/jjjermiah/NBIA-toolkit/commit/3c650bee5e5663e353c39c6251416775e66c2e4e))
+
+* docs: Update dependencies and fix code execution counts ([`68e67e0`](https://github.com/jjjermiah/NBIA-toolkit/commit/68e67e0b0e3efee319acf14ae904568b8cfd3bb8))
+
+* docs: update documentation for new features and changelog to readthedocs ([`4a2af47`](https://github.com/jjjermiah/NBIA-toolkit/commit/4a2af470dffd6a8794875917b62e104ad0c04774))
+
 * Merge pull request #38 from jjjermiah/37-fix-ghacd-to-not-fail-if-version-isnt-bumped
 
 build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`b6e3126`](https://github.com/jjjermiah/NBIA-toolkit/commit/b6e3126019b987c2240bf7685f89f277daf9a965))
@@ -38,10 +50,6 @@ build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`b
 
 
 ## v0.6.0 (2024-01-07)
-
-### Documentation
-
-* docs: re-run  with new adds ([`36410f2`](https://github.com/jjjermiah/NBIA-toolkit/commit/36410f219327c11fab8f9dadfbd67308ca3226ae))
 
 ### Feature
 
@@ -58,6 +66,8 @@ build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`b
 fix(nbia): add error handling for downloadSeries ([`1f0a499`](https://github.com/jjjermiah/NBIA-toolkit/commit/1f0a499d2e3416a0ac1eac4dec501e3bbc2d70f8))
 
 * fix:Update .gitignore file to include docs/data/ directory ([`e6cc91e`](https://github.com/jjjermiah/NBIA-toolkit/commit/e6cc91ea1fc11e0fec4820f1c974c80aaa305898))
+
+* docs: re-run  with new adds ([`36410f2`](https://github.com/jjjermiah/NBIA-toolkit/commit/36410f219327c11fab8f9dadfbd67308ca3226ae))
 
 * add parallel documentation and info on filepatterns ([`48174bd`](https://github.com/jjjermiah/NBIA-toolkit/commit/48174bd4a0151dd02449c49a0df749f0baafd7a5))
 
@@ -223,12 +233,6 @@ test: gha ([`92e90e2`](https://github.com/jjjermiah/NBIA-toolkit/commit/92e90e26
 
 * build: add CD workflow ([`06e8401`](https://github.com/jjjermiah/NBIA-toolkit/commit/06e8401b43295998eb9c0da269a41facfc9843bb))
 
-### Documentation
-
-* docs(auth): add some documentation ([`017bfae`](https://github.com/jjjermiah/NBIA-toolkit/commit/017bfaefc4fe31bb5d9d00718be5b21a0535c10f))
-
-* docs: Remove empty usage section and extra line breaks in README ([`f9c1c8a`](https://github.com/jjjermiah/NBIA-toolkit/commit/f9c1c8a46f7e0b05e6e6df2080ca606091eb11cc))
-
 ### Feature
 
 * feat: add headers property to nbia client ([`52dafe8`](https://github.com/jjjermiah/NBIA-toolkit/commit/52dafe8e485cbc0cefafe9110e8983fc8ccda5b7))
@@ -253,6 +257,10 @@ Docs/update docs ([`359a30d`](https://github.com/jjjermiah/NBIA-toolkit/commit/3
 
 * docs(auth):Add requests module and update test cases ([`43197fa`](https://github.com/jjjermiah/NBIA-toolkit/commit/43197fae10fccfdf6992f750398512313bbc7ada))
 
+* docs(auth): add some documentation ([`017bfae`](https://github.com/jjjermiah/NBIA-toolkit/commit/017bfaefc4fe31bb5d9d00718be5b21a0535c10f))
+
+* docs: Remove empty usage section and extra line breaks in README ([`f9c1c8a`](https://github.com/jjjermiah/NBIA-toolkit/commit/f9c1c8a46f7e0b05e6e6df2080ca606091eb11cc))
+
 * Update version number in pyproject.toml ([`c71ce49`](https://github.com/jjjermiah/NBIA-toolkit/commit/c71ce49e6466e651c125e7cf10de85c2d1630174))
 
 
@@ -272,11 +280,9 @@ Docs/update docs ([`359a30d`](https://github.com/jjjermiah/NBIA-toolkit/commit/3
 
 ## v0.0.0 (2023-12-16)
 
-### Documentation
+### Unknown
 
 * docs: add package for version bumping ([`efbed0f`](https://github.com/jjjermiah/NBIA-toolkit/commit/efbed0fb7c91df8991135ed4800c60a49f0d7905))
-
-### Unknown
 
 * Update example notebook and package initialization ([`b940a6f`](https://github.com/jjjermiah/NBIA-toolkit/commit/b940a6fa1a157b5e2466b78dcc0d32553d2ca4ce))
 
