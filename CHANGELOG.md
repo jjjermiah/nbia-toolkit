@@ -2,6 +2,41 @@
 
 
 
+## v0.9.0 (2024-01-21)
+
+### Fix
+
+* fix(md5): Add MD5HashMismatchError class and update validateMD5 function ([`c854242`](https://github.com/jjjermiah/NBIA-toolkit/commit/c85424215a6b46cab0ce2090cf30c0ebdf82b90d))
+
+### Refactor
+
+* refactor: Refactor NBIAClient&#39;s _downloadSingleSeries method
+
+This commit refactors the _downloadSingleSeries method in the NBIAClient class. The changes include:
+- Reformatting the method signature for better readability
+- Adding exception handling for MD5 hash validation
+- Commenting out a line of code that is not currently being used
+- Adding error handling and logging for sorting DICOM files ([`ff11711`](https://github.com/jjjermiah/NBIA-toolkit/commit/ff1171178842434fc3c562f6dfd5b48488dca481))
+
+* refactor(nbia): remove unused logger method ([`50916a4`](https://github.com/jjjermiah/NBIA-toolkit/commit/50916a4d029250b771d52d4a74f6940dcf4d09db))
+
+### Test
+
+* test: Add unit tests for MD5 validation ([`539f8b0`](https://github.com/jjjermiah/NBIA-toolkit/commit/539f8b061ca51338d9ca01c3b59128aa754fb46a))
+
+* test: Refactor temporary directory variable name in test_nbia.py ([`3cdeb4a`](https://github.com/jjjermiah/NBIA-toolkit/commit/3cdeb4ad30b2b50fb61b211e6b64a6f4b655d569))
+
+### Unknown
+
+* Merge pull request #41 from jjjermiah/27-md5pyadd-tests-and-logging-+-error-handling-for-non-existent-files
+
+27 md5pyadd tests and logging + error handling for non existent files ([`c1ed27b`](https://github.com/jjjermiah/NBIA-toolkit/commit/c1ed27b16a52abd0fb8db2a58b22302f4fbe7c34))
+
+* docs: Update execution counts in Tutorial.ipynb ([`ca80e28`](https://github.com/jjjermiah/NBIA-toolkit/commit/ca80e2845f113272fd6fcce344db70bcd19b226b))
+
+* refactor(dimsort):Refactor DICOMSorter class and add new method to get DICOM file paths ([`573978e`](https://github.com/jjjermiah/NBIA-toolkit/commit/573978e0f21dcdac1d7029e97c84d39572d8a15a))
+
+
 ## v0.8.0 (2024-01-21)
 
 ### Build
