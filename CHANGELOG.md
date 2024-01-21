@@ -2,6 +2,29 @@
 
 
 
+## v0.8.0 (2024-01-21)
+
+### Build
+
+* build: update python version in cicd ([`2aea484`](https://github.com/jjjermiah/NBIA-toolkit/commit/2aea4844ac95e51f9e5259ea2de8aeeac69a3b85))
+
+### Ci
+
+* ci: switch python back ([`dd0d2f4`](https://github.com/jjjermiah/NBIA-toolkit/commit/dd0d2f423ac28d072caaddc8c22a0859f24b1324))
+
+### Feature
+
+* feat: add package __version__ ([`fa583dd`](https://github.com/jjjermiah/NBIA-toolkit/commit/fa583dd36b8b1df10fccfeb2b70a72b2df27abb2))
+
+### Fix
+
+* fix: update path in toml for package version ([`f6db43e`](https://github.com/jjjermiah/NBIA-toolkit/commit/f6db43e2d505f4452c361709bd7d5c117113e6c7))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`76b0b50`](https://github.com/jjjermiah/NBIA-toolkit/commit/76b0b5003e55c8f91e51800ec8f6232b585e2867))
+
+
 ## v0.7.1 (2024-01-21)
 
 ### Chore
