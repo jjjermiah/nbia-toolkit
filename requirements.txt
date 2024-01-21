@@ -4,3 +4,5 @@ pytest-cov==4.0.0
 ruff==v0.0.260
 coverage-badge~=1.1.0
 requests==2.31.0
+pydicom==2.4.3
+tqdm==4.66.1

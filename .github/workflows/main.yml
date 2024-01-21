@@ -27,13 +27,10 @@ jobs:
       - name: Install poetry
         uses: snok/install-poetry@v1
 
-      - name: Install package
-        run: poetry install
-
       - name: Test with pytest
         run: |
-          pip install pytest
-          pip install pytest-cov
+          pip install -r requirements.txt
+          poetry install
           pytest --cov --cov-report=xml
 
       - name: Use Codecov to track coverage
