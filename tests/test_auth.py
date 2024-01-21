@@ -4,7 +4,7 @@
 # pytest -v -s 
 
 import pytest
-from nbiatoolkit import OAuth2
+from src.nbiatoolkit import OAuth2
 import time 
 import requests
 

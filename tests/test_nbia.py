@@ -5,7 +5,7 @@
 # pytest -v -n 8 tests/test_nbia.py::test_getCollections
 
 import pytest
-from nbiatoolkit import NBIAClient
+from src.nbiatoolkit import NBIAClient
 from tempfile import TemporaryDirectory
 import os
 
