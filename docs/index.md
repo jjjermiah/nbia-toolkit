@@ -7,8 +7,8 @@
 
 wiki/NBIA.md
 Tutorial.ipynb
-../CONTRIBUTING.md
-contributing.md
-conduct.md
+CONTRIBUTING.md
+CONTRIBUTING.md
+CONDUCT.md
 autoapi/index
 ```

@@ -58,9 +58,7 @@ allowed_tags = [
     "test",
 ]
 minor_tags = [
-    "feat",
-    "fix",
-    "docs"]
+    "feat"]
 patch_tags = [
     "build",
     "chore",
@@ -69,4 +67,6 @@ patch_tags = [
     "refactor",
     "style",
     "test",
+    "fix",
+    "docs"
 ]
