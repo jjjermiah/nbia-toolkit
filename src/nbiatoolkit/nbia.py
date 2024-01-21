@@ -9,7 +9,7 @@ from requests.exceptions import JSONDecodeError as JSONDecodeError
 from typing import Union
 import io
 import zipfile
-
+from tqdm import tqdm
 
 class NBIAClient:
     """
@@ -101,22 +101,29 @@ class NBIAClient:
 
         return response_data
 
-    def getCollections(self) -> list:
+    def getCollections(self, prefix: str = ""
+    ) -> list[dict[str]]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTIONS)
         collections = []
         for collection in response:
-            collections.append(collection["Collection"])
+            name = collection["Collection"]
+            if name.lower().startswith(prefix.lower()):
+                collections.append(name)
         return collections
 
-    def getCollectionPatientCount(self) -> list:
+    # returns a list of dictionaries with the collection name and patient count
+    def getCollectionPatientCount(self, prefix: str = ""
+    ) -> list[dict[str, int]]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
-        patientCount = []
+        patientCounts = []
         for collection in response:
-            patientCount.append({
-                "Collection": collection["criteria"],
-                "PatientCount": collection["count"]})
+            name = collection["criteria"]
+            if name.lower().startswith(prefix.lower()):
+                patientCounts.append({
+                    "Collection": collection["criteria"],
+                    "PatientCount": int(collection["count"])})
 
-        return patientCount
+        return patientCounts
 
     def getBodyPartCounts(
         self, Collection: str = "", Modality: str = "") -> list:
@@ -171,9 +178,6 @@ class NBIAClient:
             params = PARAMS)
 
         return response
-
-
-    from tqdm import tqdm
 
     def downloadSeries(
         self,
@@ -277,6 +281,12 @@ if __name__ == "__main__":
     from pprint import pprint
     import os
     client = NBIAClient(log_level='info')
+
+    all = client.getCollections()
+    pprint(all)
+
+    sub = client.getCollections(prefix="aCrin")
+    pprint(sub)
     # collections = client.getCollections()
     # pprint(collections[0:5])
     # seriesJSON = client.getSeries(Collection="4D-Lung")
@@ -284,32 +294,32 @@ if __name__ == "__main__":
     # seriesUIDS = [series['SeriesInstanceUID'] for series in seriesJSON]
     # pprint(seriesUIDS[0:5])
 
-    seriesUIDS = [
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.189721824525842725510380467695',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.336250251691987239290048605884',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.227929163446067537882961857921',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.925990093742075237571072608963',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.139116724721865252687455544825',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.364787732307640672278270360328',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.384197169742944248273003912317',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.149750833495190982103087204448',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.300347070051003027185063750283',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.317831614083862743715273480521',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.736089011729021729851027177073',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.133381852562664457904201355429',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.909088026336573109170906532418',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.953079890279542310843831057254',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.427052348021168186336245283790',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.295010883410722294053941635303',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.263257070197787007872578860295',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.672179203515231442641005032212',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.184961274239908956209701869504',
-        '1.3.6.1.4.1.14519.5.2.1.6834.5010.797307942821711099898506950104']
+    # seriesUIDS = [
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.189721824525842725510380467695',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.336250251691987239290048605884',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.227929163446067537882961857921',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.925990093742075237571072608963',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.139116724721865252687455544825',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.364787732307640672278270360328',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.384197169742944248273003912317',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.149750833495190982103087204448',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.300347070051003027185063750283',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.317831614083862743715273480521',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.736089011729021729851027177073',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.133381852562664457904201355429',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.909088026336573109170906532418',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.953079890279542310843831057254',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.427052348021168186336245283790',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.295010883410722294053941635303',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.263257070197787007872578860295',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.672179203515231442641005032212',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.184961274239908956209701869504',
+    #     '1.3.6.1.4.1.14519.5.2.1.6834.5010.797307942821711099898506950104']
 
-    downloadDir = "./data"
-    os.makedirs(downloadDir, exist_ok=True)
+    # downloadDir = "./data"
+    # os.makedirs(downloadDir, exist_ok=True)
 
-    client.downloadSeries(
-        seriesUIDS, downloadDir, overwrite=True, nParallel=8)
+    # client.downloadSeries(
+    #     seriesUIDS, downloadDir, overwrite=True, nParallel=8)
 
-    pprint(os.listdir(downloadDir))
+    # pprint(os.listdir(downloadDir))
