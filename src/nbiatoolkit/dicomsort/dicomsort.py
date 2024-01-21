@@ -23,7 +23,7 @@ class DICOMSorter:
 
     def generateFilePathFromDICOMAttributes(
         self, dataset: pydicom.dataset.FileDataset
-        ) -> str:
+    ) -> str:
         """
         Generate a file path for the DICOM file by formatting DICOM attributes.
         """
@@ -45,7 +45,7 @@ class DICOMSorter:
     
     def sortSingleDICOMFile(
         self, filePath: str, option: str, overwrite: bool = False
-        ) -> bool:
+    ) -> bool:
         assert option in ["copy", "move"], "Invalid option: symlink not implemented yet"
         
         try: 
@@ -77,38 +77,39 @@ class DICOMSorter:
 
         return True
         
+    def sortDICOMFiles(
+        self, option: str = "copy", overwrite: bool = False
+    ) -> bool:
 
-    def sortDICOMFiles(self, option: str = "copy", overwrite: bool = False) -> bool:    
-        
-        all_files = []
-        # Iterate over all files in the source directory
-        for root, dirs, files in os.walk(self.sourceDir):
-            for file in files:
-                all_files.append(os.path.join(root, file)) if file.endswith(".dcm") else None
+        dicom_file_paths = self._get_dicom_files()
 
-        results = [self.sortSingleDICOMFile(file, option, overwrite) for file in all_files]
-        
+        results = [self.sortSingleDICOMFile(file, option, overwrite) for file in dicom_file_paths]
+
         return all(results)
 
 
+    def _get_dicom_files(self) -> list[str]:
+        dicom_file_paths = []
+        # Iterate over all files in the source directory
+        for root, dirs, files in os.walk(self.sourceDir):
+            for f in files:
+                dicom_file_paths.append(os.path.join(root, f)) if f.endswith(".dcm") else None
+
+        return dicom_file_paths
+
 # Test case
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    # Create an instance of DICOMSorter with the desired target pattern
-    sourceDir="/home/bioinf/bhklab/jermiah/projects/NBIA-toolkit/resources/rawdata/RADCURE-0281"
-    pattern = '%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm'
-    destinationDir="/home/bioinf/bhklab/jermiah/projects/NBIA-toolkit/resources/procdata"
-    
-    sorter = DICOMSorter(
-        sourceDir = sourceDir,
-        destinationDir=destinationDir,
-        targetPattern=pattern,
-        truncateUID=True,
-        sanitizeFilename=True,
-        overwrite=True
-        )
+    # sorter = DICOMSorter(
+    #     sourceDir = sourceDir,
+    #     destinationDir=destinationDir,
+    #     targetPattern=pattern,
+    #     truncateUID=True,
+    #     sanitizeFilename=True,
+    #     overwrite=True
+    #     )
 
-    sorter.sortDICOMFiles(option="move")    
+    # sorter.sortDICOMFiles(option="move")
 
 
 
