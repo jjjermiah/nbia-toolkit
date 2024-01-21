@@ -49,7 +49,6 @@ allowed_tags = [
     "build",
     "chore",
     "ci",
-
     "feat",
     "fix",
     "perf",
