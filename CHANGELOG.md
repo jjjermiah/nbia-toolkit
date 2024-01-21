@@ -2,6 +2,41 @@
 
 
 
+## v0.7.0 (2024-01-21)
+
+### Build
+
+* build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`8adc4e1`](https://github.com/jjjermiah/NBIA-toolkit/commit/8adc4e1de88476b498296ca103b627d79428bf48))
+
+### Documentation
+
+* docs: import changelog for readthedocs ([`3c650be`](https://github.com/jjjermiah/NBIA-toolkit/commit/3c650bee5e5663e353c39c6251416775e66c2e4e))
+
+* docs: Update dependencies and fix code execution counts ([`68e67e0`](https://github.com/jjjermiah/NBIA-toolkit/commit/68e67e0b0e3efee319acf14ae904568b8cfd3bb8))
+
+* docs: update documentation for new features and changelog to readthedocs ([`4a2af47`](https://github.com/jjjermiah/NBIA-toolkit/commit/4a2af470dffd6a8794875917b62e104ad0c04774))
+
+### Feature
+
+* feat(nbia): add prefix option to get Collections methods ([`0f95c89`](https://github.com/jjjermiah/NBIA-toolkit/commit/0f95c899f1f45888001f38bb55d8cb30863732aa))
+
+### Test
+
+* test(nbia): added test for downloadSeries ([`0f502ce`](https://github.com/jjjermiah/NBIA-toolkit/commit/0f502ce8e1a1f1b5e53c63c3cb705e36d7b2393d))
+
+### Unknown
+
+* Merge pull request #40 from jjjermiah/updateDocumentation
+
+Update documentation ([`c58ad3d`](https://github.com/jjjermiah/NBIA-toolkit/commit/c58ad3d6cccb02cd17a68a790c9ce5aca081e628))
+
+* Merge pull request #38 from jjjermiah/37-fix-ghacd-to-not-fail-if-version-isnt-bumped
+
+build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`b6e3126`](https://github.com/jjjermiah/NBIA-toolkit/commit/b6e3126019b987c2240bf7685f89f277daf9a965))
+
+* Merge pull request #36 from jjjermiah/25-nbiapyadd-tests-for-download-series ([`f0f3781`](https://github.com/jjjermiah/NBIA-toolkit/commit/f0f3781ff408d998da9abb13671284cb0e1143fc))
+
+
 ## v0.6.0 (2024-01-07)
 
 ### Documentation
