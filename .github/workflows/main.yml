@@ -69,7 +69,18 @@ jobs:
       run: poetry install
 
 
+    # Get the last tag value (i.e 0.6.0)
+    # save to a variable called last_tag to be used later
+    - name: Get latest tag name
+      id: last_tag
+      run: echo ::set-output name=tag::$(git describe --tags --abbrev=0 | sed 's/^v//')
+
    # This action uses Python Semantic Release v8
+   # What this action does:
+   # - Determines the next version number based on the commit history
+    # - Creates a new tag with the new version number
+    # - Pushes the new tag to GitHub
+    # - Creates a GitHub release with the new version number
     - name: Python Semantic Release
       id: release
       uses: python-semantic-release/python-semantic-release@master
@@ -80,13 +91,20 @@ jobs:
       run:
         python3 -m pip install build twine
 
+    # Build Package step:
+    # After semantic release, we should have a new tag if the commit history
+    # has been updated. If there isnt a new tag, then we dont need to build
+    # a new package. If there is a new tag, then we need to build a new package
+    # and publish it to PyPI
     - name: Build package
+      if: steps.release.outputs.released == 'true'
       run: |
         poetry version $(git describe --tags --abbrev=0 | sed 's/^v//')
         python -m build --sdist --wheel --outdir dist/ .
         ls dist/
 
     - name: Publish package distributions to PyPI
+      if: steps.release.outputs.released == 'true'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         verbose: true
