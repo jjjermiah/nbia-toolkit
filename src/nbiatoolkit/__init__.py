@@ -6,6 +6,9 @@
 # this file is used to import all the modules in the package
 # this file is used to define the __all__ variable
 
+# set __version__ variable
+__version__ = "0.7.0"
+
 # import the modules
 from .nbia import NBIAClient
 from .auth import OAuth2
@@ -17,5 +20,6 @@ __all__ = [
     'NBIAClient',
     'OAuth2',
     'setup_logger',
-    'NBIA_ENDPOINTS'
+    'NBIA_ENDPOINTS',
+    '__version__'
 ]
