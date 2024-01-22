@@ -2,6 +2,13 @@
 
 
 
+## v0.10.3 (2024-01-22)
+
+### Documentation
+
+* docs: Add Docker Pulls badge to README ([`d6943d7`](https://github.com/jjjermiah/NBIA-toolkit/commit/d6943d7a5a731b98ae149da45556777134866d32))
+
+
 ## v0.10.2 (2024-01-22)
 
 ### Ci
@@ -14,6 +21,12 @@
 ### Ci
 
 * ci: test docker pipeline ([`20a43ad`](https://github.com/jjjermiah/NBIA-toolkit/commit/20a43addf9ae331c9a407aaaa7d0edb01947af5f))
+
+### Documentation
+
+* docs: Add GitHub repo size badge ([`3b1ab49`](https://github.com/jjjermiah/NBIA-toolkit/commit/3b1ab49bc9d0aa7c8fd1e9633c52c5ab9d07b368))
+
+* docs: Update contributing.md, badges, and pyproject.toml ([`15cba32`](https://github.com/jjjermiah/NBIA-toolkit/commit/15cba32fc17061441f6a7f7f57b6908a6784b7a8))
 
 ### Unknown
 
@@ -43,15 +56,11 @@ Devel ([`2b33361`](https://github.com/jjjermiah/NBIA-toolkit/commit/2b33361e25dd
 
 docs: Add GitHub repo size badge ([`0ff2ded`](https://github.com/jjjermiah/NBIA-toolkit/commit/0ff2dedf7ac39462324acf24910efe42c0d4c84c))
 
-* docs: Add GitHub repo size badge ([`3b1ab49`](https://github.com/jjjermiah/NBIA-toolkit/commit/3b1ab49bc9d0aa7c8fd1e9633c52c5ab9d07b368))
-
 * Merge pull request #43 from jjjermiah/update-README-badges
 
 docs: Update contributing.md, badges, and pyproject.toml ([`581834b`](https://github.com/jjjermiah/NBIA-toolkit/commit/581834b92946ebfd9fe0963270ff0451ce7f0207))
 
 * Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit into update-README-badges ([`aa1715d`](https://github.com/jjjermiah/NBIA-toolkit/commit/aa1715d280b040234e3d4426f13138ab0bfd67c8))
-
-* docs: Update contributing.md, badges, and pyproject.toml ([`15cba32`](https://github.com/jjjermiah/NBIA-toolkit/commit/15cba32fc17061441f6a7f7f57b6908a6784b7a8))
 
 
 ## v0.10.0 (2024-01-21)
@@ -91,6 +100,10 @@ build: Update Codecov action and add coverage badge ([`2114f3b`](https://github.
 
 ## v0.9.0 (2024-01-21)
 
+### Documentation
+
+* docs: Update execution counts in Tutorial.ipynb ([`ca80e28`](https://github.com/jjjermiah/NBIA-toolkit/commit/ca80e2845f113272fd6fcce344db70bcd19b226b))
+
 ### Fix
 
 * fix(md5): Add MD5HashMismatchError class and update validateMD5 function ([`c854242`](https://github.com/jjjermiah/NBIA-toolkit/commit/c85424215a6b46cab0ce2090cf30c0ebdf82b90d))
@@ -118,8 +131,6 @@ This commit refactors the _downloadSingleSeries method in the NBIAClient class. 
 * Merge pull request #41 from jjjermiah/27-md5pyadd-tests-and-logging-+-error-handling-for-non-existent-files
 
 27 md5pyadd tests and logging + error handling for non existent files ([`c1ed27b`](https://github.com/jjjermiah/NBIA-toolkit/commit/c1ed27b16a52abd0fb8db2a58b22302f4fbe7c34))
-
-* docs: Update execution counts in Tutorial.ipynb ([`ca80e28`](https://github.com/jjjermiah/NBIA-toolkit/commit/ca80e2845f113272fd6fcce344db70bcd19b226b))
 
 * refactor(dimsort):Refactor DICOMSorter class and add new method to get DICOM file paths ([`573978e`](https://github.com/jjjermiah/NBIA-toolkit/commit/573978e0f21dcdac1d7029e97c84d39572d8a15a))
 
@@ -167,6 +178,14 @@ ops ([`559a980`](https://github.com/jjjermiah/NBIA-toolkit/commit/559a980f2dce35
 
 * build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`8adc4e1`](https://github.com/jjjermiah/NBIA-toolkit/commit/8adc4e1de88476b498296ca103b627d79428bf48))
 
+### Documentation
+
+* docs: import changelog for readthedocs ([`3c650be`](https://github.com/jjjermiah/NBIA-toolkit/commit/3c650bee5e5663e353c39c6251416775e66c2e4e))
+
+* docs: Update dependencies and fix code execution counts ([`68e67e0`](https://github.com/jjjermiah/NBIA-toolkit/commit/68e67e0b0e3efee319acf14ae904568b8cfd3bb8))
+
+* docs: update documentation for new features and changelog to readthedocs ([`4a2af47`](https://github.com/jjjermiah/NBIA-toolkit/commit/4a2af470dffd6a8794875917b62e104ad0c04774))
+
 ### Feature
 
 * feat(nbia): add prefix option to get Collections methods ([`0f95c89`](https://github.com/jjjermiah/NBIA-toolkit/commit/0f95c899f1f45888001f38bb55d8cb30863732aa))
@@ -181,12 +200,6 @@ ops ([`559a980`](https://github.com/jjjermiah/NBIA-toolkit/commit/559a980f2dce35
 
 Update documentation ([`c58ad3d`](https://github.com/jjjermiah/NBIA-toolkit/commit/c58ad3d6cccb02cd17a68a790c9ce5aca081e628))
 
-* docs: import changelog for readthedocs ([`3c650be`](https://github.com/jjjermiah/NBIA-toolkit/commit/3c650bee5e5663e353c39c6251416775e66c2e4e))
-
-* docs: Update dependencies and fix code execution counts ([`68e67e0`](https://github.com/jjjermiah/NBIA-toolkit/commit/68e67e0b0e3efee319acf14ae904568b8cfd3bb8))
-
-* docs: update documentation for new features and changelog to readthedocs ([`4a2af47`](https://github.com/jjjermiah/NBIA-toolkit/commit/4a2af470dffd6a8794875917b62e104ad0c04774))
-
 * Merge pull request #38 from jjjermiah/37-fix-ghacd-to-not-fail-if-version-isnt-bumped
 
 build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`b6e3126`](https://github.com/jjjermiah/NBIA-toolkit/commit/b6e3126019b987c2240bf7685f89f277daf9a965))
@@ -195,6 +208,10 @@ build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`b
 
 
 ## v0.6.0 (2024-01-07)
+
+### Documentation
+
+* docs: re-run  with new adds ([`36410f2`](https://github.com/jjjermiah/NBIA-toolkit/commit/36410f219327c11fab8f9dadfbd67308ca3226ae))
 
 ### Feature
 
@@ -211,8 +228,6 @@ build(Continuous-Deployment): Only push to PyPi if semantic release updates ([`b
 fix(nbia): add error handling for downloadSeries ([`1f0a499`](https://github.com/jjjermiah/NBIA-toolkit/commit/1f0a499d2e3416a0ac1eac4dec501e3bbc2d70f8))
 
 * fix:Update .gitignore file to include docs/data/ directory ([`e6cc91e`](https://github.com/jjjermiah/NBIA-toolkit/commit/e6cc91ea1fc11e0fec4820f1c974c80aaa305898))
-
-* docs: re-run  with new adds ([`36410f2`](https://github.com/jjjermiah/NBIA-toolkit/commit/36410f219327c11fab8f9dadfbd67308ca3226ae))
 
 * add parallel documentation and info on filepatterns ([`48174bd`](https://github.com/jjjermiah/NBIA-toolkit/commit/48174bd4a0151dd02449c49a0df749f0baafd7a5))
 
@@ -378,6 +393,12 @@ test: gha ([`92e90e2`](https://github.com/jjjermiah/NBIA-toolkit/commit/92e90e26
 
 * build: add CD workflow ([`06e8401`](https://github.com/jjjermiah/NBIA-toolkit/commit/06e8401b43295998eb9c0da269a41facfc9843bb))
 
+### Documentation
+
+* docs(auth): add some documentation ([`017bfae`](https://github.com/jjjermiah/NBIA-toolkit/commit/017bfaefc4fe31bb5d9d00718be5b21a0535c10f))
+
+* docs: Remove empty usage section and extra line breaks in README ([`f9c1c8a`](https://github.com/jjjermiah/NBIA-toolkit/commit/f9c1c8a46f7e0b05e6e6df2080ca606091eb11cc))
+
 ### Feature
 
 * feat: add headers property to nbia client ([`52dafe8`](https://github.com/jjjermiah/NBIA-toolkit/commit/52dafe8e485cbc0cefafe9110e8983fc8ccda5b7))
@@ -402,10 +423,6 @@ Docs/update docs ([`359a30d`](https://github.com/jjjermiah/NBIA-toolkit/commit/3
 
 * docs(auth):Add requests module and update test cases ([`43197fa`](https://github.com/jjjermiah/NBIA-toolkit/commit/43197fae10fccfdf6992f750398512313bbc7ada))
 
-* docs(auth): add some documentation ([`017bfae`](https://github.com/jjjermiah/NBIA-toolkit/commit/017bfaefc4fe31bb5d9d00718be5b21a0535c10f))
-
-* docs: Remove empty usage section and extra line breaks in README ([`f9c1c8a`](https://github.com/jjjermiah/NBIA-toolkit/commit/f9c1c8a46f7e0b05e6e6df2080ca606091eb11cc))
-
 * Update version number in pyproject.toml ([`c71ce49`](https://github.com/jjjermiah/NBIA-toolkit/commit/c71ce49e6466e651c125e7cf10de85c2d1630174))
 
 
@@ -425,9 +442,11 @@ Docs/update docs ([`359a30d`](https://github.com/jjjermiah/NBIA-toolkit/commit/3
 
 ## v0.0.0 (2023-12-16)
 
-### Unknown
+### Documentation
 
 * docs: add package for version bumping ([`efbed0f`](https://github.com/jjjermiah/NBIA-toolkit/commit/efbed0fb7c91df8991135ed4800c60a49f0d7905))
+
+### Unknown
 
 * Update example notebook and package initialization ([`b940a6f`](https://github.com/jjjermiah/NBIA-toolkit/commit/b940a6fa1a157b5e2466b78dcc0d32553d2ca4ce))
 
