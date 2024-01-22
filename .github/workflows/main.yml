@@ -47,8 +47,11 @@ jobs:
 
   Continuous-Deployment:
     permissions:
-        contents: read
+        contents: write
         packages: write
+        issues: write
+        pull-requests: write
+
     # needs: Continuous-Integration
 
     # if pulling to main, deploy to PyPI
