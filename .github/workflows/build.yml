@@ -26,12 +26,6 @@ jobs:
     # The docker image tag is the git release tag
     # If there is no release tag, then we will use the branch name
     # as the docker image tag
-    - name: Get latest tag name
-      id: last_tag
-      run: |
-        LATEST_TAG=$(git describe --tags --abbrev=0 | sed 's/^v//')
-        echo $LATEST_TAG
-
     - name: Get latest tag name 2
       run: |
         echo "LATEST_TAG_NEW=$(git describe --tags --abbrev=0 | sed 's/^v//')" >> "$GITHUB_ENV"
@@ -40,3 +34,22 @@ jobs:
       run: |
         printf "%s\n" "${LATEST_TAG_NEW}"
 
+    - name: Get branch name
+      run: |
+        echo "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)" >> "$GITHUB_ENV"
+
+    - name: Print branch name
+      run: |
+        printf "%s\n" "${BRANCH_NAME}"
+
+    - name: Set docker image tag
+      run: |
+        if [ -z "${LATEST_TAG_NEW}" ]; then
+          echo "DOCKER_IMAGE_TAG=${BRANCH_NAME}" >> "$GITHUB_ENV"
+        else
+          echo "DOCKER_IMAGE_TAG=${LATEST_TAG_NEW}" >> "$GITHUB_ENV"
+        fi
+
+    - name: Print docker image tag
+      run: |
+        printf "%s\n" "${DOCKER_IMAGE_TAG}"
