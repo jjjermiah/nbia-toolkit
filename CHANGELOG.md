@@ -2,6 +2,15 @@
 
 
 
+## v0.10.5 (2024-01-22)
+
+### Ci
+
+* ci: Update permissions in Continuous-Deployment job ([`2bd552c`](https://github.com/jjjermiah/NBIA-toolkit/commit/2bd552ca192166d79d22b2620258df3423050279))
+
+* ci: test ghcr container ([`d2b186a`](https://github.com/jjjermiah/NBIA-toolkit/commit/d2b186ada53986013048375800f877a8c01eb9e0))
+
+
 ## v0.10.4 (2024-01-22)
 
 ### Documentation
