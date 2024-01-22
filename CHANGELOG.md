@@ -2,6 +2,13 @@
 
 
 
+## v0.10.7 (2024-01-22)
+
+### Documentation
+
+* docs: Update badges in README.md ([`2046e8e`](https://github.com/jjjermiah/nbia-toolkit/commit/2046e8e758c367221730f88e8ba2d06217124b53))
+
+
 ## v0.10.6 (2024-01-22)
 
 ### Build
