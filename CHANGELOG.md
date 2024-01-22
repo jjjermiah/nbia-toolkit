@@ -2,6 +2,17 @@
 
 
 
+## v0.10.4 (2024-01-22)
+
+### Documentation
+
+* docs: add link to docker pulls badge ([`03d69a3`](https://github.com/jjjermiah/NBIA-toolkit/commit/03d69a320281e8c8db4f77950598ab1b4c3997cf))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`610967b`](https://github.com/jjjermiah/NBIA-toolkit/commit/610967bc0a84c6956e5e30a77e9fa89c042229d5))
+
+
 ## v0.10.3 (2024-01-22)
 
 ### Documentation
