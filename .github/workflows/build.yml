@@ -76,8 +76,6 @@ jobs:
 
     - name: Test Image
       run: |
-        docker run -it --rm --name nbiatoolkit-test \
-          -v $(pwd)/:/home/nbiatoolkit/ \
-          -w /home/nbiatoolkit/ \
+        docker run -it --rm \
           ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }} \
           python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
