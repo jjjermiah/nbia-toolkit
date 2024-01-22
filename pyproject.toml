@@ -58,6 +58,7 @@ allowed_tags = [
     "style",
     "refactor",
     "test",
+    "docs"
 ]
 minor_tags = [
     "feat"]

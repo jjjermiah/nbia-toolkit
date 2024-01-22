@@ -6,6 +6,8 @@
 [![PyPI version](https://badge.fury.io/py/nbiatoolkit.svg)](https://badge.fury.io/py/nbiatoolkit)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/nbiatoolkit.svg?label=pypi%20downloads)](https://pypi.org/project/nbiatoolkit/)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jjjermiah/nbia-toolkit)
+![Docker Pulls](https://img.shields.io/docker/pulls/jjjermiah/nbiatoolkit?label=Docker%20Pulls&link=https%3A%2F%2Fhub.docker.com%2Fr%2Fjjjermiah%2Fnbiatoolkit)
+
 
 # *NBIA Toolkit*
 `nbiatoolkit` is a python package that provides programmatic access to query and download images from the National Biomedical Imaging Archive (**NBIA**) and The Cancer Imaging Archive (**TCIA**) databases.
