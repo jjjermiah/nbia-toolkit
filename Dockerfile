@@ -5,8 +5,11 @@
 # repository:
 # docker build -t nbiatoolkit .
 #
-
+# ADD LABELS HERE
 FROM python:3.12-slim
+
+LABEL maintainer="Jermiah Joseph"
+LABEL org.opencontainers.image.source=https://github.com/jjjermiah/nbiatoolkit
 
 # install the dependencies
 RUN python -m pip install nbiatoolkit
