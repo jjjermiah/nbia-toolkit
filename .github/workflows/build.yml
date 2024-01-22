@@ -1,0 +1,22 @@
+# This script is used to build a docker image and push it to docker hub
+
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      [devel]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # first we need to check out the code
+    steps:
+      - uses: actions/checkout@v2
+
+    # The docker image tag is the git release tag
+    # If there is no release tag, then we will use the branch name
+    # as the docker image tag
+      - name: Get latest tag name
+        id: last_tag
+        run: echo ::set-output name=tag::$(git describe --tags --abbrev=0 | sed 's/^v//')
