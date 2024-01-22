@@ -12,13 +12,32 @@ jobs:
     runs-on: ubuntu-latest
     # first we need to check out the code
     steps:
-      - uses: actions/checkout@v2
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.12
+
+    - name: Check-out repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
 
     # The docker image tag is the git release tag
     # If there is no release tag, then we will use the branch name
     # as the docker image tag
-      - name: Get latest tag name
-        id: last_tag
-        run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0 | sed 's/^v//')
-          echo $LATEST_TAG
+    - name: Get latest tag name
+      id: last_tag
+      run: |
+        LATEST_TAG=$(git describe --tags --abbrev=0 | sed 's/^v//')
+        echo $LATEST_TAG
+
+    - name: Get latest tag name 2
+      id: last_tag
+      run: |
+        echo "LATEST_TAG_NEW=$(git describe --tags --abbrev=0 | sed 's/^v//')" >> "$GITHUB_ENV"
+
+    - name: Print latest tag name
+      run: |
+        printf "%s\n" "${LATEST_TAG_NEW}"
+
