@@ -2,6 +2,13 @@
 
 
 
+## v0.10.2 (2024-01-22)
+
+### Ci
+
+* ci: combine deployment ([`67c17f4`](https://github.com/jjjermiah/NBIA-toolkit/commit/67c17f4f9e7ca0ca2f3035ed3a13bb40c05f1024))
+
+
 ## v0.10.1 (2024-01-22)
 
 ### Ci
