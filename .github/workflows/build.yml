@@ -19,4 +19,6 @@ jobs:
     # as the docker image tag
       - name: Get latest tag name
         id: last_tag
-        run: echo ::set-output name=tag::$(git describe --tags --abbrev=0 | sed 's/^v//')
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 | sed 's/^v//')
+          echo $LATEST_TAG
