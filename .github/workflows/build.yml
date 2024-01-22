@@ -33,7 +33,6 @@ jobs:
         echo $LATEST_TAG
 
     - name: Get latest tag name 2
-      id: last_tag
       run: |
         echo "LATEST_TAG_NEW=$(git describe --tags --abbrev=0 | sed 's/^v//')" >> "$GITHUB_ENV"
 
