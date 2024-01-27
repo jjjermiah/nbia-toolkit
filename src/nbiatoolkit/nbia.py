@@ -42,7 +42,7 @@ class NBIAClient:
             "Setting up OAuth2 client... with username %s", username)
 
         self._oauth2_client = OAuth2(username=username, password=password)
-        self.api_headers = self._oauth2_client.getToken()
+        self._api_headers = self._oauth2_client.getToken()
 
     @property
     def headers(self):
@@ -56,7 +56,7 @@ class NBIAClient:
         try:
             response = requests.get(
                 url=query_url,
-                headers=self.api_headers,
+                headers=self.headers,
                 params=params
                 )
             if response.headers.get('Content-Type') == 'application/json':
