@@ -199,7 +199,9 @@ jobs:
       - name: Test Image With new Tag
         run: |
           # get latest tag
-          LATEST_TAG=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name)
+          LATEST_TAG=$(curl -s \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+            | jq -r .tag_name | sed 's/^v//')
           echo "LATEST_TAG=${LATEST_TAG}"
 
           # test image with latest tag
