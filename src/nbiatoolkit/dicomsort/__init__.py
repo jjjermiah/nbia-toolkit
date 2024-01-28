@@ -10,9 +10,4 @@
 from .dicomsort import DICOMSorter
 from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, truncateUID
 
-__all__ = [
-    "DICOMSorter",
-    "parseDICOMKeysFromFormat",
-    "sanitizeFileName",
-    "truncateUID"
-]
+__all__ = ["DICOMSorter", "parseDICOMKeysFromFormat", "sanitizeFileName", "truncateUID"]
