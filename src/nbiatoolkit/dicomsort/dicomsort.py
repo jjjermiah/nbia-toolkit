@@ -7,6 +7,7 @@ from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, trunca
 
 from typing import Optional
 
+
 class DICOMSorter:
     def __init__(
         self,
@@ -25,9 +26,7 @@ class DICOMSorter:
         self.truncateUID = truncateUID
         self.sanitizeFilename = sanitizeFilename
 
-    def generateFilePathFromDICOMAttributes(
-        self, dataset: pydicom.FileDataset
-    ) -> str:
+    def generateFilePathFromDICOMAttributes(self, dataset: pydicom.FileDataset) -> str:
         """
         Generate a file path for the DICOM file by formatting DICOM attributes.
         """
@@ -58,8 +57,9 @@ class DICOMSorter:
         assert option in ["copy", "move"], "Invalid option: symlink not implemented yet"
 
         try:
-
-            dataset : pydicom.FileDataset = pydicom.dcmread(filePath, stop_before_pixels=True)
+            dataset: pydicom.FileDataset = pydicom.dcmread(
+                filePath, stop_before_pixels=True
+            )
         except InvalidDicomError as e:
             print(f"Error reading file {filePath}: {e}")
             return False
