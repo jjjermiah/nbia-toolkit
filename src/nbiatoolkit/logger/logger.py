@@ -1,14 +1,14 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
 import os
-
+from typing import Optional
 
 def setup_logger(
     name: str,
     log_level: str = "INFO",
     console_logging: bool = False,
-    log_file: str = None,
-    log_dir: str = None,
+    log_file: Optional[str] = None,
+    log_dir: Optional[str] = None,
     log_format: str = "%(asctime)s | %(name)s | %(levelname)s | %(message)s",
     datefmt: str = "%y-%m-%d %H:%M",
 ) -> logging.Logger:
