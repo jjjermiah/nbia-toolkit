@@ -2,6 +2,29 @@
 
 
 
+## v0.10.9 (2024-01-28)
+
+### Build
+
+* build(GHA): separate Codecov ([`9368df9`](https://github.com/jjjermiah/nbia-toolkit/commit/9368df94ae88f005023357153d4c25cb29e33cee))
+
+### Chore
+
+* chore: remove excess comments ([`2e52ef4`](https://github.com/jjjermiah/nbia-toolkit/commit/2e52ef49b3c3558e725e9cde2cc1c3ab220e4dc4))
+
+### Fix
+
+* fix(gha): invalid workflow error ([`1ba3d1e`](https://github.com/jjjermiah/nbia-toolkit/commit/1ba3d1e8804dc61a00c1ebca9867183e129a8efb))
+
+### Unknown
+
+* Merge pull request #56 from jjjermiah/development
+
+Development ([`fb09228`](https://github.com/jjjermiah/nbia-toolkit/commit/fb09228e9096a5987627bd23d6cb0768ff451e1d))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit into development ([`a7c7518`](https://github.com/jjjermiah/nbia-toolkit/commit/a7c751887f6e9d91e5c8e6d41ef639c6a8e1890c))
+
+
 ## v0.10.8 (2024-01-28)
 
 ### Build

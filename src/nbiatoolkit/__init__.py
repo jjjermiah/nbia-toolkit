@@ -7,7 +7,7 @@
 # this file is used to define the __all__ variable
 
 # set __version__ variable
-__version__ = "0.10.8"
+__version__ = "0.10.9"
 
 # import the modules
 from .nbia import NBIAClient
