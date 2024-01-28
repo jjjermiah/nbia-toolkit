@@ -44,7 +44,7 @@ dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
 remove_dist = false
-commit_subject = "chore(release): {version}"
+commit_message = "chore(release): {version}"
 patch_without_tag = true
 
 [tool.semantic_release.commit_parser_options]
@@ -64,7 +64,6 @@ minor_tags = [
     "feat"]
 patch_tags = [
     "build",
-    "chore",
     "ci",
     "perf",
     "refactor",

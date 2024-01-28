@@ -108,6 +108,7 @@ jobs:
       uses: python-semantic-release/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        git_commit_message: 'chore(release): release ${next_version}'
 
     - name: Install packaging-related tool
       run:
