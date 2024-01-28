@@ -2,6 +2,17 @@
 
 
 
+## v0.12.0 (2024-01-28)
+
+### Build
+
+* build: add 3.11 ([`73fa198`](https://github.com/jjjermiah/nbia-toolkit/commit/73fa1988e605d498d08b091b78885b689eb6d0d4))
+
+### Feature
+
+* feat: Update Python versions to accept 3.11 ([`34137fd`](https://github.com/jjjermiah/nbia-toolkit/commit/34137fdc29ede3c23209af1d806bb1b6c101935d))
+
+
 ## v0.11.2 (2024-01-28)
 
 ### Fix
