@@ -2,6 +2,48 @@
 
 
 
+## v0.10.8 (2024-01-28)
+
+### Build
+
+* build(GHA): also tag images with latest ([`d3e47e2`](https://github.com/jjjermiah/nbia-toolkit/commit/d3e47e27ee3e6654701426352db99814f2c4eef0))
+
+### Chore
+
+* chore(format): format scripts with Black ([`1686564`](https://github.com/jjjermiah/nbia-toolkit/commit/168656435948b6495dc9e716db4c9ce0d4ebc6ed))
+
+* chore(NBIA_ENDPOINTS): add some endpoints and general documentation ([`208034a`](https://github.com/jjjermiah/nbia-toolkit/commit/208034a40d1c639f83cd5c64faf8ea7bb20032cc))
+
+### Documentation
+
+* docs: update README ([`1056284`](https://github.com/jjjermiah/nbia-toolkit/commit/10562845b1402c99fe1b095ca21eeebc868bf182))
+
+### Fix
+
+* fix(tests): remove api_headers from being acces ([`95dd5a3`](https://github.com/jjjermiah/nbia-toolkit/commit/95dd5a3ab3c4a713ad4030c1b6b3565edf6b49ff))
+
+* fix(tests): remove api_headers from being acces ([`06e6d42`](https://github.com/jjjermiah/nbia-toolkit/commit/06e6d423fdbab7cf3103cca96ee63daa6b17d11c))
+
+### Refactor
+
+* refactor(nbia): use headers property instead of api_header attribute ([`c3b0940`](https://github.com/jjjermiah/nbia-toolkit/commit/c3b09401df2f7465e5605d8b103d0b21f766885a))
+
+### Unknown
+
+* Merge pull request #55 from jjjermiah/development
+
+Development ([`5cb0b70`](https://github.com/jjjermiah/nbia-toolkit/commit/5cb0b704daac0863e315735c7d2877e2e1c96514))
+
+* Merge branch &#39;development&#39; of https://github.com/jjjermiah/NBIA-toolkit into development ([`ccda4f3`](https://github.com/jjjermiah/nbia-toolkit/commit/ccda4f373566ed7ed20b6c78b219fcb4d4918d05))
+
+* Merge pull request #54 from jjjermiah/organize_project_todo
+
+Organize project todo ([`5841645`](https://github.com/jjjermiah/nbia-toolkit/commit/5841645b307199f816aa6d86ecef5131abf7c19e))
+
+* add changes from upstream
+Merge remote-tracking branch &#39;origin/development&#39; into organize_project_todo ([`d101597`](https://github.com/jjjermiah/nbia-toolkit/commit/d101597bdcd2c2fb8751fac5c9824643ef4e268d))
+
+
 ## v0.10.7 (2024-01-22)
 
 ### Documentation
