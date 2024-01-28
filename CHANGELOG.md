@@ -2,6 +2,69 @@
 
 
 
+## v0.11.0 (2024-01-28)
+
+### Build
+
+* build(GHA): fix issue with test_image needs ([`1bdd456`](https://github.com/jjjermiah/nbia-toolkit/commit/1bdd456435122307384c30563a4d2e13e4c29ba6))
+
+* build(GHA): fix issue with test_image needs ([`023ac12`](https://github.com/jjjermiah/nbia-toolkit/commit/023ac126623806f7e250138914df886f84e65aa3))
+
+### Documentation
+
+* docs: &#34;fix badges&#34; ([`d10dff2`](https://github.com/jjjermiah/nbia-toolkit/commit/d10dff2703392851a74bb7f6e70678cb6f309c4a))
+
+* docs: add milestone to readme ([`7b8c3d5`](https://github.com/jjjermiah/nbia-toolkit/commit/7b8c3d55605bd72edaeef4d6fe79f28a5a8768ce))
+
+* docs: add milestone to readme ([`3dc3eae`](https://github.com/jjjermiah/nbia-toolkit/commit/3dc3eaed0200a120d62d2cc6db4792fd48423020))
+
+* docs: test adding hide-output ([`037d737`](https://github.com/jjjermiah/nbia-toolkit/commit/037d7372a68e36a8579f5992da67a3b1fb9b4beb))
+
+* docs: test adding hide-output ([`cb82e5a`](https://github.com/jjjermiah/nbia-toolkit/commit/cb82e5a38da5569bb03de38d828d9fdd06f10aaf))
+
+### Feature
+
+* feat: add getModalityValues and refactor getPatients for getPatientsByCollection ([`d8d2062`](https://github.com/jjjermiah/nbia-toolkit/commit/d8d2062cd70acd5231d6e4a478eadeb95bfeb147))
+
+### Fix
+
+* fix: add better type checks to fix #22 ([`f8aaa61`](https://github.com/jjjermiah/nbia-toolkit/commit/f8aaa61941ae3cf495aad9ee4c960b26ed46ef44))
+
+* fix(logger): parameter type error ([`1d9fd26`](https://github.com/jjjermiah/nbia-toolkit/commit/1d9fd26aed5160d1062c3bba05da2f9956bfe840))
+
+### Test
+
+* test(nbia): fix downloadSeries patientId error that propagates from getPatient funciton update ([`101e1be`](https://github.com/jjjermiah/nbia-toolkit/commit/101e1be2808c2409e25daf3f7e6d9d359ea599ba))
+
+### Unknown
+
+* Merge pull request #60 from jjjermiah/development
+
+Development ([`2b2808c`](https://github.com/jjjermiah/nbia-toolkit/commit/2b2808c202d3e2a1422196002d75d1e65992f72d))
+
+* Merge pull request #59 from jjjermiah/47-feature-refactor-getpatients-and-add-getpatient
+
+47 feature refactor getpatients and add getpatient ([`4898f86`](https://github.com/jjjermiah/nbia-toolkit/commit/4898f862b32539227192dd89dd33a092e92a6a96))
+
+* Refactor: generateFilePathFromDICOMAttributes method ([`d1a437e`](https://github.com/jjjermiah/nbia-toolkit/commit/d1a437e6026b2a6523a4a6182de30e08a58eb427))
+
+* Merge remote-tracking branch &#39;origin/main&#39; into 46-feature-refactor-getpatients-and-add-getpatient ([`518ffe3`](https://github.com/jjjermiah/nbia-toolkit/commit/518ffe328fc12a948b3555b6812bf907b6b9b05d))
+
+* Merge pull request #58 from jjjermiah/example_notebook
+
+Example notebook ([`4eb377f`](https://github.com/jjjermiah/nbia-toolkit/commit/4eb377fdbaf81c69385ac7fc27ba6dbc611e1e49))
+
+* Merge branch &#39;development&#39; into example_notebook ([`68ddb13`](https://github.com/jjjermiah/nbia-toolkit/commit/68ddb13f861070ad27082493e18e7b8d288d9fc0))
+
+* Update README.md ([`be0f3e3`](https://github.com/jjjermiah/nbia-toolkit/commit/be0f3e3aa6f0ecc27d92df69c92555067dc85af5))
+
+* Merge pull request #57 from jjjermiah/example_notebook
+
+documentation for notebook and readme ([`f477c4a`](https://github.com/jjjermiah/nbia-toolkit/commit/f477c4a48f55ee59c59410487c5434bad81d44f9))
+
+* Merge remote-tracking branch &#39;origin/development&#39; into example_notebook ([`9ef2623`](https://github.com/jjjermiah/nbia-toolkit/commit/9ef262315fde123ce1d51bef62d8536c6e8fc35e))
+
+
 ## v0.10.9 (2024-01-28)
 
 ### Build
@@ -126,6 +189,8 @@ Merge remote-tracking branch &#39;origin/development&#39; into organize_project_
 * ci: test docker pipeline ([`20a43ad`](https://github.com/jjjermiah/nbia-toolkit/commit/20a43addf9ae331c9a407aaaa7d0edb01947af5f))
 
 ### Documentation
+
+* docs: Add Example.ipynb to docs folder ([`0a41b96`](https://github.com/jjjermiah/nbia-toolkit/commit/0a41b960897fbd48da82b19dca5ab3ed062f2395))
 
 * docs: Add GitHub repo size badge ([`3b1ab49`](https://github.com/jjjermiah/nbia-toolkit/commit/3b1ab49bc9d0aa7c8fd1e9633c52c5ab9d07b368))
 
