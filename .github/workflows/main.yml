@@ -199,9 +199,9 @@ jobs:
       - name: Test Image With new Tag
         run: |
           # first get the latest tag
-          LATEST_TAG=$(git describe --tags --abbrev=0 | sed 's/^v//')
+          LATEST_TAG = $(poetry version | sed 's/^nbiatoolkit //')
           echo $LATEST_TAG
-          echo "LATEST_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
+          # echo "LATEST_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
 
           # then test the image with the latest tag
           docker run --rm \
