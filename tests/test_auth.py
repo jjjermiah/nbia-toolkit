@@ -33,10 +33,9 @@ def test_failed_oauth(failed_oauth2):
     # should raise requests.exceptions.RequestException
     with pytest.raises(requests.exceptions.RequestException):
         failed_oauth2.getToken()
-        assert failed_oauth2.getToken() == 401
-    assert failed_oauth2.access_token == -1
-    assert failed_oauth2.token == -1
-    assert failed_oauth2.getToken() == 401
+        assert failed_oauth2.getToken() is None
+    assert failed_oauth2.access_token is None
+    assert failed_oauth2.token is None
     assert failed_oauth2.api_headers is None
     assert failed_oauth2.expiry_time is None
     assert failed_oauth2.refresh_token is None
@@ -47,9 +46,9 @@ def test_failed_oauth(failed_oauth2):
 def test_getToken_valid_token(oauth2):
     # Test if the access token is valid and not expired
     assert oauth2.getToken() == oauth2.access_token
-    assert oauth2.getToken() != 401
-    assert oauth2.access_token != -1
-    assert oauth2.token != -1
+    assert oauth2.getToken() is not None
+    assert oauth2.access_token is not None
+    assert oauth2.token is not None
     assert oauth2.headers is not None
     assert oauth2.expiry_time is not None
     assert oauth2.refresh_token is not None
