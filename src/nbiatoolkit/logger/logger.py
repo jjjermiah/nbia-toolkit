@@ -3,6 +3,7 @@ from logging.handlers import TimedRotatingFileHandler
 import os
 from typing import Optional
 
+
 def setup_logger(
     name: str,
     log_level: str = "INFO",

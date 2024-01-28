@@ -47,11 +47,13 @@ class NBIAClient:
     def headers(self):
         return self._api_headers
 
-    def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> Union[list, dict, bytes]:
+    def query_api(
+        self, endpoint: NBIA_ENDPOINTS, params: dict = {}
+    ) -> Union[list, dict, bytes]:
         query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
 
         self.log.debug("Querying API endpoint: %s", query_url)
-        response : requests.Response
+        response: requests.Response
         try:
             response = requests.get(url=query_url, headers=self.headers, params=params)
             response.raise_for_status()  # Raise an HTTPError for bad responses
@@ -70,11 +72,11 @@ class NBIAClient:
 
         try:
             if response.headers.get("Content-Type") == "application/json":
-                response_json : dict | list = response.json()
+                response_json: dict | list = response.json()
                 return response_json
             else:
                 # If response is binary data, return raw response
-                response_data : bytes = response.content
+                response_data: bytes = response.content
                 return response_data
         except JSONDecodeError as j:
             self.log.debug("Response: %s", response.text)
@@ -86,8 +88,6 @@ class NBIAClient:
         except Exception as e:
             self.log.error("Error querying API: %s", e)
             raise e
-
-
 
     def getCollections(self, prefix: str = "") -> Union[list[str], None]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTIONS)
@@ -103,9 +103,77 @@ class NBIAClient:
                 collections.append(name)
         return collections
 
+    def getModalityValues(self, Collection: str = "", BodyPartExamined: str = "") -> Union[list[str], None]:
+        PARAMS = self.parsePARAMS(locals())
+
+        response = self.query_api(
+            endpoint=NBIA_ENDPOINTS.GET_MODALITY_VALUES, params=PARAMS
+        )
+
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
+        modalities = []
+        for modality in response:
+            modalities.append(modality["Modality"])
+        return modalities
+
+    def getPatients(self, Collection: str = "") -> Union[list[dict[str, str]], None]:
+        assert isinstance(Collection, str), "Collection must be a string"
+
+        PARAMS = self.parsePARAMS(locals())
+
+        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_PATIENTS, params=PARAMS)
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
+        patientList = []
+        for patient in response:
+            assert isinstance(patient, dict), "Expected dict, but received: %s" % type(
+                patient
+            )
+            assert "PatientId" in patient, "PatientId not in patient dict"
+            assert isinstance(
+                patient["PatientId"], str
+            ), "PatientId must be a string, but received: %s" % type(
+                patient["PatientId"]
+            )
+            patientList.append(
+                {
+                    "PatientId": patient["PatientId"],
+                    "PatientName": patient["PatientName"],
+                    "PatientSex": patient["PatientSex"],
+                    "Collection": patient["Collection"],
+                }
+            )
+
+        return patientList
+
+    def getPatientsByCollectionAndModality(
+        self, Collection: str, Modality: str
+    ) -> Union[list[str], None]:
+        assert Collection is not None
+        assert Modality is not None
+
+        PARAMS = self.parsePARAMS(locals())
+
+        response = self.query_api(
+            endpoint=NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY,
+            params=PARAMS,
+        )
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
+        patientList = [_["PatientId"] for _ in response]
+        return patientList
 
     # returns a list of dictionaries with the collection name and patient count
-    def getCollectionPatientCount(self, prefix: str = "") -> Union[list[dict[str, int]], None]:
+    def getCollectionPatientCount(
+        self, prefix: str = ""
+    ) -> Union[list[dict[str, int]], None]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
 
         if not isinstance(response, list):
@@ -114,17 +182,19 @@ class NBIAClient:
 
         patientCounts = []
         for collection in response:
-            name = collection["criteria"]
-            if name.lower().startswith(prefix.lower()):
+            CollectionName = collection["criteria"]
+            if CollectionName.lower().startswith(prefix.lower()):
                 patientCounts.append(
                     {
-                        "Collection": collection["criteria"],
+                        "Collection": CollectionName,
                         "PatientCount": int(collection["count"]),
                     }
                 )
         return patientCounts
 
-    def getBodyPartCounts(self, Collection: str = "", Modality: str = "") -> Union[list[dict[str, int]], None]:
+    def getBodyPartCounts(
+        self, Collection: str = "", Modality: str = ""
+    ) -> Union[list[dict[str, int]], None]:
         PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(
@@ -145,23 +215,6 @@ class NBIAClient:
             )
         return bodyparts
 
-    def getPatients(self, Collection: str, Modality: str) -> Union[list[str], None]:
-        assert Collection is not None
-        assert Modality is not None
-
-        PARAMS = self.parsePARAMS(locals())
-
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY,
-            params=PARAMS,
-        )
-        if not isinstance(response, list):
-            self.log.error("Expected list, but received: %s", type(response))
-            return None
-
-        patientList = [_["PatientId"] for _ in response]
-        return patientList
-
     def getSeries(
         self,
         Collection: str = "",
@@ -173,7 +226,6 @@ class NBIAClient:
         ManufacturerModelName: str = "",
         Manufacturer: str = "",
     ) -> Union[list[dict[str, str]], None]:
-
         PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_SERIES, params=PARAMS)
