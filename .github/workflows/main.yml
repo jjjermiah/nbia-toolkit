@@ -190,7 +190,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
 
   test_image_with_new_tag:
-    needs: build
+    needs: Continuous-Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -204,7 +204,7 @@ jobs:
             python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
 
   test_image_with_latest_tag:
-    needs: build
+    needs: Continuous-Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
