@@ -4,7 +4,7 @@ name: Unit Tests
 on:
   push:
     # push to any branch
-    branches: [ main ]
+    branches: [ main, development]
   pull_request:
     branches: [ main ]
   
@@ -31,19 +31,38 @@ jobs:
         run: |
           pip install -r requirements.txt
           poetry install
-          pytest --cov --cov-report=xml
+          pytest --cov --cov-report=xml:coverage-report/coverage.xml
+
+      - name: Build documentation
+        run: poetry run make html --directory docs/
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage-report
+
+  Codecov:
+    needs: Continuous-Integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download coverage.xml artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage-report
 
       - name: Use Codecov to track coverage
         uses: codecov/codecov-action@v3
         with:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
+          files: ./coverage-report/coverage.xml
+          fail_ci_if_error: true
+          verbose: true
           name: codecov-umbrella
-
-      - name: Build documentation
-        run: poetry run make html --directory docs/
 
   Continuous-Deployment:
     permissions:
@@ -170,57 +189,30 @@ jobs:
           ghcr.io/${{ github.repository }}/nbiatoolkit:latest
         labels: ${{ steps.meta.outputs.labels }}
 
-    - name: Test Image
-      if: steps.release.outputs.released == 'true'
-      run: |
-        docker run --rm \
-          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }} \
-          python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
-    # # - name: Publish package distributions to GitHub Releases
-    # - name: Build and Publish
-    #   uses: pypa/gh-action-pypi-publish@release/v1
-    #   with:
-    #     user: __token__
-    #     password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-    #     repository_url: https://test.pypi.org/legacy/
-    #     build: true
-    #     build_command: poetry build
-    #     build_command_postfix: dist/*
+  test_image_with_new_tag:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # - name: Publish package distributions to PyPI
-    #   id: pypi-publish
+      - name: Test Image With new Tag
+        if: needs.build.result == 'success'
+        run: |
+          docker run --rm \
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }} \
+            python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
 
+  test_image_with_latest_tag:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-
-    # - name: Publish package distributions to GitHub Releases
-    #   uses: python-semantic-release/upload-to-gh-release@main
-    #   if: steps.release.outputs.released == 'true'
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-    # - name: Publish to TestPyPI
-    #   uses: pypa/gh-action-pypi-publish@release/v1
-    #   with:
-    #     user: __token__
-    #     password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-    #     repository_url: https://test.pypi.org/legacy/
-
-    # - name: Test install from TestPyPI
-    #   run: |
-    #       pip install \
-    #       --index-url https://test.pypi.org/simple/ \
-    #       --extra-index-url https://pypi.org/simple \
-    #       nbiatoolkit
-
-    # - name: Publish to PyPI
-    #   uses: pypa/gh-action-pypi-publish@release/v1
-    #   with:
-    #     user: __token__
-    #     password: ${{ secrets.PYPI_API_TOKEN }}
-
-    # - name: Publish documentation
-    #   uses: maxheld83/ghpages@v0.2.1
-    #   with:
-    #     build_dir: docs/_build/html
-    #     target_branch: gh-pages
-    #     committer_name: "GitHub Actions"
-    #     committer_email: "jermiahjoseph98@gmail.com"
+      - name: Test Image with "latest" Tag
+        if: needs.build.result == 'success'
+        run: |
+          docker run --rm \
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest \
+            python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
