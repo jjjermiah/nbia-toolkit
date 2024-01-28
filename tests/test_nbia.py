@@ -101,7 +101,7 @@ def test_getPatientsByCollectionAndModality(nbia_patientsByCollectionAndModality
 def test_getSeries(nbia_client, nbia_collections, nbia_patients):
     seriesList = nbia_client.getSeries(
         Collection=nbia_collections[0],
-        PatientID=nbia_patients[0],
+        PatientID=nbia_patients[0]['PatientId'],
         Modality="CT"
     )
     assert seriesList is not None
@@ -113,7 +113,7 @@ def test_fail_getSeries(nbia_client, nbia_collections, nbia_patients):
     with pytest.raises(Exception):
         seriesList = nbia_client.getSeries(
             Collection=nbia_collections[0],
-            PatientID=nbia_patients[0],
+            PatientID=nbia_patients[0]['PatientId'],
             Modality="CT",
             SeriesInstanceUID="bad_series_uid"
         )
@@ -122,7 +122,46 @@ def test_fail_getSeries(nbia_client, nbia_collections, nbia_patients):
         assert len(seriesList) > 0
         assert isinstance(seriesList[0], dict)
         
+def test_downloadSeries(nbia_client, nbia_collections, nbia_patients):
+    seriesList = nbia_client.getSeries(
+        Collection=nbia_collections[0],
+        PatientID=nbia_patients[0]['PatientId'],
+        Modality="CT"
+    )
+    filePattern = '%PatientID/%Modality/%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm'
+    # create a temporary directory
 
+    tempdir_ = TemporaryDirectory()
+    tempdir = tempdir_.name
 
-    # nbia_client.downloadSeries(
+    nbia_client.downloadSeries(
+        SeriesInstanceUID=seriesList[0]["SeriesInstanceUID"],
+        downloadDir=tempdir,
+        filePattern=filePattern
+    )
+    dir = os.listdir(tempdir)
+
+    assert len(dir) == 1
+    assert dir[0] == nbia_patients[0]['PatientId']
+    assert os.path.isdir(os.path.join(tempdir, dir[0]))
+
+    modality_dir = os.listdir(os.path.join(tempdir, dir[0]))
+    assert len(modality_dir) == 1
+    assert modality_dir[0] == "CT"
+    assert os.path.isdir(os.path.join(tempdir, dir[0], modality_dir[0]))
+
+    series_dir = os.listdir(os.path.join(tempdir, dir[0], modality_dir[0]))
+    assert len(series_dir) == 1
+    # only last 5 digits of SeriesInstanceUID are used
+    assert series_dir[0] == "{}-{}".format(
+        seriesList[0]["SeriesNumber"], seriesList[0]["SeriesInstanceUID"][-5:])
+    assert os.path.isdir(os.path.join(tempdir, dir[0], modality_dir[0], series_dir[0]))
+
+    dicom_dir = os.listdir(os.path.join(
+        tempdir, dir[0], modality_dir[0], series_dir[0]))
+
+    assert len(dicom_dir) == int(seriesList[0]["ImageCount"])
+    for file in dicom_dir:
+        assert file.endswith(".dcm")
+        assert file[:-4].isdigit()
 
