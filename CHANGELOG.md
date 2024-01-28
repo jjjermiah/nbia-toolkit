@@ -2,6 +2,31 @@
 
 
 
+## v0.11.2 (2024-01-28)
+
+### Fix
+
+* fix: build ([`4408840`](https://github.com/jjjermiah/nbia-toolkit/commit/4408840e267d3a9ce2e7dacbcb2c3e0f40342948))
+
+### Test
+
+* test: build ([`657c44c`](https://github.com/jjjermiah/nbia-toolkit/commit/657c44c7ff66fadf9a5ef418ff1b8c5cbf385b5f))
+
+* test: build ([`20c8595`](https://github.com/jjjermiah/nbia-toolkit/commit/20c8595bbeb0ceb81dea8dd7497d2a00311028d9))
+
+* test: build ([`248d7c3`](https://github.com/jjjermiah/nbia-toolkit/commit/248d7c3574070fa057ec74c335fe532d5fb515fd))
+
+### Unknown
+
+* fix:build ([`7ef92dc`](https://github.com/jjjermiah/nbia-toolkit/commit/7ef92dcb42b2204e5261575f4514c772c827840d))
+
+* fix:build ([`7fec918`](https://github.com/jjjermiah/nbia-toolkit/commit/7fec9187fe1c98118551e471abe326d592825528))
+
+* test:build ([`01e82b1`](https://github.com/jjjermiah/nbia-toolkit/commit/01e82b116dd99cb3c39f744648392d8903bb78af))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`951f89c`](https://github.com/jjjermiah/nbia-toolkit/commit/951f89c3230573a7753b517ab047b1fbb5b0f917))
+
+
 ## v0.11.1 (2024-01-28)
 
 ### Build
