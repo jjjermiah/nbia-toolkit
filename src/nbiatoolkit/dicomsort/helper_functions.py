@@ -1,5 +1,7 @@
 import re
 from typing import Tuple, List
+
+
 def parseDICOMKeysFromFormat(targetPattern: str) -> Tuple[str, List[str]]:
     """
     Parse the target pattern to create a format string with named placeholders
@@ -19,12 +21,13 @@ def parseDICOMKeysFromFormat(targetPattern: str) -> Tuple[str, List[str]]:
     """
 
     # Compile the regex pattern for efficiency
-    dicom_key_pattern = re.compile(r'%([A-Za-z]+)')
+    dicom_key_pattern = re.compile(r"%([A-Za-z]+)")
     keys = dicom_key_pattern.findall(targetPattern)
     # Use the same compiled pattern for replacing
-    formatted_pattern = dicom_key_pattern.sub(r'%(\1)s', targetPattern)
+    formatted_pattern = dicom_key_pattern.sub(r"%(\1)s", targetPattern)
 
     return formatted_pattern, keys
+
 
 def sanitizeFileName(fileName: str) -> str:
     """
@@ -35,14 +38,14 @@ def sanitizeFileName(fileName: str) -> str:
     # Define a pattern for disallowed filename characters and their replacements
     disallowed_characters_pattern = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
     # Replace disallowed characters with an underscore
-    sanitized_name = disallowed_characters_pattern.sub('_', fileName)
-    
+    sanitized_name = disallowed_characters_pattern.sub("_", fileName)
+
     # replace spaces with underscores
     sanitized_name = sanitized_name.replace(" ", "_")
-    
+
     # Remove subsequent underscores
-    sanitized_name = re.sub(r'(_{2,})', '_', sanitized_name)
-    
+    sanitized_name = re.sub(r"(_{2,})", "_", sanitized_name)
+
     return sanitized_name
 
 

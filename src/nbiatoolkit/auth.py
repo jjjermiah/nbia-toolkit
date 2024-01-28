@@ -2,18 +2,19 @@ import requests
 import time
 from typing import Union
 
+
 class OAuth2:
     """
     OAuth2 class for handling authentication and access token retrieval.
 
     This class provides methods to authenticate with the NBIA API using OAuth2
     and retrieve the access token required for accessing the API.
-    
+
     Defaults to using the NBIA Guest for accessing public collections.
     If you have a username and password which has been granted access
     to the collections tagged with "limited access" you can use those
     credentials to access those collections.
-    
+
 
     Attributes
     ----------
@@ -39,7 +40,7 @@ class OAuth2:
     Methods
     -------
     getToken()
-        Authenticates with the API. Returns API headers containing the 
+        Authenticates with the API. Returns API headers containing the
         access token.
 
     Example Usage
@@ -66,7 +67,9 @@ class OAuth2:
     this class, please open an issue on the GitHub repository.
     """
 
-    def __init__(self, username: str = "nbia_guest", password: str = "", client_id: str = "NBIA"):
+    def __init__(
+        self, username: str = "nbia_guest", password: str = "", client_id: str = "NBIA"
+    ):
         """
         Initialize the OAuth2 class.
 
@@ -104,7 +107,7 @@ class OAuth2:
         >>> from nbiatoolkit import OAuth2
         >>> oauth = OAuth2()
         >>> api_headers = oauth.getToken()
-        
+
         >>> requests.get(url=query_url, headers=api_headers)
         """
         # Check if the access token is valid and not expired
@@ -113,37 +116,35 @@ class OAuth2:
 
         # Prepare the request data
         data = {
-            'username': self.username,
-            'password': self.password,
-            'client_id': self.client_id,
-            'grant_type': 'password'
+            "username": self.username,
+            "password": self.password,
+            "client_id": self.client_id,
+            "grant_type": "password",
         }
-        token_url = 'https://services.cancerimagingarchive.net/nbia-api/oauth/token'
+        token_url = "https://services.cancerimagingarchive.net/nbia-api/oauth/token"
 
         response = requests.post(token_url, data=data)
-
 
         try:
             response = requests.post(token_url, data=data)
             response.raise_for_status()  # Raise an HTTPError for bad responses
         except requests.exceptions.RequestException as e:
             self.access_token = -1
-            raise requests.exceptions.RequestException(\
-                f'Failed to get access token. Status code:\
-                    {response.status_code}') from e
+            raise requests.exceptions.RequestException(
+                f"Failed to get access token. Status code:\
+                    {response.status_code}"
+            ) from e
         else:
             # Code to execute if there is no exception
             token_data = response.json()
-            self.access_token = token_data.get('access_token')
+            self.access_token = token_data.get("access_token")
 
-            self.api_headers = {
-                'Authorization': f'Bearer {self.access_token}'
-            }
+            self.api_headers = {"Authorization": f"Bearer {self.access_token}"}
 
-            self.expiry_time = time.ctime(time.time() + token_data.get('expires_in'))
-            self.refresh_token = token_data.get('refresh_token')
-            self.refresh_expiry = token_data.get('refresh_expires_in')
-            self.scope = token_data.get('scope')
+            self.expiry_time = time.ctime(time.time() + token_data.get("expires_in"))
+            self.refresh_token = token_data.get("refresh_token")
+            self.refresh_expiry = token_data.get("refresh_expires_in")
+            self.scope = token_data.get("scope")
 
             return self.api_headers
 

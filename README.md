@@ -13,10 +13,10 @@
 
 ## Features
 - Use NBIA Guest account to access public data OR authenticate using OAuth with user credentials for limited access data (requires approved data access).
-- Query NBIA database for metadata on collections, patients, studies, series, and images
+- ***Query NBIA database*** for metadata on ***collections***, ***patients***, ***studies***, ***series***, and ***images***
 - Download images from NBIA
-  - Calculate MD5 checksums for downloaded images
-  - Auto-sort DICOM files using a user-defined pattern of DICOM tags
+  - ***Validate doownloads with MD5 checksums*** for downloaded images
+  - **Auto-sort** DICOM files using a user-defined pattern of DICOM tags with specialized ***DICOMSorter class***
 
 See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
 
