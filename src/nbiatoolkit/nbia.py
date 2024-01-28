@@ -39,7 +39,7 @@ class NBIAClient:
 
     @property
     def headers(self):
-        return self.api_headers
+        return self._api_headers
 
     def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
         query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
