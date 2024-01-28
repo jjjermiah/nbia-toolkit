@@ -9,202 +9,203 @@ on:
     branches: [ main ]
   
 jobs:  
-  Continuous-Integration:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        python-version: ["3.12"]
+  # Continuous-Integration:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, macos-latest]
+  #       python-version: ["3.12"]
   
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Install poetry
-        uses: snok/install-poetry@v1
+  #     - name: Install poetry
+  #       uses: snok/install-poetry@v1
 
-      - name: Test with pytest
-        run: |
-          pip install -r requirements.txt
-          poetry install
-          pytest --cov --cov-report=xml:coverage-report/coverage.xml
+  #     - name: Test with pytest
+  #       run: |
+  #         pip install -r requirements.txt
+  #         poetry install
+  #         pytest --cov --cov-report=xml:coverage-report/coverage.xml
 
-      - name: Build documentation
-        run: poetry run make html --directory docs/
+  #     - name: Build documentation
+  #       run: poetry run make html --directory docs/
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage-report
+  #     - name: Upload coverage report
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: coverage-report
+  #         path: coverage-report
 
-  Codecov:
-    needs: Continuous-Integration
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # Codecov:
+  #   needs: Continuous-Integration
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Download coverage.xml artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage-report
+  #     - name: Download coverage.xml artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: coverage-report
+  #         path: coverage-report
 
-      - name: Use Codecov to track coverage
-        uses: codecov/codecov-action@v3
-        with:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage-report/coverage.xml
-          fail_ci_if_error: true
-          verbose: true
-          name: codecov-umbrella
+  #     - name: Use Codecov to track coverage
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  #         files: ./coverage-report/coverage.xml
+  #         fail_ci_if_error: true
+  #         verbose: true
+  #         name: codecov-umbrella
 
-  Continuous-Deployment:
-    permissions:
-        contents: write
-        packages: write
-        issues: write
-        pull-requests: write
+  # Continuous-Deployment:
+  #   permissions:
+  #       contents: write
+  #       packages: write
+  #       issues: write
+  #       pull-requests: write
 
-    # needs: Continuous-Integration
+  #   # needs: Continuous-Integration
 
-    # if pulling to main, deploy to PyPI
-    if: github.ref == 'refs/heads/main'
+  #   # if pulling to main, deploy to PyPI
+  #   if: github.ref == 'refs/heads/main'
 
-    # Set up operating system
-    runs-on: ubuntu-latest
+  #   # Set up operating system
+  #   runs-on: ubuntu-latest
 
-    # Define job steps
-    steps:
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.12
+  #   # Define job steps
+  #   steps:
+  #   - name: Set up Python 3.12
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: 3.12
 
-    - name: Check-out repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+  #   - name: Check-out repository
+  #     uses: actions/checkout@v2
+  #     with:
+  #       fetch-depth: 0
 
-    - name: Install poetry
-      uses: snok/install-poetry@v1
+  #   - name: Install poetry
+  #     uses: snok/install-poetry@v1
 
-    - name: Install package
-      run: poetry install
+  #   - name: Install package
+  #     run: poetry install
 
-   # This action uses Python Semantic Release v8
-   # What this action does:
-   # - Determines the next version number based on the commit history
-    # - Creates a new tag with the new version number
-    # - Pushes the new tag to GitHub
-    # - Creates a GitHub release with the new version number
-    - name: Python Semantic Release
-      id: release
-      uses: python-semantic-release/python-semantic-release@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+  #  # This action uses Python Semantic Release v8
+  #  # What this action does:
+  #  # - Determines the next version number based on the commit history
+  #   # - Creates a new tag with the new version number
+  #   # - Pushes the new tag to GitHub
+  #   # - Creates a GitHub release with the new version number
+  #   - name: Python Semantic Release
+  #     id: release
+  #     uses: python-semantic-release/python-semantic-release@master
+  #     with:
+  #       github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install packaging-related tool
-      run:
-        python3 -m pip install build twine
+  #   - name: Install packaging-related tool
+  #     run:
+  #       python3 -m pip install build twine
 
-    # Build Package step:
-    # After semantic release, we should have a new tag if the commit history
-    # has been updated. If there isnt a new tag, then we dont need to build
-    # a new package. If there is a new tag, then we need to build a new package
-    # and publish it to PyPI
-    - name: Build package
-      if: steps.release.outputs.released == 'true'
-      run: |
-        poetry version $(git describe --tags --abbrev=0 | sed 's/^v//')
-        python -m build --sdist --wheel --outdir dist/ .
-        echo "LATEST_TAG=$(poetry version | sed 's/^nbiatoolkit //')" >> "$GITHUB_ENV"
+  #   # Build Package step:
+  #   # After semantic release, we should have a new tag if the commit history
+  #   # has been updated. If there isnt a new tag, then we dont need to build
+  #   # a new package. If there is a new tag, then we need to build a new package
+  #   # and publish it to PyPI
+  #   - name: Build package
+  #     if: steps.release.outputs.released == 'true'
+  #     run: |
+  #       poetry version $(git describe --tags --abbrev=0 | sed 's/^v//')
+  #       python -m build --sdist --wheel --outdir dist/ .
+  #       echo "LATEST_TAG=$(poetry version | sed 's/^nbiatoolkit //')" >> "$GITHUB_ENV"
 
-    - name: Publish package distributions to PyPI
-      if: steps.release.outputs.released == 'true'
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        verbose: true
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+  #   - name: Publish package distributions to PyPI
+  #     if: steps.release.outputs.released == 'true'
+  #     uses: pypa/gh-action-pypi-publish@release/v1
+  #     with:
+  #       verbose: true
+  #       user: __token__
+  #       password: ${{ secrets.PYPI_API_TOKEN }}
 
-    - name: Print latest tag name
-      run: |
-        printf "%s\n" "${LATEST_TAG}"
+  #   - name: Print latest tag name
+  #     run: |
+  #       printf "%s\n" "${LATEST_TAG}"
 
-    - name: Print branch name
-      run: |
-        printf "LATEST TAG: %s\n" "${LATEST_TAG}"
-        echo "DOCKER_IMAGE_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
-        printf "DOCKER_IMAGE_TAG: %s\n" "${DOCKER_IMAGE_TAG}"
+  #   - name: Print branch name
+  #     run: |
+  #       printf "LATEST TAG: %s\n" "${LATEST_TAG}"
+  #       echo "DOCKER_IMAGE_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
+  #       printf "DOCKER_IMAGE_TAG: %s\n" "${DOCKER_IMAGE_TAG}"
 
-    - name: Set up QEMU
-      if: steps.release.outputs.released == 'true'
-      uses: docker/setup-qemu-action@v3
+  #   - name: Set up QEMU
+  #     if: steps.release.outputs.released == 'true'
+  #     uses: docker/setup-qemu-action@v3
 
-    - name: Set up Docker Buildx
-      if: steps.release.outputs.released == 'true'
-      uses: docker/setup-buildx-action@v3
+  #   - name: Set up Docker Buildx
+  #     if: steps.release.outputs.released == 'true'
+  #     uses: docker/setup-buildx-action@v3
 
-    - name: Login to Docker Hub
-      if: steps.release.outputs.released == 'true'
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #   - name: Login to Docker Hub
+  #     if: steps.release.outputs.released == 'true'
+  #     uses: docker/login-action@v3
+  #     with:
+  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #       password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Login to the GitHub Container Registry
-      if: steps.release.outputs.released == 'true'
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+  #   - name: Login to the GitHub Container Registry
+  #     if: steps.release.outputs.released == 'true'
+  #     uses: docker/login-action@v3
+  #     with:
+  #       registry: ghcr.io
+  #       username: ${{ github.actor }}
+  #       password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v3
-      with:
-        images: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
-          ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+  #   - name: Extract metadata (tags, labels) for Docker
+  #     id: meta
+  #     uses: docker/metadata-action@v3
+  #     with:
+  #       images: |
+  #         ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+  #         ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
 
-    - name: Build
-      if: steps.release.outputs.released == 'true'
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        platforms: linux/amd64,linux/arm64
-        file: ./Dockerfile
-        push: true
-        tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
-          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest
-          ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
-          ghcr.io/${{ github.repository }}/nbiatoolkit:latest
-        labels: ${{ steps.meta.outputs.labels }}
+  #   - name: Build
+  #     if: steps.release.outputs.released == 'true'
+  #     uses: docker/build-push-action@v5
+  #     with:
+  #       context: .
+  #       platforms: linux/amd64,linux/arm64
+  #       file: ./Dockerfile
+  #       push: true
+  #       tags: |
+  #         ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+  #         ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest
+  #         ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+  #         ghcr.io/${{ github.repository }}/nbiatoolkit:latest
+  #       labels: ${{ steps.meta.outputs.labels }}
 
   test_image_with_new_tag:
     needs: Continuous-Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Test Image With new Tag
         run: |
           # first get the latest tag
           LATEST_TAG=$(git describe --tags --abbrev=0 | sed 's/^v//')
+          echo $LATEST_TAG
           echo "LATEST_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
 
           # then test the image with the latest tag
           docker run --rm \
-            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.LATEST_TAG }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${LATEST_TAG} \
             python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
 
 
