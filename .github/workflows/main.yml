@@ -190,7 +190,7 @@ jobs:
   #       labels: ${{ steps.meta.outputs.labels }}
 
   test_image_with_new_tag:
-    needs: Continuous-Deployment
+    # needs: Continuous-Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
