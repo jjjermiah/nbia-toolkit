@@ -78,7 +78,7 @@ def test_downloadSeries(nbia_client, nbia_collections, nbia_patients):
 
 
 def test_nbiaclient_access_token(nbia_client):
-    assert nbia_client.api_headers is not None
+    assert nbia_client.headers is not None
     
 def test_getCollections(nbia_collections):
     assert isinstance(nbia_collections, list)

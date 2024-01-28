@@ -38,7 +38,6 @@ def test_failed_oauth(failed_oauth2):
     assert failed_oauth2.token == -1
     assert failed_oauth2.getToken() == 401
     assert failed_oauth2.headers is None
-    assert failed_oauth2.api_headers is None
     assert failed_oauth2.expiry_time is None
     assert failed_oauth2.refresh_token is None
     assert failed_oauth2.refresh_expiry is None
@@ -51,7 +50,6 @@ def test_getToken_valid_token(oauth2):
     assert oauth2.getToken() != 401
     assert oauth2.access_token != -1
     assert oauth2.token != -1
-    assert oauth2.api_headers is not None
     assert oauth2.headers is not None
     assert oauth2.expiry_time is not None
     assert oauth2.refresh_token is not None
