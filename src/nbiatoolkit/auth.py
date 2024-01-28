@@ -93,7 +93,7 @@ class OAuth2:
         self.refresh_expiry = None
         self.scope = None
 
-    def getToken(self) -> Union[dict, int]:
+    def getToken(self) -> Union[dict, None]:
         """
         Retrieves the access token from the API.
 
@@ -112,7 +112,7 @@ class OAuth2:
         """
         # Check if the access token is valid and not expired
         if self.access_token is not None:
-            return 401 if self.access_token == -1 else self.access_token
+            return None if self.access_token == None else self.access_token
 
         # Prepare the request data
         data = {
@@ -129,7 +129,7 @@ class OAuth2:
             response = requests.post(token_url, data=data)
             response.raise_for_status()  # Raise an HTTPError for bad responses
         except requests.exceptions.RequestException as e:
-            self.access_token = -1
+            self.access_token = None
             raise requests.exceptions.RequestException(
                 f"Failed to get access token. Status code:\
                     {response.status_code}"
