@@ -198,9 +198,15 @@ jobs:
 
       - name: Test Image With new Tag
         run: |
+          # first get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 | sed 's/^v//')
+          echo "LATEST_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
+
+          # then test the image with the latest tag
           docker run --rm \
-            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.LATEST_TAG }} \
             python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
+
 
   test_image_with_latest_tag:
     needs: Continuous-Deployment
