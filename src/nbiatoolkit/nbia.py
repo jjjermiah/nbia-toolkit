@@ -35,37 +35,67 @@ class NBIAClient:
         self.log.debug("Setting up OAuth2 client... with username %s", username)
 
         self._oauth2_client = OAuth2(username=username, password=password)
-        self._api_headers = self._oauth2_client.getToken()
+
+        try:
+            self._api_headers = self._oauth2_client.getToken()
+        except Exception as e:
+            self.log.error("Error retrieving access token: %s", e)
+            self._api_headers = None
+            raise e
 
     @property
     def headers(self):
         return self._api_headers
 
-    def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> dict:
+    def query_api(self, endpoint: NBIA_ENDPOINTS, params: dict = {}) -> Union[list, dict, bytes]:
         query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
 
         self.log.debug("Querying API endpoint: %s", query_url)
+        response : requests.Response
         try:
             response = requests.get(url=query_url, headers=self.headers, params=params)
+            response.raise_for_status()  # Raise an HTTPError for bad responses
+        except requests.exceptions.RequestException as e:
+            self.log.error("Error querying API: %s", e)
+            raise e
+
+        if response.status_code != 200:
+            self.log.error(
+                "Error querying API: %s %s", response.status_code, response.reason
+            )
+            raise requests.exceptions.RequestException(
+                f"Failed to get access token. Status code:\
+                    {response.status_code}"
+            )
+
+        try:
             if response.headers.get("Content-Type") == "application/json":
-                response_data = response.json()
+                response_json : dict | list = response.json()
+                return response_json
             else:
                 # If response is binary data, return raw response
-                response_data = response.content
+                response_data : bytes = response.content
+                return response_data
         except JSONDecodeError as j:
+            self.log.debug("Response: %s", response.text)
             if response.text == "":
                 self.log.error("Response text is empty.")
-                return response
-            self.log.error("Error parsing response as JSON: %s", j)
-            self.log.debug("Response: %s", response.text)
+            else:
+                self.log.error("Error parsing response as JSON: %s", j)
+            raise j
         except Exception as e:
             self.log.error("Error querying API: %s", e)
             raise e
 
-        return response_data
 
-    def getCollections(self, prefix: str = "") -> list[dict[str]]:
+
+    def getCollections(self, prefix: str = "") -> Union[list[str], None]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTIONS)
+
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
         collections = []
         for collection in response:
             name = collection["Collection"]
@@ -73,9 +103,15 @@ class NBIAClient:
                 collections.append(name)
         return collections
 
+
     # returns a list of dictionaries with the collection name and patient count
-    def getCollectionPatientCount(self, prefix: str = "") -> list[dict[str, int]]:
+    def getCollectionPatientCount(self, prefix: str = "") -> Union[list[dict[str, int]], None]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
+
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
         patientCounts = []
         for collection in response:
             name = collection["criteria"]
@@ -86,24 +122,30 @@ class NBIAClient:
                         "PatientCount": int(collection["count"]),
                     }
                 )
-
         return patientCounts
 
-    def getBodyPartCounts(self, Collection: str = "", Modality: str = "") -> list:
+    def getBodyPartCounts(self, Collection: str = "", Modality: str = "") -> Union[list[dict[str, int]], None]:
         PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_BODY_PART_PATIENT_COUNT, params=PARAMS
         )
 
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
         bodyparts = []
         for bodypart in response:
             bodyparts.append(
-                {"BodyPartExamined": bodypart["criteria"], "Count": bodypart["count"]}
+                {
+                    "BodyPartExamined": bodypart["criteria"],
+                    "Count": int(bodypart["count"]),
+                }
             )
         return bodyparts
 
-    def getPatients(self, Collection: str, Modality: str) -> list:
+    def getPatients(self, Collection: str, Modality: str) -> Union[list[str], None]:
         assert Collection is not None
         assert Modality is not None
 
@@ -113,6 +155,9 @@ class NBIAClient:
             endpoint=NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY,
             params=PARAMS,
         )
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
 
         patientList = [_["PatientId"] for _ in response]
         return patientList
@@ -127,14 +172,15 @@ class NBIAClient:
         BodyPartExamined: str = "",
         ManufacturerModelName: str = "",
         Manufacturer: str = "",
-    ) -> list:
-        PARAMS = dict()
+    ) -> Union[list[dict[str, str]], None]:
 
-        for key, value in locals().items():
-            if (value != "") and (key != "self"):
-                PARAMS[key] = value
+        PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_SERIES, params=PARAMS)
+
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
 
         return response
 

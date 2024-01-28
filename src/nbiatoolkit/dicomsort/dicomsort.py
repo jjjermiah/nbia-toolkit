@@ -1,17 +1,18 @@
 import re, os, sys, shutil
 import pydicom
 
-from pydicom.filereader import InvalidDicomError
+from pydicom.errors import InvalidDicomError
 
 from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, truncateUID
 
+from typing import Optional
 
 class DICOMSorter:
     def __init__(
         self,
         sourceDir: str,
         destinationDir: str,
-        targetPattern: str = None,
+        targetPattern: str = "%PatientName/%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
         truncateUID: bool = True,
         sanitizeFilename: bool = True,
     ):
@@ -25,7 +26,7 @@ class DICOMSorter:
         self.sanitizeFilename = sanitizeFilename
 
     def generateFilePathFromDICOMAttributes(
-        self, dataset: pydicom.dataset.FileDataset
+        self, dataset: pydicom.FileDataset
     ) -> str:
         """
         Generate a file path for the DICOM file by formatting DICOM attributes.
@@ -57,7 +58,8 @@ class DICOMSorter:
         assert option in ["copy", "move"], "Invalid option: symlink not implemented yet"
 
         try:
-            dataset = pydicom.dcmread(filePath, stop_before_pixels=True)
+
+            dataset : pydicom.FileDataset = pydicom.dcmread(filePath, stop_before_pixels=True)
         except InvalidDicomError as e:
             print(f"Error reading file {filePath}: {e}")
             return False
