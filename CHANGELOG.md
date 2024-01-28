@@ -2,6 +2,13 @@
 
 
 
+## v0.11.1 (2024-01-28)
+
+### Build
+
+* build: fix env latest tag error ([`1989d7b`](https://github.com/jjjermiah/nbia-toolkit/commit/1989d7bca9c71dfff8a8183105f93f29aca5693f))
+
+
 ## v0.11.0 (2024-01-28)
 
 ### Build
