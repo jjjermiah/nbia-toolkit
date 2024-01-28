@@ -2,6 +2,17 @@
 
 
 
+## v0.12.1 (2024-01-28)
+
+### Documentation
+
+* docs: add total downloads ([`6ed7cde`](https://github.com/jjjermiah/nbia-toolkit/commit/6ed7cdec9bf0f61588c16545f71d87e7f9df0756))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`bad151e`](https://github.com/jjjermiah/nbia-toolkit/commit/bad151e81b5cfbcda2b792de4a7b0d9f311c4921))
+
+
 ## v0.12.0 (2024-01-28)
 
 ### Build
