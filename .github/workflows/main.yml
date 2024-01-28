@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.12"]
+        python-version: ["3.12", "3.11"]
   
     steps:
       - uses: actions/checkout@v3
@@ -190,7 +190,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
 
   test_image_with_new_tag:
-    # needs: Continuous-Deployment
+    needs: Continuous-Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -211,7 +211,7 @@ jobs:
 
 
   test_image_with_latest_tag:
-    # needs: Continuous-Deployment
+    needs: Continuous-Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
