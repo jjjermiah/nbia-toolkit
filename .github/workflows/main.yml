@@ -165,7 +165,9 @@ jobs:
         push: true
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest
           ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+          ghcr.io/${{ github.repository }}/nbiatoolkit:latest
         labels: ${{ steps.meta.outputs.labels }}
 
     - name: Test Image
