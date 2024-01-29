@@ -6,6 +6,9 @@ authors = ["Jermiah Joseph"]
 license = "MIT"
 readme = "README.md"
 
+[tool.poetry.scripts]
+DICOMSorter = "nbiatoolkit.dicomsort:DICOMSorter_cli"
+
 [tool.poetry.dependencies]
 python = ">=3.11 || 3.12"
 requests = "2.31.0"
