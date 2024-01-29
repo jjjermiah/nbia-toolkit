@@ -8,6 +8,7 @@ readme = "README.md"
 
 [tool.poetry.scripts]
 DICOMSorter = "nbiatoolkit.dicomsort:DICOMSorter_cli"
+NBIAToolkit = "nbiatoolkit:version"
 
 [tool.poetry.dependencies]
 python = ">=3.11 || 3.12"

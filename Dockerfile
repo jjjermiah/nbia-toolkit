@@ -13,7 +13,7 @@ LABEL maintainer="Jermiah Joseph"
 # install the dependencies
 RUN python -m pip install nbiatoolkit
 
-RUN python -c 'import nbiatoolkit; print(nbiatoolkit.__version__)'
+RUN python -c 'import nbiatoolkit; print(nbiatoolkit.version())'
 
 # On run, open a bash shell
 CMD ["/bin/bash"]
