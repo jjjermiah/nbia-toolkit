@@ -15,6 +15,7 @@ python = ">=3.11 || 3.12"
 requests = "2.31.0"
 pydicom = "^2.4.3"
 tqdm = "^4.66.1"
+pyfiglet = "^1.0"
 
 [tool.poetry.dev-dependencies]
 
