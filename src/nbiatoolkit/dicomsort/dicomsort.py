@@ -83,11 +83,12 @@ class DICOMSorter:
 
         os.makedirs(os.path.dirname(targetFilename), exist_ok=True)
 
-        match option:
-            case "copy":
-                shutil.copyfile(src=filePath, dst=targetFilename)
-            case "move":
-                shutil.move(src=filePath, dst=targetFilename)
+        if option == "copy":
+            shutil.copyfile(src=filePath, dst=targetFilename)
+        elif option == "move":
+            shutil.move(src=filePath, dst=targetFilename)
+        else:
+            raise ValueError(f"Invalid option: {option}")
 
         return True
 
@@ -101,7 +102,7 @@ class DICOMSorter:
 
         return all(results)
 
-    def _get_dicom_files(self) -> list[str]:
+    def _get_dicom_files(self) -> 'list[str]':
         dicom_file_paths = []
         # Iterate over all files in the source directory
         for root, dirs, files in os.walk(self.sourceDir):
