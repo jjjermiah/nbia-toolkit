@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.12"]
+        python-version: ["3.12", "3.11"]
   
     steps:
       - uses: actions/checkout@v3
@@ -108,6 +108,7 @@ jobs:
       uses: python-semantic-release/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        git_commit_message: 'chore(release): release ${next_version}'
 
     - name: Install packaging-related tool
       run:
@@ -194,13 +195,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Test Image With new Tag
         run: |
+          # get latest tag
+          LATEST_TAG=$(curl -s \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+            | jq -r .tag_name | sed 's/^v//')
+          echo "LATEST_TAG=${LATEST_TAG}"
+
+          # test image with latest tag
           docker run --rm \
-            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }} \
-            python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${LATEST_TAG} \
+            NBIAToolkit
+
 
   test_image_with_latest_tag:
     needs: Continuous-Deployment
@@ -213,4 +222,4 @@ jobs:
         run: |
           docker run --rm \
             ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest \
-            python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
+            NBIAToolkit

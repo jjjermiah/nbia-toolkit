@@ -1,14 +1,17 @@
 
-![GitHub milestone details](https://img.shields.io/github/milestones/progress-percent/jjjermiah/nbia-toolkit/1?style=flat-square&label=1.0.0%20Stable%20Release%20Milestone&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)![GitHub milestone details](https://img.shields.io/github/milestones/progress/jjjermiah/nbia-toolkit/1?style=flat-square&label=%20&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)
-
 [![PyTests](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/jjjermiah/nbia-toolkit/graph/badge.svg?token=JKREY71D0R)](https://codecov.io/gh/jjjermiah/nbia-toolkit)
 [![Python version](https://img.shields.io/pypi/pyversions/nbiatoolkit.svg)](https://img.shields.io/pypi/pyversions/nbiatoolkit.svg)
 [![PyPI version](https://badge.fury.io/py/nbiatoolkit.svg)](https://badge.fury.io/py/nbiatoolkit)
+[![Downloads](https://static.pepy.tech/badge/nbiatoolkit)](https://pepy.tech/project/nbiatoolkit)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/nbiatoolkit.svg?label=pypi%20downloads)](https://pypi.org/project/nbiatoolkit/)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jjjermiah/nbia-toolkit)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jjjermiah/nbiatoolkit)](https://hub.docker.com/r/jjjermiah/nbiatoolkit)
+
+
+
+![GitHub milestone details](https://img.shields.io/github/milestones/progress-percent/jjjermiah/nbia-toolkit/1?style=flat-square&label=1.0.0%20Stable%20Release%20Milestone&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)![GitHub milestone details](https://img.shields.io/github/milestones/progress/jjjermiah/nbia-toolkit/1?style=flat-square&label=%20&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)
 
 
 # *NBIA Toolkit*
@@ -28,7 +31,7 @@ See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedo
 
 `nbiatoolkit` is currently under development.
 It is made available via PyPI and can be installed using pip:
-
+****
 ```bash
 pip install nbiatoolkit
 ```
