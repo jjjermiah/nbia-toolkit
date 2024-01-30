@@ -81,7 +81,7 @@ class DICOMSorter:
         if os.path.exists(targetFilename) and not overwrite:
             print(f"Source File: {filePath}\n")
             print(f"File {targetFilename} already exists. ")
-            sys.exit(
+            raise ValueError(
                 "Pattern is probably not unique or overwrite is set to False. Exiting."
             )
 

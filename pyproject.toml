@@ -12,7 +12,8 @@ NBIAToolkit = "nbiatoolkit:version"
 getCollections = "nbiatoolkit.nbia_cli:getCollections_cli"
 getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
 getBodyPartCounts = "nbiatoolkit.nbia_cli:getBodyPartCounts_cli"
-
+downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
+getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
 
 [tool.poetry.dependencies]
 python = ">=3.11 || 3.12"

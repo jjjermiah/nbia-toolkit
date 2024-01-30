@@ -1,3 +1,4 @@
+from math import e
 from .auth import OAuth2
 from .utils.nbia_endpoints import NBIA_ENDPOINTS
 from .logger.logger import setup_logger
@@ -265,23 +266,30 @@ class NBIAClient:
 
         with cf.ThreadPoolExecutor(max_workers=nParallel) as executor:
             futures = []
-            for seriesUID in SeriesInstanceUID:
-                future = executor.submit(
-                    self._downloadSingleSeries,
-                    SeriesInstanceUID=seriesUID,
-                    downloadDir=downloadDir,
-                    filePattern=filePattern,
-                    overwrite=overwrite,
-                )
-                futures.append(future)
 
-            # Use tqdm to create a progress bar
-            with tqdm(
-                total=len(futures), desc=f"Downloading {len(futures)} series"
-            ) as pbar:
-                for future in cf.as_completed(futures):
-                    pbar.update(1)
+            try:
+                os.makedirs(downloadDir)
 
+                for seriesUID in SeriesInstanceUID:
+                    future = executor.submit(
+                        self._downloadSingleSeries,
+                        SeriesInstanceUID=seriesUID,
+                        downloadDir=downloadDir,
+                        filePattern=filePattern,
+                        overwrite=overwrite,
+                    )
+                    futures.append(future)
+
+            except Exception as e:
+                self.log.error("Error creating download directory: %s", e)
+                raise e
+            else:
+                # Use tqdm to create a progress bar
+                with tqdm(
+                    total=len(futures), desc=f"Downloading {len(futures)} series"
+                ) as pbar:
+                    for future in cf.as_completed(futures):
+                        pbar.update(1)
             return True
 
     # _downloadSingleSeries is a helper function that downloads a single series
