@@ -8,7 +8,8 @@
 
 
 # import the modules
-from .nbia import NBIAClient, version
+from .nbia import NBIAClient
+from .nbia_cli import version, getCollections_cli
 from .auth import OAuth2
 from .logger.logger import setup_logger
 from .utils.nbia_endpoints import NBIA_ENDPOINTS
