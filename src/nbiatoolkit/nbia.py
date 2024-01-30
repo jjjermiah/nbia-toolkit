@@ -1,4 +1,3 @@
-from math import e
 from .auth import OAuth2
 from .utils.nbia_endpoints import NBIA_ENDPOINTS
 from .logger.logger import setup_logger
@@ -147,13 +146,10 @@ class NBIAClient:
             ), "PatientId must be a string, but received: %s" % type(
                 patient["PatientId"]
             )
+
+
             patientList.append(
-                {
-                    "PatientId": patient["PatientId"],
-                    "PatientName": patient["PatientName"],
-                    "PatientSex": patient["PatientSex"],
-                    "Collection": patient["Collection"],
-                }
+                patient
             )
 
         return patientList
@@ -269,27 +265,26 @@ class NBIAClient:
 
             try:
                 os.makedirs(downloadDir)
+            except FileExistsError:
+                pass
 
-                for seriesUID in SeriesInstanceUID:
-                    future = executor.submit(
-                        self._downloadSingleSeries,
-                        SeriesInstanceUID=seriesUID,
-                        downloadDir=downloadDir,
-                        filePattern=filePattern,
-                        overwrite=overwrite,
-                    )
-                    futures.append(future)
+            for seriesUID in SeriesInstanceUID:
+                future = executor.submit(
+                    self._downloadSingleSeries,
+                    SeriesInstanceUID=seriesUID,
+                    downloadDir=downloadDir,
+                    filePattern=filePattern,
+                    overwrite=overwrite,
+                )
+                futures.append(future)
 
-            except Exception as e:
-                self.log.error("Error creating download directory: %s", e)
-                raise e
-            else:
-                # Use tqdm to create a progress bar
-                with tqdm(
-                    total=len(futures), desc=f"Downloading {len(futures)} series"
-                ) as pbar:
-                    for future in cf.as_completed(futures):
-                        pbar.update(1)
+            # Use tqdm to create a progress bar
+            with tqdm(
+                total=len(futures), desc=f"Downloading {len(futures)} series"
+            ) as pbar:
+                for future in cf.as_completed(futures):
+                    pbar.update(1)
+
             return True
 
     # _downloadSingleSeries is a helper function that downloads a single series
