@@ -19,6 +19,7 @@ done_event = threading.Event()
 query: str
 output: str | None = None
 
+
 def version():
     f = Figlet(font="slant")
     print(f.renderText("NBIAToolkit"))
@@ -41,9 +42,8 @@ def writeResultsToFile(results: List, output: str) -> None:
 
     # open the file in write mode
     with open(output, "w") as f:
-
         if isinstance(results[0], dict):
-                    # write the header
+            # write the header
             f.write("\t".join(results[0].keys()) + "\n")
             # write the results
             for result in results:
@@ -83,25 +83,21 @@ def getResults_cli(func, **kwargs) -> None:
         writeResultsToFile(results, output)
         return
     elif not isinstance(results, list) or not len(results):
-
         return
     # Print the result
     elif isinstance(results[0], dict) and len(results):
         print("\t".join(results[0].keys()))
         for result in results:
-            print("\t".join(str(value) for value in result.values())) # type: ignore
+            print("\t".join(str(value) for value in result.values()))  # type: ignore
         return
 
-    elif(isinstance(results, list)):
+    elif isinstance(results, list):
         for result in results:
             print(result)
         return
 
-
     print(f"No {query} found. Check parameters using -h or try again later.")
     return
-
-
 
 
 def cli_wrapper(func, **kwargs) -> List[str] | None:
@@ -155,13 +151,13 @@ def loading_animation():
     # Find the maximum length of the loading animation strings
     # print(animations[0])
     while not done_event.is_set():
-
         if done_event.is_set():
             # clear the line
             # sys.stdout.write("\033[F")
             # print( len(animations[0]))
             # print(" " * len(animations[0]), end="\r")
             break
+
 
 def getPatients_cli() -> None:
     global query
@@ -170,7 +166,11 @@ def getPatients_cli() -> None:
     p = general_argParser()
 
     p.add_argument(
-        "--collection", dest="collection", action="store", required=True, type=str,
+        "--collection",
+        dest="collection",
+        action="store",
+        required=True,
+        type=str,
     )
     args = p.parse_args()
 
@@ -192,8 +192,12 @@ def getCollections_cli() -> None:
     p = general_argParser()
 
     p.add_argument(
-        "--prefix", dest="prefix", action="store", default="", type=str,
-        help = "The prefix to filter collections by, i.e \'TCGA\', \'LIDC\', \'NSCLC\'"
+        "--prefix",
+        dest="prefix",
+        action="store",
+        default="",
+        type=str,
+        help="The prefix to filter collections by, i.e 'TCGA', 'LIDC', 'NSCLC'",
     )
     args = p.parse_args()
     if args.version:
@@ -205,11 +209,16 @@ def getCollections_cli() -> None:
 
     return getResults_cli(func=NBIAClient().getCollections, prefix=args.prefix)
 
+
 def getBodyPartCounts_cli() -> None:
     p = argparse.ArgumentParser(description="NBIAToolkit: get body part counts")
 
     p.add_argument(
-        "--collection", dest="collection", action="store", default = "", type=str,
+        "--collection",
+        dest="collection",
+        action="store",
+        default="",
+        type=str,
     )
 
     args = p.parse_args()
@@ -217,46 +226,79 @@ def getBodyPartCounts_cli() -> None:
     global query
     query = f"BodyPartCounts"
 
-    return getResults_cli(func=NBIAClient().getBodyPartCounts, Collection=args.collection)
+    return getResults_cli(
+        func=NBIAClient().getBodyPartCounts, Collection=args.collection
+    )
+
 
 def getSeries_cli() -> None:
-
     p = argparse.ArgumentParser(description="NBIAToolkit: get series")
 
     p.add_argument(
-        "--collection", dest="collection", action="store", default = "", type=str,
+        "--collection",
+        dest="collection",
+        action="store",
+        default="",
+        type=str,
     )
 
     p.add_argument(
-        "--patientID", dest="patientID", action="store", default = "", type=str,
+        "--patientID",
+        dest="patientID",
+        action="store",
+        default="",
+        type=str,
     )
 
     p.add_argument(
-        "--studyInstanceUID", dest="studyInstanceUID", action="store", default = "", type=str,
+        "--studyInstanceUID",
+        dest="studyInstanceUID",
+        action="store",
+        default="",
+        type=str,
     )
 
     p.add_argument(
-        "--modality", dest="modality", action="store", default = "", type=str,
+        "--modality",
+        dest="modality",
+        action="store",
+        default="",
+        type=str,
     )
 
     p.add_argument(
-        "--seriesInstanceUID", dest="seriesInstanceUID", action="store", default = "", type=str,
+        "--seriesInstanceUID",
+        dest="seriesInstanceUID",
+        action="store",
+        default="",
+        type=str,
     )
 
     p.add_argument(
-        "--bodyPartExamined", dest="bodyPartExamined", action="store", default = "", type=str,
+        "--bodyPartExamined",
+        dest="bodyPartExamined",
+        action="store",
+        default="",
+        type=str,
     )
 
     p.add_argument(
-        "--manufacturerModelName", dest="manufacturerModelName", action="store", default = "", type=str,
+        "--manufacturerModelName",
+        dest="manufacturerModelName",
+        action="store",
+        default="",
+        type=str,
     )
 
     p.add_argument(
-        "--manufacturer", dest="manufacturer", action="store", default = "", type=str,
+        "--manufacturer",
+        dest="manufacturer",
+        action="store",
+        default="",
+        type=str,
     )
 
     args = p.parse_args()
-
 
     global query
     query = f"series"
@@ -273,6 +315,7 @@ def getSeries_cli() -> None:
         Manufacturer=args.manufacturer,
     )
 
+
 def downloadSingleSeries_cli() -> None:
     global query
     query = f"series"
@@ -281,42 +324,59 @@ def downloadSingleSeries_cli() -> None:
     p = argparse.ArgumentParser(description="NBIAToolkit: download a single series")
 
     p.add_argument(
-        "--seriesUID", dest="seriesUID", action="store", required=True, type=str,
+        "--seriesUID",
+        dest="seriesUID",
+        action="store",
+        required=True,
+        type=str,
     )
 
     p.add_argument(
-        "--downloadDir", dest="downloadDir", action="store", required=True, type=str,
-        help = "The directory to download the series to"
+        "--downloadDir",
+        dest="downloadDir",
+        action="store",
+        required=True,
+        type=str,
+        help="The directory to download the series to",
     )
 
     p.add_argument(
-        "--filePattern", dest="filePattern", action="store", type=str,
+        "--filePattern",
+        dest="filePattern",
+        action="store",
+        type=str,
         default="%PatientID/%StudyInstanceUID/%SeriesInstanceUID/%SOPInstanceUID.dcm",
-        help = "The file pattern to use when downloading the series"
+        help="The file pattern to use when downloading the series",
     )
 
     p.add_argument(
-        "--overwrite", action="store_true", default=False, help="Overwrite existing files"
+        "--overwrite",
+        action="store_true",
+        default=False,
+        help="Overwrite existing files",
     )
-
 
     args = p.parse_args()
-
-
 
     return getResults_cli(
         func=NBIAClient()._downloadSingleSeries,
         SeriesInstanceUID=args.seriesUID,
         downloadDir=args.downloadDir,
         filePattern=args.filePattern,
-        overwrite=args.overwrite)
+        overwrite=args.overwrite,
+    )
+
 
 def general_argParser():
     global query
     p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
-        "--output", dest="output", action="store", type=str, help="Output file (tsv works best)"
+        "--output",
+        dest="output",
+        action="store",
+        type=str,
+        help="Output file (tsv works best)",
     )
 
     p.add_argument(
@@ -324,4 +384,3 @@ def general_argParser():
     )
 
     return p
-
