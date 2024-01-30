@@ -36,6 +36,26 @@ It is made available via PyPI and can be installed using pip:
 pip install nbiatoolkit
 ```
 
+## CLI Usage
+
+### getCollections
+nbia-toolkit also provides a command line interface (CLI) to query the NBIA database for some queries.
+``` bash
+> getCollections --prefix NSCLC
+NSCLC Radiogenomics
+NSCLC-Radiomics
+NSCLC-Radiomics-Genomics
+NSCLC-Radiomics-Interobserver1
+
+> getCollections --prefix TCGA | head -5
+TCGA-BLCA
+TCGA-BRCA
+TCGA-CESC
+TCGA-COAD
+TCGA-ESCA
+```
+
+
 ## Contributing
 
 Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.

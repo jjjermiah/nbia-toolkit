@@ -11,6 +11,7 @@ from typing import Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
+
 class DICOMSorter:
     def __init__(
         self,
@@ -80,7 +81,7 @@ class DICOMSorter:
         if os.path.exists(targetFilename) and not overwrite:
             print(f"Source File: {filePath}\n")
             print(f"File {targetFilename} already exists. ")
-            sys.exit(
+            raise ValueError(
                 "Pattern is probably not unique or overwrite is set to False. Exiting."
             )
 
@@ -95,20 +96,25 @@ class DICOMSorter:
 
         return True
 
-    def sortDICOMFiles(self, option: str = "copy", overwrite: bool = False, nParallel: int = 1) -> bool:
+    def sortDICOMFiles(
+        self, option: str = "copy", overwrite: bool = False, nParallel: int = 1
+    ) -> bool:
         dicom_file_paths = self._get_dicom_files()
         result = []
         print("Running with {} parallel threads".format(nParallel))
 
         with ThreadPoolExecutor(max_workers=nParallel) as executor:
-            futures = [executor.submit(self.sortSingleDICOMFile, filePath, option, overwrite) for filePath in dicom_file_paths]
+            futures = [
+                executor.submit(self.sortSingleDICOMFile, filePath, option, overwrite)
+                for filePath in dicom_file_paths
+            ]
 
             for future in tqdm(as_completed(futures), total=len(futures)):
                 result.append(future.result())
 
         return all(result)
-    
-    def _get_dicom_files(self) -> 'list[str]':
+
+    def _get_dicom_files(self) -> "list[str]":
         dicom_file_paths = []
         # Iterate over all files in the source directory
         for root, dirs, files in os.walk(self.sourceDir):
@@ -119,67 +125,77 @@ class DICOMSorter:
 
         return dicom_file_paths
 
+
 # Create command line interface
 
 # Given a source directory, destination directory, and target pattern, sort DICOM files
 # into the destination directory according to the target pattern.
 # The target pattern is a string with placeholders matching '%<DICOMKey>'.
 
+
 def DICOMSorter_cli():
     parser = argparse.ArgumentParser(
         description="Sort DICOM files into destination directory according to target pattern."
     )
 
-    parser.add_argument("sourceDir",
+    parser.add_argument(
+        "sourceDir",
         metavar="sourceDir",
         type=str,
         help="The source directory containing DICOM files.",
     )
 
-    parser.add_argument("destinationDir",
+    parser.add_argument(
+        "destinationDir",
         metavar="destinationDir",
         type=str,
         help="The destination directory to sort DICOM files into.",
     )
 
     # Default is %%PatientName/%%SeriesNumber-%%SeriesInstanceUID/%%InstanceNumber.dcm
-    parser.add_argument("--targetPattern",
+    parser.add_argument(
+        "--targetPattern",
         dest="targetPattern",
         default="%PatientName/%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
         type=str,
-        help='The target pattern for sorting DICOM files. Default is %%PatientName/%%SeriesNumber-%%SeriesInstanceUID/%%InstanceNumber.dcm.',
+        help="The target pattern for sorting DICOM files. Default is %%PatientName/%%SeriesNumber-%%SeriesInstanceUID/%%InstanceNumber.dcm.",
     )
 
-    parser.add_argument("--truncateUID",
+    parser.add_argument(
+        "--truncateUID",
         dest="truncateUID",
         action="store_true",
         default=True,
         help="Truncate the UID to the last n characters (includes periods & underscores). Default is True.",
     )
 
-    parser.add_argument("--sanitizeFilename",
+    parser.add_argument(
+        "--sanitizeFilename",
         dest="sanitizeFilename",
         action="store_true",
         help="Sanitize the file name by replacing potentially dangerous characters. Default is True.",
     )
 
-    parser.add_argument("--overwrite",
+    parser.add_argument(
+        "--overwrite",
         dest="overwrite",
         action="store_true",
         help="Overwrite existing files. Default is False.",
     )
 
-    parser.add_argument("--nParallel",
+    parser.add_argument(
+        "--nParallel",
         dest="nParallel",
         action="store",
         type=int,
-        help="Number of parallel threads. Default is 1.",)
-    
+        help="Number of parallel threads. Default is 1.",
+    )
+
     parser.set_defaults(truncateUID=True)
     parser.set_defaults(sanitizeFilename=True)
     parser.set_defaults(overwrite=False)
     parser.set_defaults(nParallel=1)
-    
+
     args = parser.parse_args()
 
     sorter = DICOMSorter(
@@ -190,4 +206,6 @@ def DICOMSorter_cli():
         sanitizeFilename=args.sanitizeFilename,
     )
 
-    sorter.sortDICOMFiles(option="copy", overwrite=args.overwrite, nParallel=int(args.nParallel))
+    sorter.sortDICOMFiles(
+        option="copy", overwrite=args.overwrite, nParallel=int(args.nParallel)
+    )
