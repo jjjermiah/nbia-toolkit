@@ -6,3 +6,4 @@ coverage-badge~=1.1.0
 requests==2.31.0
 pydicom==2.4.3
 tqdm==4.66.1
+pyfiglet~=1.0

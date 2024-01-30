@@ -27,11 +27,12 @@ jobs:
       - name: Install poetry
         uses: snok/install-poetry@v1
 
+      - name: Install dependencies
+        run: poetry install
+
       - name: Test with pytest
         run: |
-          pip install -r requirements.txt
-          poetry install
-          pytest --cov --cov-report=xml:coverage-report/coverage.xml
+          poetry run pytest -n 2 --cov --cov-report xml:coverage-report/coverage.xml
 
       - name: Build documentation
         run: poetry run make html --directory docs/
@@ -58,7 +59,7 @@ jobs:
       - name: Use Codecov to track coverage
         uses: codecov/codecov-action@v3
         with:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage-report/coverage.xml
           fail_ci_if_error: true
           verbose: true
@@ -208,7 +209,7 @@ jobs:
           # test image with latest tag
           docker run --rm \
             ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${LATEST_TAG} \
-            python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
+            NBIAToolkit
 
 
   test_image_with_latest_tag:
@@ -222,4 +223,4 @@ jobs:
         run: |
           docker run --rm \
             ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest \
-            python -c "import nbiatoolkit; print(nbiatoolkit.__version__)"
+            NBIAToolkit

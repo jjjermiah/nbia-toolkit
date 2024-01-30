@@ -10,6 +10,18 @@ from typing import Union
 import io
 import zipfile
 from tqdm import tqdm
+from pyfiglet import Figlet
+
+# set __version__ variable
+__version__ = "0.12.1"
+
+def version():
+    
+    f = Figlet(font='slant')
+    print(f.renderText('NBIAToolkit'))
+    print("Version: {}".format(__version__))
+    return 
+
 
 
 class NBIAClient:
@@ -343,6 +355,7 @@ class NBIAClient:
             if (value != "") and (key != "self"):
                 PARAMS[key] = value
         return PARAMS
+
 
 
 # main
