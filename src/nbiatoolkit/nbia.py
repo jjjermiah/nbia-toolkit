@@ -12,7 +12,7 @@ import io
 import zipfile
 from tqdm import tqdm
 from pyfiglet import Figlet
-
+import os
 # set __version__ variable
 __version__ = "0.12.1"
 
