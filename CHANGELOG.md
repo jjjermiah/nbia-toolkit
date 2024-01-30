@@ -2,9 +2,38 @@
 
 
 
+## v0.14.0 (2024-01-30)
+
+### Feature
+
+* feat: Add new CLI commands and improve error handling in DICOMSorter and NBIAClient ([`83fd4de`](https://github.com/jjjermiah/nbia-toolkit/commit/83fd4de204b8c4aac7e5ba4ab1fb2264f36b72aa))
+
+* feat(cli): Add CLI commands for querying NBIA database ([`5d9e2d7`](https://github.com/jjjermiah/nbia-toolkit/commit/5d9e2d78bfc6cf5209aeb7c2fa9882d53e7270a5))
+
+* feat(dicomsorter): Refactor DICOMSorter class and CLI arguments
+
+This commit refactors the DICOMSorter class and CLI arguments to improve code readability and maintainability. The DICOMSorter class now has a separate method for sorting DICOM files, and the CLI arguments have been organized and documented for better usability. ([`3c027dc`](https://github.com/jjjermiah/nbia-toolkit/commit/3c027dce8b4251f2ed9717cf0b34041d715ffad2))
+
+### Fix
+
+* fix(tests): missing os ([`90e8e2f`](https://github.com/jjjermiah/nbia-toolkit/commit/90e8e2f936896d6010df51f5954f8798ff024420))
+
+### Unknown
+
+* Merge pull request #66 from jjjermiah/development
+
+Development ([`b05f2fa`](https://github.com/jjjermiah/nbia-toolkit/commit/b05f2fac51ed77ef3a8310d01ecc407f694192b8))
+
+* refactor(styling):Refactor code formatting and style ([`6d6da1b`](https://github.com/jjjermiah/nbia-toolkit/commit/6d6da1b36a3e3df9930ef8bd23fd0c7d43684736))
+
+* add os to import ([`2d5bf9e`](https://github.com/jjjermiah/nbia-toolkit/commit/2d5bf9e373d7f90b64e4a79b7e4f4c916b9bba1e))
+
+
 ## v0.13.0 (2024-01-30)
 
 ### Chore
+
+* chore(release): 0.13.0 ([`5880609`](https://github.com/jjjermiah/nbia-toolkit/commit/588060993775a9ae220f1c7ff867bd06e0e5ed9b))
 
 * chore: add pre-commit hook ([`1913844`](https://github.com/jjjermiah/nbia-toolkit/commit/19138446331c8e6abf0fcb99c2ee3b2707414fe5))
 
