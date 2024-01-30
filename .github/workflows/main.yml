@@ -30,6 +30,10 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
+      - name: Install dev dependencies
+        run: poetry install
+
+
       - name: Test with pytest
         run: |
           poetry run pytest --cov-report xml:coverage-report/coverage.xml --cov=nbiatoolkit tests/
