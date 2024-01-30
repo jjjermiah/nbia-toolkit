@@ -29,8 +29,8 @@ jobs:
 
       - name: Test with pytest
         run: |
-          # pip install -r requirements.txt
           poetry install
+          pip install pytest-cov pytest-xdist
           pytest --cov --cov-report=xml:coverage-report/coverage.xml
 
       - name: Build documentation
