@@ -257,7 +257,11 @@ def getBodyPartCounts_cli() -> None:
 
 
 def getSeries_cli() -> None:
-    p = argparse.ArgumentParser(description="NBIAToolkit: get series")
+    global query
+    global output
+    query = f"series"
+
+    p = general_argParser()
 
     p.add_argument(
         "--collection",
@@ -323,10 +327,17 @@ def getSeries_cli() -> None:
         type=str,
     )
 
+
+
     args = p.parse_args()
 
-    global query
-    query = f"series"
+    if args.version:
+        version()
+        sys.exit(0)
+
+    if args.output:
+        output = args.output
+
 
     return getResults_cli(
         func=NBIAClient().getSeries,
