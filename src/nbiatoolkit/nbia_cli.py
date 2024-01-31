@@ -11,6 +11,7 @@ import time, threading
 from pprint import pprint
 from pyfiglet import Figlet
 import sys
+import subprocess
 
 # import from typing libraries
 from typing import List, Dict, Tuple, Union, Optional, Any
@@ -24,6 +25,21 @@ def version():
     f = Figlet(font="slant")
     print(f.renderText("NBIAToolkit"))
     print("Version: {}".format(__version__))
+
+    # print all available command line tools:
+    print("\nAvailable CLI tools: \n")
+
+    # run each command with -h to see the available options
+    commands = ["getCollections", "getPatients", "getBodyPartCounts", "getSeries", "downloadSingleSeries"]
+    for command in commands:
+        result = subprocess.run([command, "-h"], capture_output=True, text=True)
+        output_lines = result.stdout.splitlines()
+        # print out every line from the output until theres a line that contains "usage" in it
+        for line in output_lines:
+            if "NBIAToolkit" in line:
+                break
+            print(line[7:])
+
     return
 
 
@@ -211,7 +227,11 @@ def getCollections_cli() -> None:
 
 
 def getBodyPartCounts_cli() -> None:
-    p = argparse.ArgumentParser(description="NBIAToolkit: get body part counts")
+    global query
+    global output
+    query = f"BodyPartCounts"
+
+    p = general_argParser()
 
     p.add_argument(
         "--collection",
@@ -223,8 +243,13 @@ def getBodyPartCounts_cli() -> None:
 
     args = p.parse_args()
 
-    global query
-    query = f"BodyPartCounts"
+    if args.version:
+        version()
+        sys.exit(0)
+
+    if args.output:
+        output = args.output
+
 
     return getResults_cli(
         func=NBIAClient().getBodyPartCounts, Collection=args.collection
