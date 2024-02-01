@@ -8,6 +8,9 @@ build:
 sphinx:
   configuration: docs/conf.py
 # Configuration
+# need to install myst-nb, sphinx-autoapi, sphinx-rtd-theme,
+# nbiatoolkit
 python:
   install:
-    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
