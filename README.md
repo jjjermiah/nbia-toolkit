@@ -1,8 +1,9 @@
-
+# *NBIA Toolkit*
 [![PyTests](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/jjjermiah/nbia-toolkit/graph/badge.svg?token=JKREY71D0R)](https://codecov.io/gh/jjjermiah/nbia-toolkit)
 [![Python version](https://img.shields.io/pypi/pyversions/nbiatoolkit.svg)](https://img.shields.io/pypi/pyversions/nbiatoolkit.svg)
+
 [![PyPI version](https://badge.fury.io/py/nbiatoolkit.svg)](https://badge.fury.io/py/nbiatoolkit)
 [![Downloads](https://static.pepy.tech/badge/nbiatoolkit)](https://pepy.tech/project/nbiatoolkit)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/nbiatoolkit.svg?label=pypi%20downloads)](https://pypi.org/project/nbiatoolkit/)
@@ -14,7 +15,7 @@
 ![GitHub milestone details](https://img.shields.io/github/milestones/progress-percent/jjjermiah/nbia-toolkit/1?style=flat-square&label=1.0.0%20Stable%20Release%20Milestone&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)![GitHub milestone details](https://img.shields.io/github/milestones/progress/jjjermiah/nbia-toolkit/1?style=flat-square&label=%20&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)
 
 
-# *NBIA Toolkit*
+
 `nbiatoolkit` is a python package that provides programmatic access to query and download images from the National Biomedical Imaging Archive (**NBIA**) and The Cancer Imaging Archive (**TCIA**) databases.
 
 ## Features
@@ -41,18 +42,34 @@ pip install nbiatoolkit
 ### getCollections
 nbia-toolkit also provides a command line interface (CLI) to query the NBIA database for some queries.
 ``` bash
-> getCollections --prefix NSCLC
-NSCLC Radiogenomics
-NSCLC-Radiomics
-NSCLC-Radiomics-Genomics
-NSCLC-Radiomics-Interobserver1
+❯ NBIAToolkit
+    _   ______  _______  ______            ____   _ __
+   / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
+  /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
+ / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
+/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
 
-> getCollections --prefix TCGA | head -5
-TCGA-BLCA
-TCGA-BRCA
-TCGA-CESC
-TCGA-COAD
-TCGA-ESCA
+
+Version: 0.14.0
+
+Available CLI tools:
+
+getCollections [-h] [-p PREFIX] [-o OUTPUTFILE] [--version]
+
+getPatients [-h] -c COLLECTION [-o OUTPUTFILE] [--version]
+
+getBodyPartCounts [-h] [-c COLLECTION] [-o OUTPUTFILE] [--version]
+
+getSeries [-h] [-c COLLECTION] [-p PATIENTID] [-m MODALITY]
+          [-study STUDYINSTANCEUID]
+          [--seriesInstanceUID SERIESINSTANCEUID]
+          [--bodyPartExamined BODYPARTEXAMINED]
+          [--manufacturerModelName MANUFACTURERMODELNAME]
+          [--manufacturer MANUFACTURER] [-o OUTPUTFILE] [--version]
+
+downloadSingleSeries [-h] --seriesUID SERIESUID --downloadDir
+                     DOWNLOADDIR [--filePattern FILEPATTERN]
+                     [--overwrite]
 ```
 
 

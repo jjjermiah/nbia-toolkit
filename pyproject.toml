@@ -16,7 +16,7 @@ downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
 getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
 
 [tool.poetry.dependencies]
-python = ">=3.11 || 3.12"
+python = ">=3.10 || 3.12"
 requests = "2.31.0"
 pydicom = "^2.4.3"
 tqdm = "^4.66.1"
@@ -36,14 +36,11 @@ python-semantic-release = "^8.5.1"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-# [tool.coverage]
-# source = "src/nbiatoolkit"
-
 # https://python-semantic-release.readthedocs.io/en/latest/configuration.html
 [tool.semantic_release]
 version_variables = [
     "setup.py:__version__",
-    "src/nbiatoolkit/__init__.py:__version__",
+    "src/nbiatoolkit/main.py:__version__",
 ]
 version_toml = [
     "pyproject.toml:tool.poetry.version",
