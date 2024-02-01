@@ -42,18 +42,34 @@ pip install nbiatoolkit
 ### getCollections
 nbia-toolkit also provides a command line interface (CLI) to query the NBIA database for some queries.
 ``` bash
-> getCollections --prefix NSCLC
-NSCLC Radiogenomics
-NSCLC-Radiomics
-NSCLC-Radiomics-Genomics
-NSCLC-Radiomics-Interobserver1
+❯ NBIAToolkit
+    _   ______  _______  ______            ____   _ __
+   / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
+  /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
+ / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
+/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
 
-> getCollections --prefix TCGA | head -5
-TCGA-BLCA
-TCGA-BRCA
-TCGA-CESC
-TCGA-COAD
-TCGA-ESCA
+
+Version: 0.14.0
+
+Available CLI tools:
+
+getCollections [-h] [-p PREFIX] [-o OUTPUTFILE] [--version]
+
+getPatients [-h] -c COLLECTION [-o OUTPUTFILE] [--version]
+
+getBodyPartCounts [-h] [-c COLLECTION] [-o OUTPUTFILE] [--version]
+
+getSeries [-h] [-c COLLECTION] [-p PATIENTID] [-m MODALITY]
+          [-study STUDYINSTANCEUID]
+          [--seriesInstanceUID SERIESINSTANCEUID]
+          [--bodyPartExamined BODYPARTEXAMINED]
+          [--manufacturerModelName MANUFACTURERMODELNAME]
+          [--manufacturer MANUFACTURER] [-o OUTPUTFILE] [--version]
+
+downloadSingleSeries [-h] --seriesUID SERIESUID --downloadDir
+                     DOWNLOADDIR [--filePattern FILEPATTERN]
+                     [--overwrite]
 ```
 
 
