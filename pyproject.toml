@@ -40,7 +40,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.semantic_release]
 version_variables = [
     "setup.py:__version__",
-    "src/nbiatoolkit/main.py:__version__",
+    "src/nbiatoolkit/nbia.py:__version__",
 ]
 version_toml = [
     "pyproject.toml:tool.poetry.version",
