@@ -209,7 +209,7 @@ jobs:
       
       - name: Install using PyPi
         run: |
-          pip install -y nbiatoolkit;
+          pip install  nbiatoolkit;
           NBIAToolkit
 
 
