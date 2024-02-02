@@ -2,7 +2,18 @@
 
 
 
+## v0.15.1 (2024-02-02)
+
+### Build
+
+* build: add install with pypi test ([`648ea4f`](https://github.com/jjjermiah/nbia-toolkit/commit/648ea4f6d53b4460bc546693cfe88e418a4d5aa6))
+
+
 ## v0.15.0 (2024-02-01)
+
+### Chore
+
+* chore(release): 0.15.0 ([`0b6c7f1`](https://github.com/jjjermiah/nbia-toolkit/commit/0b6c7f1d0729a06e8f6ac8f2d791fde024aff107))
 
 ### Documentation
 
