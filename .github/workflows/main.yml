@@ -290,10 +290,17 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          LATEST_TAG=$(curl -s \
+              "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+              | jq -r .tag_name | sed 's/^v//')
+          echo "LATEST_TAG=${LATEST_TAG}"
           # Check for changes
           if [[ $(git status --porcelain) ]]; then
               # Changes are present
               echo "Changes found. Committing and pushing..."
+
+              git config --global user.name 'jjjermiah'
+              git config --global user.email 'jjjermiah@users.noreply.github.com'
 
               # Add all changes
               git add .
@@ -311,8 +318,7 @@ jobs:
           fi
 
 
-          # git config --global user.name 'jjjermiah'
-          # git config --global user.email 'jjjermiah@users.noreply.github.com'
+
           # git add README.md
 
           # git commit -m "Update README with latest version"
