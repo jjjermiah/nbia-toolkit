@@ -2,7 +2,22 @@
 
 
 
+## v0.18.0 (2024-02-03)
+
+### Feature
+
+* feat: added git pull to update-readme ([`9038ad8`](https://github.com/jjjermiah/nbia-toolkit/commit/9038ad84174f3825caf7c031374a170af8975c3c))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`6145f1f`](https://github.com/jjjermiah/nbia-toolkit/commit/6145f1f05898f6c6f6c6c32ee2b5c44ced3e305d))
+
+
 ## v0.17.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.17.0 ([`9568607`](https://github.com/jjjermiah/nbia-toolkit/commit/95686071f5f1872356649f341bd7893027322bb9))
 
 ### Feature
 
