@@ -216,6 +216,19 @@ class NBIAClient:
             )
         return bodyparts
 
+    def getStudies(
+        self, Collection: str, PatientID: str = "", StudyInstanceUID: str = ""
+    ) -> Union[list[dict[str, str]], None]:
+        PARAMS = self.parsePARAMS(locals())
+
+        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_STUDIES, params=PARAMS)
+
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
+        return response
+
     def getSeries(
         self,
         Collection: str = "",
@@ -359,8 +372,9 @@ if __name__ == "__main__":
 
     client = NBIAClient(log_level="info")
 
-    all = client.getCollections()
-    pprint(all)
+    print(client.getStudies(Collection="TCGA-GBM"))
+    # all = client.getCollections()
+    # pprint(all)
 
-    sub = client.getCollections(prefix="aCrin")
-    pprint(sub)
+    # sub = client.getCollections(prefix="aCrin")
+    # pprint(sub)

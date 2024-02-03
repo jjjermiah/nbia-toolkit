@@ -1,7 +1,6 @@
-
 import io
 from .nbia import NBIAClient, __version__
-
+from .dicomsort import DICOMSorter
 
 import argparse
 import sys
@@ -27,7 +26,14 @@ def version():
     print("\nAvailable CLI tools: \n")
 
     # run each command with -h to see the available options
-    commands = ["getCollections", "getPatients", "getBodyPartCounts", "getSeries", "downloadSingleSeries"]
+    commands = [
+        "getCollections",
+        "getPatients",
+        "getBodyPartCounts",
+        "getSeries",
+        "downloadSingleSeries",
+        "dicomsort"
+    ]
     for command in commands:
         result = subprocess.run([command, "-h"], capture_output=True, text=True)
         output_lines = result.stdout.splitlines()
@@ -39,9 +45,15 @@ def version():
 
     return
 
+
 def general_parser(parser: argparse.ArgumentParser) -> argparse.Namespace:
-    parser.add_argument("-o", "--output", dest="outputfile",
-        action="store", type=argparse.FileType('w', encoding='UTF-8'), help="Output file (tsv works best)",
+    parser.add_argument(
+        "-o",
+        "--output",
+        dest="outputfile",
+        action="store",
+        type=argparse.FileType("w", encoding="UTF-8"),
+        help="Output file (tsv works best)",
     )
 
     parser.add_argument(
@@ -58,6 +70,7 @@ def general_parser(parser: argparse.ArgumentParser) -> argparse.Namespace:
         output = args.outputfile
 
     return args
+
 
 # An abstraction of the getCollections and getPatients functions
 # to generalize an interface for the CLI
@@ -98,6 +111,7 @@ def getResults_cli(func, **kwargs) -> None:
             print(result)
     return
 
+
 # create a helper function that will be used if the user ever uses --output <FILE>.tsv
 # output should be a io.TextIOWrapper object
 def writeResultsToFile(results: List, output: io.TextIOWrapper) -> None:
@@ -124,6 +138,7 @@ def writeResultsToFile(results: List, output: io.TextIOWrapper) -> None:
         for result in results:
             output.write(str(result) + "\n")
     return
+
 
 def cli_wrapper(func, **kwargs) -> List[str] | None:
     """
@@ -156,13 +171,19 @@ def cli_wrapper(func, **kwargs) -> List[str] | None:
 
     return result
 
+
 def getPatients_cli() -> None:
     global query
     query = "patients"
     p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
 
-    p.add_argument("-c", "--collection", action="store",
-                   required=True,type=str,)
+    p.add_argument(
+        "-c",
+        "--collection",
+        action="store",
+        required=True,
+        type=str,
+    )
 
     args = general_parser(p)
 
@@ -174,8 +195,12 @@ def getCollections_cli() -> None:
     query = "collections"
     p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
 
-    p.add_argument("-p", "--prefix",
-        action="store", default="", type=str,
+    p.add_argument(
+        "-p",
+        "--prefix",
+        action="store",
+        default="",
+        type=str,
         help="The prefix to filter collections by, i.e 'TCGA', 'LIDC', 'NSCLC'",
     )
 
@@ -191,13 +216,20 @@ def getBodyPartCounts_cli() -> None:
 
     p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
 
-    p.add_argument("-c", "--collection", dest="collection",
-        action="store", default="", type=str,)
+    p.add_argument(
+        "-c",
+        "--collection",
+        dest="collection",
+        action="store",
+        default="",
+        type=str,
+    )
 
     args = general_parser(p)
 
-
-    return getResults_cli(func=NBIAClient().getBodyPartCounts, Collection=args.collection)
+    return getResults_cli(
+        func=NBIAClient().getBodyPartCounts, Collection=args.collection
+    )
 
 
 def getSeries_cli() -> None:
@@ -207,19 +239,41 @@ def getSeries_cli() -> None:
 
     p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
 
-    p.add_argument("-c", "--collection", dest="collection", action="store",
-        default="", type=str,
+    p.add_argument(
+        "-c",
+        "--collection",
+        dest="collection",
+        action="store",
+        default="",
+        type=str,
     )
 
-    p.add_argument("-p", "--patientID", dest="patientID",
-        action="store", default="", type=str,)
+    p.add_argument(
+        "-p",
+        "--patientID",
+        dest="patientID",
+        action="store",
+        default="",
+        type=str,
+    )
 
-    p.add_argument("-m", "--modality", dest="modality",
-        action="store", default="", type=str,)
+    p.add_argument(
+        "-m",
+        "--modality",
+        dest="modality",
+        action="store",
+        default="",
+        type=str,
+    )
 
-    p.add_argument("-study", "--studyInstanceUID", dest="studyInstanceUID",
-        action="store", default="", type=str,)
-
+    p.add_argument(
+        "-study",
+        "--studyInstanceUID",
+        dest="studyInstanceUID",
+        action="store",
+        default="",
+        type=str,
+    )
 
     p.add_argument(
         "--seriesInstanceUID",
@@ -317,4 +371,86 @@ def downloadSingleSeries_cli() -> None:
         overwrite=args.overwrite,
     )
 
+# Create command line interface
 
+# Given a source directory, destination directory, and target pattern, sort DICOM files
+# into the destination directory according to the target pattern.
+# The target pattern is a string with placeholders matching '%<DICOMKey>'.
+
+
+def DICOMSorter_cli():
+    parser = argparse.ArgumentParser(
+        description="NBIAToolkit: Sort DICOM files into destination directory according to target pattern."
+    )
+
+    parser.add_argument(
+        "sourceDir",
+        metavar="sourceDir",
+        type=str,
+        help="The source directory containing DICOM files.",
+    )
+
+    parser.add_argument(
+        "destinationDir",
+        metavar="destinationDir",
+        type=str,
+        help="The destination directory to sort DICOM files into.",
+    )
+
+    # Default is %%PatientName/%%SeriesNumber-%%SeriesInstanceUID/%%InstanceNumber.dcm
+    parser.add_argument(
+        "--targetPattern",
+        dest="targetPattern",
+        default="%PatientName/%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
+        type=str,
+        help="The target pattern for sorting DICOM files. Default is %%PatientName/%%SeriesNumber-%%SeriesInstanceUID/%%InstanceNumber.dcm.",
+    )
+
+    parser.add_argument(
+        "--truncateUID",
+        dest="truncateUID",
+        action="store_true",
+        default=True,
+        help="Truncate the UID to the last 5 characters (includes periods & underscores). Default is True.",
+    )
+
+    parser.add_argument(
+        "--sanitizeFilename",
+        dest="sanitizeFilename",
+        action="store_true",
+        help="Sanitize the file name by replacing potentially dangerous characters. Default is True.",
+    )
+
+    parser.add_argument(
+        "--overwrite",
+        dest="overwrite",
+        action="store_true",
+        help="Overwrite existing files. Default is False.",
+    )
+
+    parser.add_argument(
+        "--nParallel",
+        dest="nParallel",
+        action="store",
+        type=int,
+        help="Number of parallel threads. Default is 1.",
+    )
+
+    parser.set_defaults(truncateUID=True)
+    parser.set_defaults(sanitizeFilename=True)
+    parser.set_defaults(overwrite=False)
+    parser.set_defaults(nParallel=1)
+
+    args = parser.parse_args()
+
+    sorter = DICOMSorter(
+        sourceDir=args.sourceDir,
+        destinationDir=args.destinationDir,
+        targetPattern=args.targetPattern,
+        truncateUID=args.truncateUID,
+        sanitizeFilename=args.sanitizeFilename,
+    )
+
+    sorter.sortDICOMFiles(
+        option="copy", overwrite=args.overwrite, nParallel=int(args.nParallel)
+    )

@@ -98,6 +98,21 @@ jobs:
     - name: Install package
       run: poetry install
 
+
+    - name: Update README code block
+      run: |
+        awk '/``` bash NBIAToolkit-Output/ {
+          print "``` bash NBIAToolkit-Output";
+          print "> NBIAToolkit --version";
+          system("NBIAToolkit --version");
+          f=1;
+          next
+          } f && /```/ {
+            print "```";
+            f=0;
+            next
+          } !f' README.md > temp && mv temp README.md
+
    # This action uses Python Semantic Release v8
    # What this action does:
    # - Determines the next version number based on the commit history
