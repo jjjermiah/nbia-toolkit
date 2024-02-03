@@ -318,7 +318,7 @@ jobs:
               git commit -m "Update README with latest version: $LATEST_TAG"
 
               # Push changes to the remote repository
-              git push
+              git push origin HEAD:${{ github.ref }}
 
               echo "Changes committed and pushed successfully."
           else
