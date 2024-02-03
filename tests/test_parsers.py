@@ -1,5 +1,3 @@
-
-from numpy import exp
 from src.nbiatoolkit.utils.parsers import clean_html, convertMillis
 from datetime import datetime
 import pytest
