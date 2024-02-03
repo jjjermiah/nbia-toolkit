@@ -29,6 +29,7 @@ def version():
     commands = [
         "getCollections",
         "getPatients",
+        "getNewPatients",
         "getBodyPartCounts",
         "getSeries",
         "downloadSingleSeries",
@@ -208,6 +209,30 @@ def getCollections_cli() -> None:
 
     return getResults_cli(func=NBIAClient().getCollections, prefix=args.prefix)
 
+def getNewPatients_cli() -> None:
+    global query
+    query = "newPatients"
+    p = argparse.ArgumentParser(description=f"NBIAToolkit: {query}. Get new patients from a collection since a given date.")
+
+    p.add_argument(
+        "-c",
+        "--collection",
+        action="store",
+        required=True,
+        type=str,
+    )
+
+    p.add_argument(
+        "-d", "--date",
+        action="store",
+        required=True,
+        type=str,
+        help="The date to filter by, i.e '2021-01-01' or '2019/12/31",
+    )
+
+    args = general_parser(p)
+
+    return getResults_cli(func=NBIAClient().getNewPatients, Collection=args.collection, Date=args.date)
 
 def getBodyPartCounts_cli() -> None:
     global query
