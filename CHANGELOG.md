@@ -2,7 +2,18 @@
 
 
 
+## v0.19.2 (2024-02-03)
+
+### Fix
+
+* fix: added git config email and user ([`978808f`](https://github.com/jjjermiah/nbia-toolkit/commit/978808fb736c18977c3d6f9535f0f1411f9de0aa))
+
+
 ## v0.19.1 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.19.1 ([`8c37bf8`](https://github.com/jjjermiah/nbia-toolkit/commit/8c37bf84271e9de52eb3283745763584fbc11b66))
 
 ### Fix
 
