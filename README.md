@@ -54,24 +54,21 @@ Version: 0.21.1
 
 Available CLI tools: 
 
-getCollections [-h] [-p PREFIX] [-o OUTPUTFILE] [--version]
+getPatients [-h] [-u USERNAME] [-p PASSWORD] -c COLLECTION
+            [-o OUTPUTFILE] [--version]
 
-getPatients [-h] -c COLLECTION [-o OUTPUTFILE] [--version]
+getNewPatients [-h] [-u USERNAME] [-p PASSWORD] -c COLLECTION -d DATE
+               [-o OUTPUTFILE] [--version]
 
-getBodyPartCounts [-h] [-c COLLECTION] [-o OUTPUTFILE] [--version]
+getBodyPartCounts [-h] [-u USERNAME] [-p PASSWORD] [-c COLLECTION]
+                  [-o OUTPUTFILE] [--version]
 
-getSeries [-h] [-c COLLECTION] [-p PATIENTID] [-m MODALITY]
-          [-study STUDYINSTANCEUID]
-          [--seriesInstanceUID SERIESINSTANCEUID]
-          [--bodyPartExamined BODYPARTEXAMINED]
-          [--manufacturerModelName MANUFACTURERMODELNAME]
-          [--manufacturer MANUFACTURER] [-o OUTPUTFILE] [--version]
+downloadSingleSeries [-h] [-u USERNAME] [-p PASSWORD] --seriesUID
+                     SERIESUID --downloadDir DOWNLOADDIR
+                     [--filePattern FILEPATTERN] [--overwrite]
 
-downloadSingleSeries [-h] --seriesUID SERIESUID --downloadDir
-                     DOWNLOADDIR [--filePattern FILEPATTERN]
-                     [--overwrite]
-
-dicomsort [-h] [--targetPattern TARGETPATTERN] [--truncateUID]
+dicomsort [-h] [-u USERNAME] [-p PASSWORD]
+          [--targetPattern TARGETPATTERN] [--truncateUID]
           [--sanitizeFilename] [--overwrite] [--nParallel NPARALLEL]
           sourceDir destinationDir
 
