@@ -1,6 +1,8 @@
-from src.nbiatoolkit.utils.parsers import clean_html, convertMillis
+from src.nbiatoolkit.utils.parsers import clean_html, convertMillis, convertDateFormat
 from datetime import datetime
 import pytest
+
+
 def test_clean_html_valid_input():
     # Test case for valid input with HTML tags and special characters
     html_string = "<p>This is <b>bold</b> text with special characters: &amp; &lt; &gt;</p>"
@@ -42,3 +44,23 @@ def test_convertMillis_invalid_input():
         assert False, "Expected AssertionError"
     except AssertionError as e:
         assert str(e) == "The input must be an integer"
+
+
+def test_convertDateFormat_valid_input():
+    # Test case for valid input date in different formats
+    input_date = "2021-09-01"
+    expected_output = "2021/09/01"
+    assert convertDateFormat(input_date) == expected_output
+
+def test_convertDateFormat_invalid_input():
+    # Test case for invalid input date format
+    input_date = "shoulD_fail"  # Invalid format: day-month-year
+    with pytest.raises(ValueError) as e:
+        convertDateFormat(input_date)
+    assert str(e.value) == "Invalid date format: {}".format(input_date)
+
+def test_convertDateFormat_default_value():
+    # Test case for input date with no matching format
+    input_date = "2021/09/01"
+    default_value = "N/A"
+    assert convertDateFormat(input_date, default_value) == default_value
