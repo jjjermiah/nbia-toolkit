@@ -2,11 +2,152 @@
 
 
 
+## v0.19.2 (2024-02-03)
+
+### Fix
+
+* fix: added git config email and user ([`978808f`](https://github.com/jjjermiah/nbia-toolkit/commit/978808fb736c18977c3d6f9535f0f1411f9de0aa))
+
+
+## v0.19.1 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.19.1 ([`8c37bf8`](https://github.com/jjjermiah/nbia-toolkit/commit/8c37bf84271e9de52eb3283745763584fbc11b66))
+
+### Fix
+
+* fix: add beautifulsoup4 dependency ([`e6f7162`](https://github.com/jjjermiah/nbia-toolkit/commit/e6f7162fafa3414fb00a6a957375f352894f457f))
+
+* fix: remove numpy in test_parsers ([`f56b0bc`](https://github.com/jjjermiah/nbia-toolkit/commit/f56b0bcec569ca98a6ccc21f31bfc04770a0221e))
+
+
+## v0.19.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.19.0 ([`51b679f`](https://github.com/jjjermiah/nbia-toolkit/commit/51b679fb81d097a2737913f2847e652f2ef58a9a))
+
+### Feature
+
+* feat: add getCollectionDescriptions method, with tests, and updated docs. Also includes helper functions for parsing output. ([`8617395`](https://github.com/jjjermiah/nbia-toolkit/commit/86173954918e6e12b1a05d6549aabbd0d11ee40e))
+
+### Unknown
+
+* Merge pull request #75 from jjjermiah/46-feature-get_collection_descriptions
+
+feat: add getCollectionDescriptions method, with tests, and updated d… ([`89133ac`](https://github.com/jjjermiah/nbia-toolkit/commit/89133ac5e69b5f88e60240cd547e2bd4fae80a91))
+
+
+## v0.18.1 (2024-02-03)
+
+### Build
+
+* build: only push README changes if anything actually changes ([`bf78f94`](https://github.com/jjjermiah/nbia-toolkit/commit/bf78f941231460b18fa7855f81c52022fdcfa6e7))
+
+### Chore
+
+* chore(release): 0.18.1 ([`0edfd89`](https://github.com/jjjermiah/nbia-toolkit/commit/0edfd89cf0f1ecad297aa34c5b51ec62651bd4ca))
+
+### Unknown
+
+* added unit tests back ([`ff9cf33`](https://github.com/jjjermiah/nbia-toolkit/commit/ff9cf3369e6f9355ed5f6fece924a2242d16940a))
+
+* Update README with latest version ([`60dba1e`](https://github.com/jjjermiah/nbia-toolkit/commit/60dba1e761b299a21c6282f72e801a6a6135835d))
+
+
+## v0.18.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.18.0 ([`3911d8d`](https://github.com/jjjermiah/nbia-toolkit/commit/3911d8db50aea33a9e6b002f8662c38b1e2f8e51))
+
+### Feature
+
+* feat: added git pull to update-readme ([`9038ad8`](https://github.com/jjjermiah/nbia-toolkit/commit/9038ad84174f3825caf7c031374a170af8975c3c))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`6145f1f`](https://github.com/jjjermiah/nbia-toolkit/commit/6145f1f05898f6c6f6c6c32ee2b5c44ced3e305d))
+
+
+## v0.17.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.17.0 ([`9568607`](https://github.com/jjjermiah/nbia-toolkit/commit/95686071f5f1872356649f341bd7893027322bb9))
+
+### Feature
+
+* feat: use gha to update README ([`ae50777`](https://github.com/jjjermiah/nbia-toolkit/commit/ae507770d8874e132d1a4c19d0c4a83e10ac9f8f))
+
+### Fix
+
+* fix: gha force need CD ([`11610b4`](https://github.com/jjjermiah/nbia-toolkit/commit/11610b4db0aa6e6d485b0b8ae819dbf0a7780e16))
+
+### Test
+
+* test: include python ([`9ad2cd6`](https://github.com/jjjermiah/nbia-toolkit/commit/9ad2cd662e4b50deec7ceaabe5291f908171dbb1))
+
+* test: build update README ([`b44996b`](https://github.com/jjjermiah/nbia-toolkit/commit/b44996bc9efa1aaca689fa050770533031b69844))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`2d7bc57`](https://github.com/jjjermiah/nbia-toolkit/commit/2d7bc5766e9c117ec96f2b743a1cab0ca5a1d4b4))
+
+* Update README with latest version ([`406d824`](https://github.com/jjjermiah/nbia-toolkit/commit/406d824f01e2093438fbf782958532f3a8bf4d16))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`11a8803`](https://github.com/jjjermiah/nbia-toolkit/commit/11a8803b7f5a86d96d9247bb6d2a5a281fc12e3a))
+
+* Update README with latest version ([`8dd8046`](https://github.com/jjjermiah/nbia-toolkit/commit/8dd804686670415a0cc0f276d2713eb1896a52e5))
+
+
+## v0.16.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.16.0 ([`bc51c37`](https://github.com/jjjermiah/nbia-toolkit/commit/bc51c377959d93a85dfa031d321f774908b080ca))
+
+* chore: Refactor code formatting and improve readability ([`8bcdfa4`](https://github.com/jjjermiah/nbia-toolkit/commit/8bcdfa49d11f01907f7e9d11744695a9dfd31d46))
+
+### Documentation
+
+* docs: update notebook to fix #71 and add getStudies function ([`958d603`](https://github.com/jjjermiah/nbia-toolkit/commit/958d60376d7e02ebf1d2f0b9a7252b8a7da37738))
+
+* docs: Update README code block to include NBIAToolkit version and test new gha ([`3dc1996`](https://github.com/jjjermiah/nbia-toolkit/commit/3dc1996361e070fafa659d2dd4c06e121052f47c))
+
+### Feature
+
+* feat: Update DICOMSorter command line interface ([`6b6a2a8`](https://github.com/jjjermiah/nbia-toolkit/commit/6b6a2a8050a857bd21d5e5d2c55bf525e9f642c8))
+
+### Fix
+
+* fix: Update imports and add __version__ attribute ([`daad13e`](https://github.com/jjjermiah/nbia-toolkit/commit/daad13e6ee5d472f62307cd1cea7ad8aaf8e2e39))
+
+### Unknown
+
+* Merge pull request #73 from jjjermiah/development
+
+Development ([`1a0c816`](https://github.com/jjjermiah/nbia-toolkit/commit/1a0c81613dd8257f6766e816fe215f2a7adf36db))
+
+* Merge pull request #72 from jjjermiah/48-feature-getstudy
+
+48 feature getstudy ([`9552b6c`](https://github.com/jjjermiah/nbia-toolkit/commit/9552b6c38a7b5b7df2850d1804ec62bf3d250971))
+
+* added getStudies and tests ([`6e9138a`](https://github.com/jjjermiah/nbia-toolkit/commit/6e9138a811a88a4420bc4213094b83d3242b8732))
+
+* Update main.yml ([`e4df33e`](https://github.com/jjjermiah/nbia-toolkit/commit/e4df33edd18b9002c5da3268c9ddb32b9152d80b))
+
+
 ## v0.15.1 (2024-02-02)
 
 ### Build
 
 * build: add install with pypi test ([`648ea4f`](https://github.com/jjjermiah/nbia-toolkit/commit/648ea4f6d53b4460bc546693cfe88e418a4d5aa6))
+
+### Chore
+
+* chore(release): 0.15.1 ([`37fb393`](https://github.com/jjjermiah/nbia-toolkit/commit/37fb393dc5c7c5fdc8ce52d89e87eda9efdbe0ae))
 
 
 ## v0.15.0 (2024-02-01)

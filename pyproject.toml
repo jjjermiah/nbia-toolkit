@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nbiatoolkit"
-version = "0.15.1"
+version = "0.19.2"
 description = "A python package to query the National Biomedical Imaging Archive (NBIA) database."
 authors = ["Jermiah Joseph"]
 license = "MIT"
@@ -21,6 +21,7 @@ requests = "2.31.0"
 pydicom = "^2.4.3"
 tqdm = "^4.66.1"
 pyfiglet = "^1.0"
+beautifulsoup4 = "^4.12.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

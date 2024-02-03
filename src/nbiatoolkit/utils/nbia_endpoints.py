@@ -15,9 +15,9 @@ class NBIA_ENDPOINTS(Enum):
     GET_MODALITY_VALUES = "v2/getModalityValues"
 
     GET_PATIENTS = "v2/getPatient"
+    GET_NEW_PATIENTS_IN_COLLECTION = "v2/NewPatientsInCollection"
     GET_PATIENT_BY_COLLECTION_AND_MODALITY = "v2/getPatientByCollectionAndModality"
     GET_BODY_PART_PATIENT_COUNT = "getBodyPartValuesAndCounts"
-    GET_NEW_PATIENTS_IN_COLLECTION = "NewPatientsInCollection"
 
     GET_STUDIES = "v2/getPatientStudy"
 

@@ -92,6 +92,22 @@ def test_getPatients(nbia_patients):
     assert "Collection" in nbia_patients[0]
     assert "PatientSex" in nbia_patients[0]
 
+def test_getNewPatients(nbia_client):
+    patients = nbia_client.getNewPatients('TCGA-BLCA', Date = "2019-01-01")
+    assert isinstance(patients, list)
+    assert len(patients) > 0
+    assert isinstance(patients[0], dict)
+    assert "PatientId" in patients[0]
+    assert "PatientName" in patients[0]
+    assert "Collection" in patients[0]
+    assert "PatientSex" in patients[0]
+
+def test_failed_getNewPatients(nbia_client):
+    with pytest.raises(Exception):
+        patients = nbia_client.getNewPatients('TCGA-BLCA', Date = "bad_date")
+    with pytest.raises(Exception):
+        patients = nbia_client.getNewPatients('bad_collection', Date = "2019-01-01")
+
 def test_getPatientsByCollectionAndModality(nbia_patientsByCollectionAndModality):
     assert isinstance(nbia_patientsByCollectionAndModality, list)
     assert len(nbia_patientsByCollectionAndModality) > 0
@@ -172,3 +188,19 @@ def test_downloadSeries(nbia_client, nbia_collections, nbia_patients):
         assert file.endswith(".dcm")
         assert file[:-4].isdigit()
 
+def test_getCollectionDescriptions(nbia_client):
+    collectionName = "4D-Lung"
+    descriptions = nbia_client.getCollectionDescriptions(collectionName)
+    assert isinstance(descriptions, list)
+    assert len(descriptions) == 1
+    assert isinstance(descriptions[0], dict)
+    assert "collectionName" in descriptions[0]
+    assert descriptions[0]["collectionName"] == collectionName
+    assert "description" in descriptions[0]
+    assert "descriptionURI" in descriptions[0]
+    assert "lastUpdated" in descriptions[0]
+
+def test_failed_getCollectionDescriptions(nbia_client):
+    collectionName = "bad_collection"
+    with pytest.raises(ValueError):
+        nbia_client.getCollectionDescriptions(collectionName)
