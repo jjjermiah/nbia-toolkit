@@ -255,7 +255,7 @@ jobs:
             NBIAToolkit
 
   Update-README:
-    # needs: Continuous-Deployment
+    needs: Continuous-Deployment
     runs-on: ubuntu-latest
     # if: github.ref == 'refs/heads/development'
     steps:
