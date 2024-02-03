@@ -1,7 +1,6 @@
 from .auth import OAuth2
-from .utils.nbia_endpoints import NBIA_ENDPOINTS
 from .logger.logger import setup_logger
-from .utils.md5 import validateMD5
+from .utils import NBIA_ENDPOINTS, validateMD5, clean_html, convertMillis
 from .dicomsort import DICOMSorter
 
 import requests
@@ -107,6 +106,27 @@ class NBIAClient:
             if name.lower().startswith(prefix.lower()):
                 collections.append(name)
         return collections
+
+    def getCollectionDescriptions(self, collectionName : str) -> Union[list[dict[str, str]], None]:
+        PARAMS = self.parsePARAMS(locals())
+
+        response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_DESCRIPTIONS, PARAMS)
+
+        if len(response) == 0:
+            raise ValueError("The response from the API is empty. Please check the collection name.")
+
+        api_response = response[0]
+        if not isinstance(api_response, dict):
+            raise ValueError("The response from the API is not a dictionary")
+
+        returnVal : dict[str, str] = {
+            "collectionName" : api_response['collectionName'],
+            "description" : clean_html(api_response['description']),
+            "descriptionURI" : api_response['descriptionURI'],
+            "lastUpdated" : convertMillis(millis=int(api_response['collectionDescTimestamp'])),
+        }
+
+        return [returnVal]
 
     def getModalityValues(
         self, Collection: str = "", BodyPartExamined: str = ""
