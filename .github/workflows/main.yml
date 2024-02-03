@@ -255,6 +255,7 @@ jobs:
             NBIAToolkit
 
   Update-README:
+    needs: Continuous-Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
