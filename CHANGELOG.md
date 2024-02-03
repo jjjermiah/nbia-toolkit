@@ -2,7 +2,70 @@
 
 
 
+## v0.20.0 (2024-02-03)
+
+### Feature
+
+* feat: testing ([`3062c12`](https://github.com/jjjermiah/nbia-toolkit/commit/3062c128e074701a99b9326e833764acec6bef06))
+
+* feat: Update NBIA client to include new method getNewPatients() ([`22895a4`](https://github.com/jjjermiah/nbia-toolkit/commit/22895a4205f6c69f48cf3897a8de103316225e5f))
+
+* feat: Add convertDateFormat function to utils module ([`5d77524`](https://github.com/jjjermiah/nbia-toolkit/commit/5d775248d66dabb9dd759f505fc558507349ca34))
+
+### Fix
+
+* fix: add everything back ([`9cc6cd4`](https://github.com/jjjermiah/nbia-toolkit/commit/9cc6cd42efbe22287e90a3048e31392e529039e7))
+
+* fix: ff? ([`4f3e144`](https://github.com/jjjermiah/nbia-toolkit/commit/4f3e144044aed13a80c65a3e4d6cfe10200b1566))
+
+* fix: change to head_ref ([`2e1fcf5`](https://github.com/jjjermiah/nbia-toolkit/commit/2e1fcf563bc605e41ab81269d75f557005d0f78a))
+
+* fix: still tryin ([`3e3a647`](https://github.com/jjjermiah/nbia-toolkit/commit/3e3a647c694f887dbe9b9fc14ac8c720b6ca1ca6))
+
+* fix: gha readme issue ([`027ed36`](https://github.com/jjjermiah/nbia-toolkit/commit/027ed3629b9bf6ea050c6a4bd8d9c629e2f7846e))
+
+* fix: trying to fix gha readme issue ([`9ab5f78`](https://github.com/jjjermiah/nbia-toolkit/commit/9ab5f78fd163cef130d68007e2c23e28404a500f))
+
+### Test
+
+* test: still trying ([`49831c9`](https://github.com/jjjermiah/nbia-toolkit/commit/49831c9e63454a9a01b018b4dde263458db3cbf7))
+
+* test: trying ([`caca5db`](https://github.com/jjjermiah/nbia-toolkit/commit/caca5db5a80f1b6ac524d3aff826e54f39530b27))
+
+* test: no ref ([`8460f3b`](https://github.com/jjjermiah/nbia-toolkit/commit/8460f3bea4aaa7a7bd08430d6a4a870c2dd38656))
+
+### Unknown
+
+* Merge pull request #78 from jjjermiah/development
+
+Development ([`94ae9aa`](https://github.com/jjjermiah/nbia-toolkit/commit/94ae9aa666de24be59d700268493c02bd8f8d07c))
+
+* Merge branch &#39;development&#39; of https://github.com/jjjermiah/NBIA-toolkit into development ([`11a0c89`](https://github.com/jjjermiah/nbia-toolkit/commit/11a0c8942ef58d71d318d4eef83bfb8c5ad6e459))
+
+* Update README with latest version: 0.19.2 ([`b85bd78`](https://github.com/jjjermiah/nbia-toolkit/commit/b85bd785cbd62f3505b602891e9f144651495f7f))
+
+* Fix diverged branch by fetching and checking out the head_ref ([`06fd2e3`](https://github.com/jjjermiah/nbia-toolkit/commit/06fd2e37edbd4af68ec42b450a1e5fb5dd1d5b51))
+
+* trying again ([`e1d0e39`](https://github.com/jjjermiah/nbia-toolkit/commit/e1d0e3982d780adb44adceb8abf73a2ac091ac17))
+
+* test ([`792ef68`](https://github.com/jjjermiah/nbia-toolkit/commit/792ef68e9e6261e9ecdebb9320c3b11b4b540d4d))
+
+* test ([`4d18a86`](https://github.com/jjjermiah/nbia-toolkit/commit/4d18a862942667280b34e2c929f60379377bcd55))
+
+* Merge pull request #77 from jjjermiah/50-feature-getnewpatientsincollection
+
+50 feature getnewpatientsincollection ([`ef7db33`](https://github.com/jjjermiah/nbia-toolkit/commit/ef7db33a338d54c6bfd21f16ca5c4e0fcd853654))
+
+* rip ([`8125642`](https://github.com/jjjermiah/nbia-toolkit/commit/8125642bc712343234ad21b5abfb250334f8e3af))
+
+* Auto commit: Sat Feb  3 18:10:07 UTC 2024 ([`0050eda`](https://github.com/jjjermiah/nbia-toolkit/commit/0050eda7ba49f8d755550739c55e9cd2a79c89db))
+
+
 ## v0.19.2 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.19.2 ([`157cab6`](https://github.com/jjjermiah/nbia-toolkit/commit/157cab625fe12ad2bab752738c967afe5eaf7b37))
 
 ### Fix
 
