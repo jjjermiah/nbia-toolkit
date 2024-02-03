@@ -216,8 +216,9 @@ class NBIAClient:
             )
         return bodyparts
 
-    def getStudies(self, Collection : str, PatientID : str = "", StudyInstanceUID : str = ""
-) -> Union[list[dict[str, str]], None]:
+    def getStudies(
+        self, Collection: str, PatientID: str = "", StudyInstanceUID: str = ""
+    ) -> Union[list[dict[str, str]], None]:
         PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_STUDIES, params=PARAMS)
