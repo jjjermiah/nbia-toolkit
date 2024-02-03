@@ -39,10 +39,10 @@ pip install nbiatoolkit
 
 ## CLI Usage
 
-### getCollections
+# getCollections Output
 nbia-toolkit also provides a command line interface (CLI) to query the NBIA database for some queries.
-``` bash
-❯ NBIAToolkit
+``` bash NBIAToolkit-Output
+❯ NBIAToolkit --version
     _   ______  _______  ______            ____   _ __
    / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
   /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/

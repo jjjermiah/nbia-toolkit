@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nbiatoolkit"
-version = "0.14.0"
+version = "0.15.1"
 description = "A python package to query the National Biomedical Imaging Archive (NBIA) database."
 authors = ["Jermiah Joseph"]
 license = "MIT"
@@ -40,7 +40,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.semantic_release]
 version_variables = [
     "setup.py:__version__",
-    "src/nbiatoolkit/main.py:__version__",
+    "src/nbiatoolkit/nbia.py:__version__",
 ]
 version_toml = [
     "pyproject.toml:tool.poetry.version",

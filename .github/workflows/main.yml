@@ -98,6 +98,21 @@ jobs:
     - name: Install package
       run: poetry install
 
+
+    - name: Update README code block
+      run: |
+        awk '/``` bash NBIAToolkit-Output/ {
+          print "``` bash NBIAToolkit-Output";
+          print "> NBIAToolkit --version";
+          system("NBIAToolkit --version");
+          f=1;
+          next
+          } f && /```/ {
+            print "```";
+            f=0;
+            next
+          } !f' README.md > temp && mv temp README.md
+
    # This action uses Python Semantic Release v8
    # What this action does:
    # - Determines the next version number based on the commit history
@@ -190,6 +205,28 @@ jobs:
           ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
           ghcr.io/${{ github.repository }}/nbiatoolkit:latest
         labels: ${{ steps.meta.outputs.labels }}
+
+  test_install_withPyPi:
+    needs: Continuous-Deployment
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, macos-14]
+        python-version: ["3.10", "3.12", "3.11"]
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install using PyPi
+        run: |
+          pip install  nbiatoolkit;
+          NBIAToolkit
+
 
   test_image_with_new_tag:
     needs: Continuous-Deployment

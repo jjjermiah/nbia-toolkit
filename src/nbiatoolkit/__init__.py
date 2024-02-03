@@ -8,11 +8,11 @@
 
 
 # import the modules
-from .nbia import NBIAClient
-from .nbia_cli import version, getCollections_cli
+from .nbia import NBIAClient, __version__
+from .nbia_cli import version
 from .auth import OAuth2
 from .logger.logger import setup_logger
 from .utils.nbia_endpoints import NBIA_ENDPOINTS
 
 # define the __all__ variable
-__all__ = ["NBIAClient", "OAuth2", "setup_logger", "NBIA_ENDPOINTS", "version"]
+__all__ = ["NBIAClient", "OAuth2", "setup_logger", "NBIA_ENDPOINTS", "version", "__version__"]

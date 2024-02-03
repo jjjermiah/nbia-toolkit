@@ -2,7 +2,63 @@
 
 
 
+## v0.15.1 (2024-02-02)
+
+### Build
+
+* build: add install with pypi test ([`648ea4f`](https://github.com/jjjermiah/nbia-toolkit/commit/648ea4f6d53b4460bc546693cfe88e418a4d5aa6))
+
+
+## v0.15.0 (2024-02-01)
+
+### Chore
+
+* chore(release): 0.15.0 ([`0b6c7f1`](https://github.com/jjjermiah/nbia-toolkit/commit/0b6c7f1d0729a06e8f6ac8f2d791fde024aff107))
+
+### Documentation
+
+* docs: Add NBIAToolkit CLI usage to README ([`4cd3785`](https://github.com/jjjermiah/nbia-toolkit/commit/4cd3785efc8673610c7f3faec9678924df6fc277))
+
+* docs: adding requirements.txt back just for the build docs requirements ([`22ccb4c`](https://github.com/jjjermiah/nbia-toolkit/commit/22ccb4ce955b40c28f81ecffaca2da863385db48))
+
+* docs: trying pip install instead of requirements file ([`c258223`](https://github.com/jjjermiah/nbia-toolkit/commit/c2582230b8097245e46b423f6f2d626b9d0e6f1e))
+
+* docs(README): re-structure ([`9a836e5`](https://github.com/jjjermiah/nbia-toolkit/commit/9a836e5b9ba43d4aef7eb76ad7a854fcce554129))
+
+### Feature
+
+* feat: Update dependencies and add CLI tool help messages ([`658b59d`](https://github.com/jjjermiah/nbia-toolkit/commit/658b59d708fafb81794a25d17a8c7a509177e0ce))
+
+* feat(build): add python 3.10 ([`86db037`](https://github.com/jjjermiah/nbia-toolkit/commit/86db037f6381c381709647b0483e19563edf5de5))
+
+### Fix
+
+* fix: Update pyproject.toml ([`b0b0f0a`](https://github.com/jjjermiah/nbia-toolkit/commit/b0b0f0acdbbeeb93900d7ffb57d87be34c84cbf2))
+
+* fix: add setup.py back ([`f7394be`](https://github.com/jjjermiah/nbia-toolkit/commit/f7394beeeb6eea377b4cb863ee03333fe36eddc3))
+
+* fix: Update version number in pyproject.toml and nbia.py ([`63cf16e`](https://github.com/jjjermiah/nbia-toolkit/commit/63cf16ea42bc04e8c0c7d39f15f5cf874dc6ef56))
+
+### Refactor
+
+* refactor: CLI code to improve performance and readability ([`d5bd973`](https://github.com/jjjermiah/nbia-toolkit/commit/d5bd9731bb54a140b518edff33ab7eab90ff1450))
+
+### Unknown
+
+* Merge pull request #69 from jjjermiah/development
+
+Add CLI commands ([`1d77ea1`](https://github.com/jjjermiah/nbia-toolkit/commit/1d77ea1ab4c916d827f71f1712004bf7592fc8d5))
+
+* generalized arg parse ([`58cb470`](https://github.com/jjjermiah/nbia-toolkit/commit/58cb4709a80ee80c89b9db66d6ef87f6addc0e9c))
+
+* testing macOS M1 and python 3.10 ([`a507597`](https://github.com/jjjermiah/nbia-toolkit/commit/a507597f84cf7a343b7504c3b8a5b191ea7e60e9))
+
+
 ## v0.14.0 (2024-01-30)
+
+### Chore
+
+* chore(release): 0.14.0 ([`67233c5`](https://github.com/jjjermiah/nbia-toolkit/commit/67233c588a3d0133f1d0642b787e381414b7b6cb))
 
 ### Feature
 
