@@ -92,6 +92,22 @@ def test_getPatients(nbia_patients):
     assert "Collection" in nbia_patients[0]
     assert "PatientSex" in nbia_patients[0]
 
+def test_getNewPatients(nbia_client):
+    patients = nbia_client.getNewPatients('TCGA-BLCA', Date = "2019-01-01")
+    assert isinstance(patients, list)
+    assert len(patients) > 0
+    assert isinstance(patients[0], dict)
+    assert "PatientId" in patients[0]
+    assert "PatientName" in patients[0]
+    assert "Collection" in patients[0]
+    assert "PatientSex" in patients[0]
+
+def test_failed_getNewPatients(nbia_client):
+    with pytest.raises(Exception):
+        patients = nbia_client.getNewPatients('TCGA-BLCA', Date = "bad_date")
+    with pytest.raises(Exception):
+        patients = nbia_client.getNewPatients('bad_collection', Date = "2019-01-01")
+
 def test_getPatientsByCollectionAndModality(nbia_patientsByCollectionAndModality):
     assert isinstance(nbia_patientsByCollectionAndModality, list)
     assert len(nbia_patientsByCollectionAndModality) > 0

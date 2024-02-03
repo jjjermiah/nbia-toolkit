@@ -1,6 +1,6 @@
 from .auth import OAuth2
 from .logger.logger import setup_logger
-from .utils import NBIA_ENDPOINTS, validateMD5, clean_html, convertMillis
+from .utils import NBIA_ENDPOINTS, validateMD5, clean_html, convertMillis, convertDateFormat
 from .dicomsort import DICOMSorter
 
 import requests
@@ -155,6 +155,34 @@ class NBIAClient:
         if not isinstance(response, list):
             self.log.error("Expected list, but received: %s", type(response))
             return None
+
+        patientList = []
+        for patient in response:
+            assert isinstance(patient, dict), "Expected dict, but received: %s" % type(
+                patient
+            )
+            assert "PatientId" in patient, "PatientId not in patient dict"
+            assert isinstance(
+                patient["PatientId"], str
+            ), "PatientId must be a string, but received: %s" % type(
+                patient["PatientId"]
+            )
+
+            patientList.append(patient)
+
+        return patientList
+
+    def getNewPatients(self, Collection: str, Date: str) -> Union[list[dict[str, str]], None]:
+        assert Collection is not None
+        assert Date is not None
+
+        # convert date to %Y/%m/%d format
+        Date = convertDateFormat(input_date=Date, format="%Y/%m/%d")
+
+        PARAMS = self.parsePARAMS(locals())
+
+        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS)
+        assert isinstance(response, list), "Expected list, but received: %s" % type(response)
 
         patientList = []
         for patient in response:
