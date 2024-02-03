@@ -6,7 +6,7 @@ on:
     # push to any branch
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ main , development]
   
 jobs:  
   Continuous-Integration:
@@ -77,7 +77,7 @@ jobs:
     # needs: Continuous-Integration
 
     # if pulling to main, deploy to PyPI
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     # Set up operating system
     runs-on: ubuntu-latest
@@ -261,8 +261,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Pull latest changes
-        run: git pull
+      - name: Pull latest release from github
+        run: |
+          LATEST_TAG=$(curl -s \
+              "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+              | jq -r .tag_name | sed 's/^v//')
+          echo "LATEST_TAG=${LATEST_TAG}"
+
+      - name: Pull changes after semenatic-release
+        run: |
+          git fetch --all
+          git pull origin main
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -271,7 +280,11 @@ jobs:
 
       - name: Install using PyPi
         run: |
-          pip install  nbiatoolkit;
+          # update pip
+          pip install --upgrade pip
+
+          # make sure pypi packages are up to date
+          pip install --upgrade nbiatoolkit
           NBIAToolkit
 
       - name: Update README code block
