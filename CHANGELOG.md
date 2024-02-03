@@ -2,11 +2,28 @@
 
 
 
+## v0.19.0 (2024-02-03)
+
+### Feature
+
+* feat: add getCollectionDescriptions method, with tests, and updated docs. Also includes helper functions for parsing output. ([`8617395`](https://github.com/jjjermiah/nbia-toolkit/commit/86173954918e6e12b1a05d6549aabbd0d11ee40e))
+
+### Unknown
+
+* Merge pull request #75 from jjjermiah/46-feature-get_collection_descriptions
+
+feat: add getCollectionDescriptions method, with tests, and updated d… ([`89133ac`](https://github.com/jjjermiah/nbia-toolkit/commit/89133ac5e69b5f88e60240cd547e2bd4fae80a91))
+
+
 ## v0.18.1 (2024-02-03)
 
 ### Build
 
 * build: only push README changes if anything actually changes ([`bf78f94`](https://github.com/jjjermiah/nbia-toolkit/commit/bf78f941231460b18fa7855f81c52022fdcfa6e7))
+
+### Chore
+
+* chore(release): 0.18.1 ([`0edfd89`](https://github.com/jjjermiah/nbia-toolkit/commit/0edfd89cf0f1ecad297aa34c5b51ec62651bd4ca))
 
 ### Unknown
 
