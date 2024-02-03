@@ -7,7 +7,7 @@
 #     "validateMD5"
 # ]
 
-from .dicomsort import DICOMSorter, DICOMSorter_cli
+from .dicomsort import DICOMSorter
 from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, truncateUID
 
 __all__ = [

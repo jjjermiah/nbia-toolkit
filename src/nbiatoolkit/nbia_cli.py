@@ -1,6 +1,6 @@
 import io
 from .nbia import NBIAClient, __version__
-
+from .dicomsort import DICOMSorter
 
 import argparse
 import sys
@@ -32,6 +32,7 @@ def version():
         "getBodyPartCounts",
         "getSeries",
         "downloadSingleSeries",
+        "dicomsort"
     ]
     for command in commands:
         result = subprocess.run([command, "-h"], capture_output=True, text=True)
@@ -368,4 +369,88 @@ def downloadSingleSeries_cli() -> None:
         downloadDir=args.downloadDir,
         filePattern=args.filePattern,
         overwrite=args.overwrite,
+    )
+
+# Create command line interface
+
+# Given a source directory, destination directory, and target pattern, sort DICOM files
+# into the destination directory according to the target pattern.
+# The target pattern is a string with placeholders matching '%<DICOMKey>'.
+
+
+def DICOMSorter_cli():
+    parser = argparse.ArgumentParser(
+        description="NBIAToolkit: Sort DICOM files into destination directory according to target pattern."
+    )
+
+    parser.add_argument(
+        "sourceDir",
+        metavar="sourceDir",
+        type=str,
+        help="The source directory containing DICOM files.",
+    )
+
+    parser.add_argument(
+        "destinationDir",
+        metavar="destinationDir",
+        type=str,
+        help="The destination directory to sort DICOM files into.",
+    )
+
+    # Default is %%PatientName/%%SeriesNumber-%%SeriesInstanceUID/%%InstanceNumber.dcm
+    parser.add_argument(
+        "--targetPattern",
+        dest="targetPattern",
+        default="%PatientName/%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
+        type=str,
+        help="The target pattern for sorting DICOM files. Default is %%PatientName/%%SeriesNumber-%%SeriesInstanceUID/%%InstanceNumber.dcm.",
+    )
+
+    parser.add_argument(
+        "--truncateUID",
+        dest="truncateUID",
+        action="store_true",
+        default=True,
+        help="Truncate the UID to the last 5 characters (includes periods & underscores). Default is True.",
+    )
+
+    parser.add_argument(
+        "--sanitizeFilename",
+        dest="sanitizeFilename",
+        action="store_true",
+        help="Sanitize the file name by replacing potentially dangerous characters. Default is True.",
+    )
+
+    parser.add_argument(
+        "--overwrite",
+        dest="overwrite",
+        action="store_true",
+        help="Overwrite existing files. Default is False.",
+    )
+
+    parser.add_argument(
+        "--nParallel",
+        dest="nParallel",
+        action="store",
+        type=int,
+        help="Number of parallel threads. Default is 1.",
+    )
+
+    parser.set_defaults(truncateUID=True)
+    parser.set_defaults(sanitizeFilename=True)
+    parser.set_defaults(overwrite=False)
+    parser.set_defaults(nParallel=1)
+
+    args = parser.parse_args()
+
+    sorter = DICOMSorter(
+        sourceDir=args.sourceDir,
+        destinationDir=args.destinationDir,
+        targetPattern=args.targetPattern,
+        truncateUID=args.truncateUID,
+        sanitizeFilename=args.sanitizeFilename,
+    )
+
+    sorter.sortDICOMFiles(
+        option="copy", overwrite=args.overwrite, nParallel=int(args.nParallel)
     )

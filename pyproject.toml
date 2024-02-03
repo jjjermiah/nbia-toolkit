@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.scripts]
-DICOMSorter = "nbiatoolkit.dicomsort:DICOMSorter_cli"
+dicomsort = "nbiatoolkit.nbia_cli:DICOMSorter_cli"
 NBIAToolkit = "nbiatoolkit:version"
 getCollections = "nbiatoolkit.nbia_cli:getCollections_cli"
 getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
