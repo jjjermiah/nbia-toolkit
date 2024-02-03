@@ -14,6 +14,7 @@ getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
 getBodyPartCounts = "nbiatoolkit.nbia_cli:getBodyPartCounts_cli"
 downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
 getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
+getNewPatients = "nbiatoolkit.nbia_cli:getNewPatients_cli"
 
 [tool.poetry.dependencies]
 python = ">=3.10 || 3.12"
