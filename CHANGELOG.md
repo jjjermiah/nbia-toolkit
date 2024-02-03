@@ -2,7 +2,26 @@
 
 
 
+## v0.21.0 (2024-02-03)
+
+### Feature
+
+* feat: try again ([`ef5a0d4`](https://github.com/jjjermiah/nbia-toolkit/commit/ef5a0d4d87f9771980943da0242916d63d61a734))
+
+### Unknown
+
+* Merge pull request #79 from jjjermiah/development
+
+Development ([`90ad78d`](https://github.com/jjjermiah/nbia-toolkit/commit/90ad78dcd38bf48f7ed08f0ab4f757903aa9754c))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit into development ([`ea39ee4`](https://github.com/jjjermiah/nbia-toolkit/commit/ea39ee4337742e2b87e5d54a74d6e3dfb99137a0))
+
+
 ## v0.20.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.20.0 ([`0c69c5c`](https://github.com/jjjermiah/nbia-toolkit/commit/0c69c5cacde5135587d016fd013a6dbe952dd7a1))
 
 ### Feature
 
