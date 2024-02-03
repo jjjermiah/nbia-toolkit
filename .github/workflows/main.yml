@@ -290,8 +290,54 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name 'jjjermiah'
-          git config --global user.email 'jjjermiah@users.noreply.github.com'
-          git add README.md
-          git commit -m "Update README with latest version"
-          git push
+          # Check for changes
+          if [[ $(git status --porcelain) ]]; then
+              # Changes are present
+              echo "Changes found. Committing and pushing..."
+
+              # Add all changes
+              git add .
+
+              # Commit with a timestamp
+              git commit -m "Auto commit: $(date)"
+
+              # Push changes to the remote repository
+              git push origin main
+
+              echo "Changes committed and pushed successfully."
+          else
+              # No changes
+              echo "No changes found. Nothing to commit or push."
+          fi
+
+
+          # git config --global user.name 'jjjermiah'
+          # git config --global user.email 'jjjermiah@users.noreply.github.com'
+          # git add README.md
+
+          # git commit -m "Update README with latest version"
+          # git push
+
+
+# #!/bin/bash
+
+# # Check for changes
+# if [[ $(git status --porcelain) ]]; then
+#     # Changes are present
+#     echo "Changes found. Committing and pushing..."
+
+#     # Add all changes
+#     git add .
+
+#     # Commit with a timestamp
+#     git commit -m "Auto commit: $(date)"
+
+#     # Push changes to the remote repository
+#     git push origin <your-branch-name>
+
+#     echo "Changes committed and pushed successfully."
+# else
+#     # No changes
+#     echo "No changes found. Nothing to commit or push."
+# fi
+
