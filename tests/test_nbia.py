@@ -98,6 +98,13 @@ def test_getPatientsByCollectionAndModality(nbia_patientsByCollectionAndModality
     assert isinstance(nbia_patientsByCollectionAndModality[0], str)
     assert len(nbia_patientsByCollectionAndModality[0]) > 0
 
+def test_getStudies(nbia_client, nbia_collections):
+    studies = nbia_client.getStudies(Collection=nbia_collections[0])
+    assert studies is not None
+    assert isinstance(studies, list)
+    assert len(studies) > 0
+    assert isinstance(studies[0], dict)
+
 def test_getSeries(nbia_client, nbia_collections, nbia_patients):
     seriesList = nbia_client.getSeries(
         Collection=nbia_collections[0],

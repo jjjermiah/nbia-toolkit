@@ -19,6 +19,8 @@ class NBIA_ENDPOINTS(Enum):
     GET_BODY_PART_PATIENT_COUNT = "getBodyPartValuesAndCounts"
     GET_NEW_PATIENTS_IN_COLLECTION = "NewPatientsInCollection"
 
+    GET_STUDIES = "v2/getPatientStudy"
+
     GET_SERIES = "v2/getSeries"
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
 
