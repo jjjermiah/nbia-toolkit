@@ -2,7 +2,24 @@
 
 
 
+## v0.18.1 (2024-02-03)
+
+### Build
+
+* build: only push README changes if anything actually changes ([`bf78f94`](https://github.com/jjjermiah/nbia-toolkit/commit/bf78f941231460b18fa7855f81c52022fdcfa6e7))
+
+### Unknown
+
+* added unit tests back ([`ff9cf33`](https://github.com/jjjermiah/nbia-toolkit/commit/ff9cf3369e6f9355ed5f6fece924a2242d16940a))
+
+* Update README with latest version ([`60dba1e`](https://github.com/jjjermiah/nbia-toolkit/commit/60dba1e761b299a21c6282f72e801a6a6135835d))
+
+
 ## v0.18.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.18.0 ([`3911d8d`](https://github.com/jjjermiah/nbia-toolkit/commit/3911d8db50aea33a9e6b002f8662c38b1e2f8e51))
 
 ### Feature
 
