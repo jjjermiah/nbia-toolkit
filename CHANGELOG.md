@@ -2,7 +2,20 @@
 
 
 
+## v0.19.1 (2024-02-03)
+
+### Fix
+
+* fix: add beautifulsoup4 dependency ([`e6f7162`](https://github.com/jjjermiah/nbia-toolkit/commit/e6f7162fafa3414fb00a6a957375f352894f457f))
+
+* fix: remove numpy in test_parsers ([`f56b0bc`](https://github.com/jjjermiah/nbia-toolkit/commit/f56b0bcec569ca98a6ccc21f31bfc04770a0221e))
+
+
 ## v0.19.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.19.0 ([`51b679f`](https://github.com/jjjermiah/nbia-toolkit/commit/51b679fb81d097a2737913f2847e652f2ef58a9a))
 
 ### Feature
 
