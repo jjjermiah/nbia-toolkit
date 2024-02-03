@@ -2,11 +2,50 @@
 
 
 
+## v0.16.0 (2024-02-03)
+
+### Chore
+
+* chore: Refactor code formatting and improve readability ([`8bcdfa4`](https://github.com/jjjermiah/nbia-toolkit/commit/8bcdfa49d11f01907f7e9d11744695a9dfd31d46))
+
+### Documentation
+
+* docs: update notebook to fix #71 and add getStudies function ([`958d603`](https://github.com/jjjermiah/nbia-toolkit/commit/958d60376d7e02ebf1d2f0b9a7252b8a7da37738))
+
+* docs: Update README code block to include NBIAToolkit version and test new gha ([`3dc1996`](https://github.com/jjjermiah/nbia-toolkit/commit/3dc1996361e070fafa659d2dd4c06e121052f47c))
+
+### Feature
+
+* feat: Update DICOMSorter command line interface ([`6b6a2a8`](https://github.com/jjjermiah/nbia-toolkit/commit/6b6a2a8050a857bd21d5e5d2c55bf525e9f642c8))
+
+### Fix
+
+* fix: Update imports and add __version__ attribute ([`daad13e`](https://github.com/jjjermiah/nbia-toolkit/commit/daad13e6ee5d472f62307cd1cea7ad8aaf8e2e39))
+
+### Unknown
+
+* Merge pull request #73 from jjjermiah/development
+
+Development ([`1a0c816`](https://github.com/jjjermiah/nbia-toolkit/commit/1a0c81613dd8257f6766e816fe215f2a7adf36db))
+
+* Merge pull request #72 from jjjermiah/48-feature-getstudy
+
+48 feature getstudy ([`9552b6c`](https://github.com/jjjermiah/nbia-toolkit/commit/9552b6c38a7b5b7df2850d1804ec62bf3d250971))
+
+* added getStudies and tests ([`6e9138a`](https://github.com/jjjermiah/nbia-toolkit/commit/6e9138a811a88a4420bc4213094b83d3242b8732))
+
+* Update main.yml ([`e4df33e`](https://github.com/jjjermiah/nbia-toolkit/commit/e4df33edd18b9002c5da3268c9ddb32b9152d80b))
+
+
 ## v0.15.1 (2024-02-02)
 
 ### Build
 
 * build: add install with pypi test ([`648ea4f`](https://github.com/jjjermiah/nbia-toolkit/commit/648ea4f6d53b4460bc546693cfe88e418a4d5aa6))
+
+### Chore
+
+* chore(release): 0.15.1 ([`37fb393`](https://github.com/jjjermiah/nbia-toolkit/commit/37fb393dc5c7c5fdc8ce52d89e87eda9efdbe0ae))
 
 
 ## v0.15.0 (2024-02-01)
