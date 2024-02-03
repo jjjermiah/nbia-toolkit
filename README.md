@@ -50,7 +50,7 @@ nbia-toolkit also provides a command line interface (CLI) to query the NBIA data
 /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/  
                                                        
 
-Version: 0.21.1
+Version: 0.22.0
 
 Available CLI tools: 
 
