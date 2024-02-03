@@ -262,6 +262,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get Current branch
+        run: |
+          echo "Current branch is: ${{ github.ref }}"
+          echo "Current branch is: ${{ github.head_ref }}"
+          echo "Current branch is: ${{ github.base_ref }}"
+          echo "Current branch is: ${{ github.event_name }}"
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -309,7 +316,9 @@ jobs:
 
               # Commit with a timestamp
               git commit -m "Update README with latest version: $LATEST_TAG"
-              #[detached HEAD 718fec3] Update README with latest version: 0.19.2
+
+              # Push changes to the remote repository
+              git push
 
               echo "Changes committed and pushed successfully."
           else
