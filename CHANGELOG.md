@@ -2,7 +2,30 @@
 
 
 
+## v0.21.1 (2024-02-03)
+
+### Fix
+
+* fix: force require CD ([`0039c67`](https://github.com/jjjermiah/nbia-toolkit/commit/0039c67b2c20293efd6e22236e344a1e1c4c04ba))
+
+### Unknown
+
+* add CD back ([`be48bb9`](https://github.com/jjjermiah/nbia-toolkit/commit/be48bb9e4944aba4df7fc96dae3f8fd36a99cabb))
+
+* Update README with latest version: 0.21.0 ([`15083ff`](https://github.com/jjjermiah/nbia-toolkit/commit/15083ff588cbc351fb903b0e88f63aba75442857))
+
+* Merge pull request #80 from jjjermiah/development
+
+test: ([`ee9720a`](https://github.com/jjjermiah/nbia-toolkit/commit/ee9720a9abf5579d33e75c5c3e28ea8c804ffd79))
+
+* test: ([`b28afe7`](https://github.com/jjjermiah/nbia-toolkit/commit/b28afe725ce36e95f7149611e080194506ba242c))
+
+
 ## v0.21.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.21.0 ([`53459d9`](https://github.com/jjjermiah/nbia-toolkit/commit/53459d9cd3a3139881281fbb7cdb7a91490de1e0))
 
 ### Feature
 
