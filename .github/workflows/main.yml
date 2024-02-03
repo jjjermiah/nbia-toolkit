@@ -309,9 +309,7 @@ jobs:
 
               # Commit with a timestamp
               git commit -m "Update README with latest version: $LATEST_TAG"
-
-              # Push changes to the current branch
-              git push origin development
+              #[detached HEAD 718fec3] Update README with latest version: 0.19.2
 
               echo "Changes committed and pushed successfully."
           else
