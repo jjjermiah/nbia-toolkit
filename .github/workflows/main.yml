@@ -268,8 +268,10 @@ jobs:
           echo "Current branch is: ${{ github.head_ref }}"
           echo "Current branch is: ${{ github.base_ref }}"
           echo "Current branch is: ${{ github.event_name }}"
-          git config pull.ff only       # fast-forward only
-          git pull origin ${{ github.head_ref }}
+
+          # fix diverged branch
+          git fetch origin ${{ github.head_ref }}
+          git checkout ${{ github.head_ref }}
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
