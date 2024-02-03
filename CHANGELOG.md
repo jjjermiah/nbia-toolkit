@@ -2,7 +2,30 @@
 
 
 
+## v0.22.0 (2024-02-03)
+
+### Feature
+
+* feat: add username and password parameters to CLI ([`83421a3`](https://github.com/jjjermiah/nbia-toolkit/commit/83421a31d09817298c82e3046129c237094e7e94))
+
+* feat: Add getNewPatients_cli command to pyproject.toml and nbia_cli.py ([`fc40dec`](https://github.com/jjjermiah/nbia-toolkit/commit/fc40decadc6d4b317c1687932e09836cadbd4810))
+
+### Unknown
+
+* Merge pull request #82 from jjjermiah/70-feat-implement-user-and-password-for-clie
+
+70 feat implement user and password for cli ([`40aca34`](https://github.com/jjjermiah/nbia-toolkit/commit/40aca34c7cec1ed31b896a8418d0f26cf6bf3e00))
+
+* Update README with latest version: 0.21.1 ([`5d0a69b`](https://github.com/jjjermiah/nbia-toolkit/commit/5d0a69b23e654598b0d297d1698bbedf2d78b73b))
+
+* Update README with latest version: 0.21.1 ([`64afa17`](https://github.com/jjjermiah/nbia-toolkit/commit/64afa17c8077a12b96338730f054d8b012ab36ed))
+
+
 ## v0.21.1 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.21.1 ([`d6c673d`](https://github.com/jjjermiah/nbia-toolkit/commit/d6c673dae772b503f9be5772309d97980c344b63))
 
 ### Fix
 

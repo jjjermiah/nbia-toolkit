@@ -13,7 +13,7 @@ from pyfiglet import Figlet
 import os
 
 # set __version__ variable
-__version__ = "0.21.1"
+__version__ = "0.22.0"
 
 
 class NBIAClient:
