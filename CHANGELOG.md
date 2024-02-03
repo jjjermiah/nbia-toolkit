@@ -2,9 +2,38 @@
 
 
 
+## v0.17.0 (2024-02-03)
+
+### Feature
+
+* feat: use gha to update README ([`ae50777`](https://github.com/jjjermiah/nbia-toolkit/commit/ae507770d8874e132d1a4c19d0c4a83e10ac9f8f))
+
+### Fix
+
+* fix: gha force need CD ([`11610b4`](https://github.com/jjjermiah/nbia-toolkit/commit/11610b4db0aa6e6d485b0b8ae819dbf0a7780e16))
+
+### Test
+
+* test: include python ([`9ad2cd6`](https://github.com/jjjermiah/nbia-toolkit/commit/9ad2cd662e4b50deec7ceaabe5291f908171dbb1))
+
+* test: build update README ([`b44996b`](https://github.com/jjjermiah/nbia-toolkit/commit/b44996bc9efa1aaca689fa050770533031b69844))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`2d7bc57`](https://github.com/jjjermiah/nbia-toolkit/commit/2d7bc5766e9c117ec96f2b743a1cab0ca5a1d4b4))
+
+* Update README with latest version ([`406d824`](https://github.com/jjjermiah/nbia-toolkit/commit/406d824f01e2093438fbf782958532f3a8bf4d16))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`11a8803`](https://github.com/jjjermiah/nbia-toolkit/commit/11a8803b7f5a86d96d9247bb6d2a5a281fc12e3a))
+
+* Update README with latest version ([`8dd8046`](https://github.com/jjjermiah/nbia-toolkit/commit/8dd804686670415a0cc0f276d2713eb1896a52e5))
+
+
 ## v0.16.0 (2024-02-03)
 
 ### Chore
+
+* chore(release): 0.16.0 ([`bc51c37`](https://github.com/jjjermiah/nbia-toolkit/commit/bc51c377959d93a85dfa031d321f774908b080ca))
 
 * chore: Refactor code formatting and improve readability ([`8bcdfa4`](https://github.com/jjjermiah/nbia-toolkit/commit/8bcdfa49d11f01907f7e9d11744695a9dfd31d46))
 
