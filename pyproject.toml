@@ -59,7 +59,7 @@ commit_message = "chore(sem-ver): {version}"
 patch_without_tag = true
 
 [tool.semantic_release.changelog]
-changelog_file = "docs/wiki/CHANGELOG.md"
+changelog_file = "docs/markdowns/CHANGELOG.md"
 exclude_commit_types = ["docs", "style", "refactor", "test", "chore"]
 
 
