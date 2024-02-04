@@ -2,7 +2,44 @@
 
 
 
+## v0.23.0 (2024-02-04)
+
+### Build
+
+* build: Update pytest parallelism and add Codecov artifact upload ([`77dc291`](https://github.com/jjjermiah/nbia-toolkit/commit/77dc291a0b60c4958b52b924c0056dedea56971e))
+
+* build: Add labels and update maintainer information in Dockerfile ([`68e8831`](https://github.com/jjjermiah/nbia-toolkit/commit/68e883124dc7a30c197236e64d4bf5d1faa57f4c))
+
+### Feature
+
+* feat: add getStudies and getNewSeries CLI tools ([`99c5777`](https://github.com/jjjermiah/nbia-toolkit/commit/99c5777e58e6d94ff3199f7f8062523c97dc42a7))
+
+* feat: retrieve new series after a given date, +docs +tests ([`c6a506d`](https://github.com/jjjermiah/nbia-toolkit/commit/c6a506d473b01c63fc9fe88087fd7ecfc3b39d21))
+
+### Fix
+
+* fix: remove sem-ver commit message ([`ccd44bb`](https://github.com/jjjermiah/nbia-toolkit/commit/ccd44bb01e375968903b0b86edd8c2d666a71abf))
+
+* fix: Update .gitignore and build documentation ([`1cf31bb`](https://github.com/jjjermiah/nbia-toolkit/commit/1cf31bb0570d1f79086bf4c4edfdf94a16ebd98a))
+
+* fix: fix error from getCollections conflicting -prefix argument ([`4a7d242`](https://github.com/jjjermiah/nbia-toolkit/commit/4a7d242f5afd137a5384b31edb4bfad1faa65278))
+
+### Unknown
+
+* Merge pull request #84 from jjjermiah/49-feature-getupdatedseries
+
+49 feature getupdatedseries ([`440d9b4`](https://github.com/jjjermiah/nbia-toolkit/commit/440d9b4eee903391c22b647cb43c994e59e30123))
+
+* separate build documentation to prevent running it on every machine ([`473c5a7`](https://github.com/jjjermiah/nbia-toolkit/commit/473c5a72a623fd4241831ae203f522741eee0097))
+
+* Update README with latest version: 0.22.1 ([`67fb6e4`](https://github.com/jjjermiah/nbia-toolkit/commit/67fb6e472cdc6ed53265bd5755103111512a0931))
+
+
 ## v0.22.1 (2024-02-04)
+
+### Chore
+
+* chore(release): 0.22.1 ([`8eae5fc`](https://github.com/jjjermiah/nbia-toolkit/commit/8eae5fc58bae11ec17650cf7c4e9cc90410a96ab))
 
 ### Documentation
 
