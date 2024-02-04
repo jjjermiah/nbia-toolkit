@@ -2,6 +2,23 @@
 
 
 
+## v0.24.0 (2024-02-04)
+
+### Chore
+
+* chore: Update README: 0.23.0 ([`0223550`](https://github.com/jjjermiah/nbia-toolkit/commit/02235504d30d063c37022119cadd25f10d5d9d1b))
+
+### Feature
+
+* feat: Add getSeriesMetadata method to NBIAClient class ([`31211a6`](https://github.com/jjjermiah/nbia-toolkit/commit/31211a65e0e4907d764b3d64d82e5735d2385fc9))
+
+### Unknown
+
+* Merge pull request #87 from jjjermiah/61-feature-getseriesmetadata
+
+feat: Add getSeriesMetadata method to NBIAClient class ([`c516f96`](https://github.com/jjjermiah/nbia-toolkit/commit/c516f96f69d81b5768ed48d44102240f0301ef99))
+
+
 ## v0.23.0 (2024-02-04)
 
 ### Build
@@ -9,6 +26,10 @@
 * build: Update pytest parallelism and add Codecov artifact upload ([`77dc291`](https://github.com/jjjermiah/nbia-toolkit/commit/77dc291a0b60c4958b52b924c0056dedea56971e))
 
 * build: Add labels and update maintainer information in Dockerfile ([`68e8831`](https://github.com/jjjermiah/nbia-toolkit/commit/68e883124dc7a30c197236e64d4bf5d1faa57f4c))
+
+### Chore
+
+* chore(sem-ver): 0.23.0 ([`b1d4c3b`](https://github.com/jjjermiah/nbia-toolkit/commit/b1d4c3b7cf89a26629ff219411b92e8a0c4fe673))
 
 ### Feature
 
