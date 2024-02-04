@@ -13,7 +13,7 @@ import zipfile
 import os
 from datetime import datetime
 # set __version__ variable
-__version__ = "0.25.0"
+__version__ = "0.25.1"
 
 
 class NBIAClient:
