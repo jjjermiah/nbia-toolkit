@@ -7,6 +7,7 @@ class NBIA_ENDPOINTS(Enum):
     """
 
     BASE_URL = "https://services.cancerimagingarchive.net/nbia-api/services/"
+    NLST_URL = "https://nlst.cancerimagingarchive.net/nbia-api/services/"
 
     GET_COLLECTIONS = "v2/getCollectionValues"
     GET_COLLECTION_PATIENT_COUNT = "getCollectionValuesAndCounts"
