@@ -10,11 +10,13 @@ readme = "README.md"
 dicomsort = "nbiatoolkit.nbia_cli:DICOMSorter_cli"
 NBIAToolkit = "nbiatoolkit:version"
 getCollections = "nbiatoolkit.nbia_cli:getCollections_cli"
-getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
 getBodyPartCounts = "nbiatoolkit.nbia_cli:getBodyPartCounts_cli"
-downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
-getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
+getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
 getNewPatients = "nbiatoolkit.nbia_cli:getNewPatients_cli"
+getStudies = "nbiatoolkit.nbia_cli:getStudies_cli"
+getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
+getNewSeries = "nbiatoolkit.nbia_cli:getNewSeries_cli"
+downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
 
 [tool.poetry.dependencies]
 python = ">=3.10 || 3.12"
@@ -54,7 +56,7 @@ dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
 remove_dist = false
-commit_message = "chore(release): {version}"
+commit_message = "chore(sem-ver): {version}"
 patch_without_tag = true
 
 [tool.semantic_release.commit_parser_options]
