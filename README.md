@@ -50,24 +50,41 @@ For quick access to the NBIA, the toolkit also provides a command line interface
 /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/  
                                                        
 
-Version: 0.22.1
+Version: 0.23.0
 
 Available CLI tools: 
 
-getPatients [-h] [-u USERNAME] [-p PASSWORD] -c COLLECTION
-            [-o OUTPUTFILE] [--version]
-
-getNewPatients [-h] [-u USERNAME] [-p PASSWORD] -c COLLECTION -d DATE
+getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
                [-o OUTPUTFILE] [--version]
 
-getBodyPartCounts [-h] [-u USERNAME] [-p PASSWORD] [-c COLLECTION]
+getBodyPartCounts [-h] [-u USERNAME] [-pw PASSWORD] [-c COLLECTION]
                   [-o OUTPUTFILE] [--version]
 
-downloadSingleSeries [-h] [-u USERNAME] [-p PASSWORD] --seriesUID
+getPatients [-h] [-u USERNAME] [-pw PASSWORD] -c COLLECTION
+            [-o OUTPUTFILE] [--version]
+
+getNewPatients [-h] [-u USERNAME] [-pw PASSWORD] -c COLLECTION -d DATE
+               [-o OUTPUTFILE] [--version]
+
+getStudies [-h] [-u USERNAME] [-pw PASSWORD] -c COLLECTION
+           [-p PATIENTID] [-s STUDYINSTANCEUID] [-o OUTPUTFILE]
+           [--version]
+
+getSeries [-h] [-u USERNAME] [-pw PASSWORD] [-c COLLECTION]
+          [-p PATIENTID] [-m MODALITY] [-study STUDYINSTANCEUID]
+          [--seriesInstanceUID SERIESINSTANCEUID]
+          [--bodyPartExamined BODYPARTEXAMINED]
+          [--manufacturerModelName MANUFACTURERMODELNAME]
+          [--manufacturer MANUFACTURER] [-o OUTPUTFILE] [--version]
+
+getNewSeries [-h] [-u USERNAME] [-pw PASSWORD] -d DATE [-o OUTPUTFILE]
+             [--version]
+
+downloadSingleSeries [-h] [-u USERNAME] [-pw PASSWORD] --seriesUID
                      SERIESUID --downloadDir DOWNLOADDIR
                      [--filePattern FILEPATTERN] [--overwrite]
 
-dicomsort [-h] [-u USERNAME] [-p PASSWORD]
+dicomsort [-h] [-u USERNAME] [-pw PASSWORD]
           [--targetPattern TARGETPATTERN] [--truncateUID]
           [--sanitizeFilename] [--overwrite] [--nParallel NPARALLEL]
           sourceDir destinationDir
