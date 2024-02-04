@@ -35,9 +35,6 @@ jobs:
           # Github action runners now have 4 cores
           poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
 
-      - name: Build documentation
-        run: poetry run make html --directory docs/
-
       - name: Upload coverage report artifact to be used by Codecov
         uses: actions/upload-artifact@v2
         with:
@@ -66,6 +63,29 @@ jobs:
           verbose: true
           name: codecov-umbrella
 
+  Build-Documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Build documentation
+        run: |
+          poetry run mkdocs build
+
+
+
 
 
   Continuous-Deployment:
@@ -75,7 +95,7 @@ jobs:
         issues: write
         pull-requests: write
 
-    needs: Continuous-Integration
+    needs: [Continuous-Integration, Build-Documentation]
 
     # if pulling to main, deploy to PyPI
     if: github.ref == 'refs/heads/main'
