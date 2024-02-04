@@ -82,8 +82,9 @@ jobs:
 
       - name: Build documentation
         run: |
-          pip install sphinx-tabs
-          poetry run make html --directory docs/
+          pip install -r docs/requirements.txt
+          pip install .
+          make html --directory=docs
 
   Continuous-Deployment:
     permissions:
