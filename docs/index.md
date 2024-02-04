@@ -6,10 +6,11 @@
 :hidden:
 
 markdowns/NBIA.md
+test.rst
 markdowns/Installation.md
+Tutorial.ipynb
 markdowns/CHANGELOG.md
 markdowns/CONTRIBUTING.md
 markdowns/CONDUCT.md
-Tutorial.ipynb
 autoapi/index
 ```
