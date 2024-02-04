@@ -2,9 +2,63 @@
 
 
 
+## v0.25.2 (2024-02-04)
+
+### Build
+
+* build: test variable usage ([`d954905`](https://github.com/jjjermiah/nbia-toolkit/commit/d9549057526d9d8695bb5e89462f778526d83fe8))
+
+### Chore
+
+* chore: Update README: 0.25.1 ([`ab85e2e`](https://github.com/jjjermiah/nbia-toolkit/commit/ab85e2e37dc8861d9e2b46de6a06771e06367207))
+
+### Documentation
+
+* docs: Add new files and update index.md ([`861cb37`](https://github.com/jjjermiah/nbia-toolkit/commit/861cb3708f2099c057ce50df81a0a276f062f12b))
+
+### Fix
+
+* fix: added sphinx-tabs requirement for docs and changed changelog name ([`e321180`](https://github.com/jjjermiah/nbia-toolkit/commit/e32118076aa71daa56c62a72a08514b6f2fe1ba0))
+
+### Unknown
+
+* Merge pull request #92 from jjjermiah/read_the_docs_organization
+
+Read the docs organization ([`f4f5cac`](https://github.com/jjjermiah/nbia-toolkit/commit/f4f5cacbf5e1e93715ac925707cc5fc55a7ce78d))
+
+* Merge remote-tracking branch &#39;origin&#39; into read_the_docs_organization ([`e391dc4`](https://github.com/jjjermiah/nbia-toolkit/commit/e391dc4f90e2530ce1d73c3ab412b9a5b1a8551c))
+
+
+## v0.25.1 (2024-02-04)
+
+### Chore
+
+* chore(sem-ver): 0.25.1 ([`4c33957`](https://github.com/jjjermiah/nbia-toolkit/commit/4c33957264ba5491bda15380898b085e54676098))
+
+* chore: Update README: 0.25.0 ([`44c5032`](https://github.com/jjjermiah/nbia-toolkit/commit/44c5032649237275ab9c11a08ac18a1fd0302afa))
+
+### Documentation
+
+* docs: Update file paths and fix formatting in README and Tutorial ([`b69480f`](https://github.com/jjjermiah/nbia-toolkit/commit/b69480f64639517a92bca953b2d6abb37af89078))
+
+### Fix
+
+* fix: remove LiteralString so works with python3.10 ([`e04d367`](https://github.com/jjjermiah/nbia-toolkit/commit/e04d3672f20de685991132469a3298193428b375))
+
+### Unknown
+
+* Merge pull request #90 from jjjermiah/read_the_docs_organization
+
+Read the docs organization ([`aa5cf67`](https://github.com/jjjermiah/nbia-toolkit/commit/aa5cf67416c090cb52bc131f7f12c9b96b9f62de))
+
+* Merge remote-tracking branch &#39;origin&#39; into read_the_docs_organization ([`5d94bba`](https://github.com/jjjermiah/nbia-toolkit/commit/5d94bba085a839a2e0137c13e71988ea21fd64c6))
+
+
 ## v0.25.0 (2024-02-04)
 
 ### Chore
+
+* chore(sem-ver): 0.25.0 ([`475cb57`](https://github.com/jjjermiah/nbia-toolkit/commit/475cb575710d1f20973a7156cf247fd5ceee9388))
 
 * chore: Update README: 0.24.0 ([`a6b23ea`](https://github.com/jjjermiah/nbia-toolkit/commit/a6b23ea1e2d7ac5fda52a2fa989585de8fe09875))
 
