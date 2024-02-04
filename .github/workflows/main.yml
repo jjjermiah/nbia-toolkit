@@ -132,7 +132,6 @@ jobs:
       uses: python-semantic-release/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        git_commit_message: 'chore(release): release ${next_version}'
 
     - name: Install packaging-related tool
       run:
@@ -333,7 +332,7 @@ jobs:
               git add .
 
               # Commit with a timestamp
-              git commit -m "Update README with latest version: $LATEST_TAG"
+              git commit -m "chore: Update README: $LATEST_TAG"
 
               # Push changes to the remote repository
               # if github.head_ref is not null
