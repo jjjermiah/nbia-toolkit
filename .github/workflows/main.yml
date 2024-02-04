@@ -88,91 +88,91 @@ jobs:
 
 
 
-  Continuous-Deployment:
-    permissions:
-        contents: write
-        packages: write
-        issues: write
-        pull-requests: write
+  # Continuous-Deployment:
+  #   permissions:
+  #       contents: write
+  #       packages: write
+  #       issues: write
+  #       pull-requests: write
 
-    needs: [Unit-Tests, Build-Documentation]
+  #   needs: [Unit-Tests, Build-Documentation]
 
-    # if pulling to main, deploy to PyPI
-    if: github.ref == 'refs/heads/main'
+  #   # if pulling to main, deploy to PyPI
+  #   if: github.ref == 'refs/heads/main'
 
-    # Set up operating system
-    runs-on: ubuntu-latest
+  #   # Set up operating system
+  #   runs-on: ubuntu-latest
 
-    # Define job steps
-    steps:
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.12
+  #   # Define job steps
+  #   steps:
+  #   - name: Set up Python 3.12
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: 3.12
 
-    - name: Check-out repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+  #   - name: Check-out repository
+  #     uses: actions/checkout@v2
+  #     with:
+  #       fetch-depth: 0
 
-    - name: Install poetry
-      uses: snok/install-poetry@v1
+  #   - name: Install poetry
+  #     uses: snok/install-poetry@v1
 
-    - name: Install package
-      run: poetry install
+  #   - name: Install package
+  #     run: poetry install
 
-   # This action uses Python Semantic Release v8
-   # What this action does:
-   # - Determines the next version number based on the commit history
-    # - Creates a new tag with the new version number
-    # - Pushes the new tag to GitHub
-    # - Creates a GitHub release with the new version number
-    - name: Python Semantic Release
-      id: release
-      uses: python-semantic-release/python-semantic-release@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+  #  # This action uses Python Semantic Release v8
+  #  # What this action does:
+  #  # - Determines the next version number based on the commit history
+  #   # - Creates a new tag with the new version number
+  #   # - Pushes the new tag to GitHub
+  #   # - Creates a GitHub release with the new version number
+  #   - name: Python Semantic Release
+  #     id: release
+  #     uses: python-semantic-release/python-semantic-release@master
+  #     with:
+  #       github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install packaging-related tool
-      run:
-        python3 -m pip install build twine
+  #   - name: Install packaging-related tool
+  #     run:
+  #       python3 -m pip install build twine
 
-    # Build Package step:
-    # After semantic release, we should have a new tag if the commit history
-    # has been updated. If there isnt a new tag, then we dont need to build
-    # a new package. If there is a new tag, then we need to build a new package
-    # and publish it to PyPI
-    - name: Build package
-      if: steps.release.outputs.released == 'true'
-      run: |
-        poetry version $(git describe --tags --abbrev=0 | sed 's/^v//')
-        python -m build --sdist --wheel --outdir dist/ .
-        echo "LATEST_TAG=$(poetry version | sed 's/^nbiatoolkit //')" >> "$GITHUB_ENV"
+  #   # Build Package step:
+  #   # After semantic release, we should have a new tag if the commit history
+  #   # has been updated. If there isnt a new tag, then we dont need to build
+  #   # a new package. If there is a new tag, then we need to build a new package
+  #   # and publish it to PyPI
+  #   - name: Build package
+  #     if: steps.release.outputs.released == 'true'
+  #     run: |
+  #       poetry version $(git describe --tags --abbrev=0 | sed 's/^v//')
+  #       python -m build --sdist --wheel --outdir dist/ .
+  #       echo "LATEST_TAG=$(poetry version | sed 's/^nbiatoolkit //')" >> "$GITHUB_ENV"
 
-    - name: Publish package distributions to PyPI
-      if: steps.release.outputs.released == 'true'
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        verbose: true
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+  #   - name: Publish package distributions to PyPI
+  #     if: steps.release.outputs.released == 'true'
+  #     uses: pypa/gh-action-pypi-publish@release/v1
+  #     with:
+  #       verbose: true
+  #       user: __token__
+  #       password: ${{ secrets.PYPI_API_TOKEN }}
 
-    - name: Print branch name
-      run: |
-        printf "LATEST TAG: %s\n" "${LATEST_TAG}"
-        echo "DOCKER_IMAGE_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
-        printf "DOCKER_IMAGE_TAG: %s\n" "${DOCKER_IMAGE_TAG}"
+  #   - name: Print branch name
+  #     run: |
+  #       printf "LATEST TAG: %s\n" "${LATEST_TAG}"
+  #       echo "DOCKER_IMAGE_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
+  #       printf "DOCKER_IMAGE_TAG: %s\n" "${DOCKER_IMAGE_TAG}"
 
-    - name: Print outputs from semantic release
-      run: |
-        # Semantic release gha provides the following outputs:
-        # - released: true if a new release was created, false otherwise
-        # - version: the new version number
-        # - tag: The Git tag that was created
-        echo "${{ steps.release.outputs.released }}"
-        echo "${{ steps.release.outputs.version }}"
-        echo "${{ steps.release.outputs.tag }}"
-        echo "${{ steps.release.outputs.release_notes }}"
+  #   - name: Print outputs from semantic release
+  #     run: |
+  #       # Semantic release gha provides the following outputs:
+  #       # - released: true if a new release was created, false otherwise
+  #       # - version: the new version number
+  #       # - tag: The Git tag that was created
+  #       echo "${{ steps.release.outputs.released }}"
+  #       echo "${{ steps.release.outputs.version }}"
+  #       echo "${{ steps.release.outputs.tag }}"
+  #       echo "${{ steps.release.outputs.release_notes }}"
 
   #   - name: Set up QEMU
   #     if: steps.release.outputs.released == 'true'
