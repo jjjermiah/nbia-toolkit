@@ -2,9 +2,34 @@
 
 
 
+## v0.25.1 (2024-02-04)
+
+### Chore
+
+* chore: Update README: 0.25.0 ([`44c5032`](https://github.com/jjjermiah/nbia-toolkit/commit/44c5032649237275ab9c11a08ac18a1fd0302afa))
+
+### Documentation
+
+* docs: Update file paths and fix formatting in README and Tutorial ([`b69480f`](https://github.com/jjjermiah/nbia-toolkit/commit/b69480f64639517a92bca953b2d6abb37af89078))
+
+### Fix
+
+* fix: remove LiteralString so works with python3.10 ([`e04d367`](https://github.com/jjjermiah/nbia-toolkit/commit/e04d3672f20de685991132469a3298193428b375))
+
+### Unknown
+
+* Merge pull request #90 from jjjermiah/read_the_docs_organization
+
+Read the docs organization ([`aa5cf67`](https://github.com/jjjermiah/nbia-toolkit/commit/aa5cf67416c090cb52bc131f7f12c9b96b9f62de))
+
+* Merge remote-tracking branch &#39;origin&#39; into read_the_docs_organization ([`5d94bba`](https://github.com/jjjermiah/nbia-toolkit/commit/5d94bba085a839a2e0137c13e71988ea21fd64c6))
+
+
 ## v0.25.0 (2024-02-04)
 
 ### Chore
+
+* chore(sem-ver): 0.25.0 ([`475cb57`](https://github.com/jjjermiah/nbia-toolkit/commit/475cb575710d1f20973a7156cf247fd5ceee9388))
 
 * chore: Update README: 0.24.0 ([`a6b23ea`](https://github.com/jjjermiah/nbia-toolkit/commit/a6b23ea1e2d7ac5fda52a2fa989585de8fe09875))
 
