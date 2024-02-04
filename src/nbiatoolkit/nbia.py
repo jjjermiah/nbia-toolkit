@@ -6,7 +6,7 @@ from .dicomsort import DICOMSorter
 
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
-from typing import Union, LiteralString
+from typing import Union
 import io
 import zipfile
 
@@ -78,7 +78,7 @@ class NBIAClient:
     ) -> Union[list, dict, bytes]:
 
         # query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
-        query_url: LiteralString = self._base_url.value + endpoint.value
+        query_url: str = self._base_url.value + endpoint.value
 
         self._log.debug("Querying API endpoint: %s", query_url)
         self._log.debug("Query parameters: %s", params)
