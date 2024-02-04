@@ -1,38 +1,14 @@
 Initialize Client
------
+-----------------
 By default, nbiatoolkit uses the guest account to access all collections in the API that are publicly available.
 If you have a user account that has been granted specific access to a collection, you can use your credentials to
 initialize the client when performing a query.
 
-
 .. tabs::
-
-    .. tab::
-
-
-
-
-
-
-
-    .. tab:: Python
-
-        To perform the same operation using the Python package, follow these steps:
-
-        .. code-block:: python
-
-            from your_python_package import YourClass
-
-            instance = YourClass(option1='value1', option2='value2')
-            instance.run_operation()
-
-
-
-.. tabs::
-
-   To get a list of available public collections that start with "TCGA", run the following command:
 
    .. tab:: Command Line
+
+      To get a list of available public collections that start with "TCGA", run the following command:
 
       .. tabs::
 
@@ -44,9 +20,13 @@ initialize the client when performing a query.
 
          .. tab:: Your Account
 
+            .. code-block:: bash
+
                getCollections -u <USERNAME> -p <PASSWORD> --prefix TCGA
 
    .. tab:: Python
+
+      To do the same in Python, run the following code:
 
       .. tabs::
 
@@ -68,20 +48,28 @@ initialize the client when performing a query.
                client = NBIAClient(username = "<USERNAME>", password = "<PASSWORD>")
                client.getCollections(prefix='TCGA')
 
+.. raw:: html
+
+   <iframe src="_static/test_setup.html" width="100%" height="100%"></iframe>
+
+Logging
+^^^^^^^
 .. tabs::
 
-   .. tab:: Apples
+   .. tab:: Python
 
-      Apples are green, or sometimes red.
+      .. code-block:: python
 
-   .. tab:: Pears
+         from nbiatoolkit import NBIAClient
 
-      Pears are green.
+         client = NBIAClient(log_level='DEBUG)
+         client.getCollections(prefix='TCGA')
 
-   .. tab:: Oranges
+   .. tab:: Command Line
 
-      Oranges are orange.
+      .. code-block:: bash
 
+         getCollections --prefix TCGA # TODO:: implement logging for cli
 
 .. tabs::
 
