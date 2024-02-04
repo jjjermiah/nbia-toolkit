@@ -51,7 +51,7 @@ version_toml = [
     "pyproject.toml:tool.poetry.version",
 ]
 branch = "main"
-changelog_file = "CHANGELOG.md"
+changelog_file = "docs/wiki/CHANGELOG.md"
 dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false

@@ -5,9 +5,11 @@
 :maxdepth: 2
 :hidden:
 
-wiki/NBIA.md
+markdowns/NBIA.md
+markdowns/Installation.md
+markdowns/CHANGELOG.md
+markdowns/CONTRIBUTING.md
+markdowns/CONDUCT.md
 Tutorial.ipynb
-CONTRIBUTING.md
-CONDUCT.md
 autoapi/index
 ```
