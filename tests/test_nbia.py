@@ -93,7 +93,7 @@ def test_getPatients(nbia_patients):
     assert "PatientSex" in nbia_patients[0]
 
 def test_getNewPatients(nbia_client):
-    patients = nbia_client.getNewPatients('TCGA-BLCA', Date = "2019-01-01")
+    patients = nbia_client.getNewPatients('CMB-LCA', Date = "2022/12/06")
     assert isinstance(patients, list)
     assert len(patients) > 0
     assert isinstance(patients[0], dict)
@@ -144,7 +144,14 @@ def test_fail_getSeries(nbia_client, nbia_collections, nbia_patients):
         assert isinstance(seriesList, list)
         assert len(seriesList) > 0
         assert isinstance(seriesList[0], dict)
-        
+
+def test_getNewSeries(nbia_client):
+    Date = "01/01/2024"
+    series = nbia_client.getNewSeries(Date)
+    assert isinstance(series, list) or series is None
+    if series is not None:
+        assert all(isinstance(s, dict) for s in series)
+
 def test_downloadSeries(nbia_client, nbia_collections, nbia_patients):
     seriesList = nbia_client.getSeries(
         Collection=nbia_collections[0],
