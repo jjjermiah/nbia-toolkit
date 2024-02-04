@@ -19,7 +19,7 @@ getNewSeries = "nbiatoolkit.nbia_cli:getNewSeries_cli"
 downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
 
 [tool.poetry.dependencies]
-python = ">=3.7 || 3.12"
+python = ">=3.10 || 3.12"
 requests = "2.31.0"
 pydicom = "^2.4.3"
 tqdm = "^4.66.1"
@@ -35,7 +35,6 @@ mkdocs = "1.5.3"
 myst-nb = {version = "^1.0.0", python = "^3.9"}
 sphinx-autoapi = "^3.0.0"
 sphinx-rtd-theme = "^1.3.0"
-sphinx-tabs = "*"
 python-semantic-release = "^8.5.1"
 
 [build-system]
