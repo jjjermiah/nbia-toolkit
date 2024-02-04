@@ -7,13 +7,13 @@ initialize the client when performing a query.
 
 .. tabs::
 
-    .. tab:: Command Line
+    .. tab::
 
-        To perform an operation using the command line, use the following command:
 
-        .. code-block:: bash
 
-            your_command_line_tool --option1 value1 --option2 value2
+
+
+
 
     .. tab:: Python
 
@@ -26,6 +26,47 @@ initialize the client when performing a query.
             instance = YourClass(option1='value1', option2='value2')
             instance.run_operation()
 
+
+
+.. tabs::
+
+   To get a list of available public collections that start with "TCGA", run the following command:
+
+   .. tab:: Command Line
+
+      .. tabs::
+
+         .. tab:: Guest Account
+
+            .. code-block:: bash
+
+               getCollections --prefix TCGA
+
+         .. tab:: Your Account
+
+               getCollections -u <USERNAME> -p <PASSWORD> --prefix TCGA
+
+   .. tab:: Python
+
+      .. tabs::
+
+         .. tab:: Guest Account
+
+            .. code-block:: python
+
+               from nbiatoolkit import NBIAClient
+
+               client = NBIAClient()
+               client.getCollections(prefix='TCGA')
+
+         .. tab:: Your Account
+
+            .. code-block:: python
+
+               from nbiatoolkit import NBIAClient
+
+               client = NBIAClient(username = "<USERNAME>", password = "<PASSWORD>")
+               client.getCollections(prefix='TCGA')
 
 .. tabs::
 
@@ -41,35 +82,6 @@ initialize the client when performing a query.
 
       Oranges are orange.
 
-.. tabs::
-
-   .. tab:: Stars
-
-      .. tabs::
-
-         .. tab:: The Sun
-
-            The closest star to us.
-
-         .. tab:: Proxima Centauri
-
-            The second closest star to us.
-
-         .. tab:: Polaris
-
-            The North Star.
-
-   .. tab:: Moons
-
-      .. tabs::
-
-         .. tab:: The Moon
-
-            Orbits the Earth
-
-         .. tab:: Titan
-
-            Orbits Jupiter
 
 .. tabs::
 
@@ -171,10 +183,3 @@ initialize the client when performing a query.
          main <- function() {
             return(0)
          }
-Configuration
--------------
-
-Your configuration details go here.
-
-...
-
