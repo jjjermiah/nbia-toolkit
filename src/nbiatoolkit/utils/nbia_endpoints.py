@@ -23,6 +23,7 @@ class NBIA_ENDPOINTS(Enum):
 
     GET_SERIES = "v2/getSeries"
     GET_UPDATED_SERIES = "v2/getUpdatedSeries"  # ?fromDate=01/01/2024
+    GET_SERIES_METADATA = "v1/getSeriesMetaData"
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
 
 

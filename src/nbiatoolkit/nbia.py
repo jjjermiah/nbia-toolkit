@@ -72,9 +72,9 @@ class NBIAClient:
                 "Error querying API: %s %s", response.status_code, response.reason
             )
             raise requests.exceptions.RequestException(
-                f"Failed to get access token. Status code:\
-                    {response.status_code}"
+                f"Error querying API: {response.status_code} {response.reason}"
             )
+
 
         try:
             if response.headers.get("Content-Type") == "application/json":
@@ -302,6 +302,32 @@ class NBIAClient:
             return None
 
         return response
+
+    def getSeriesMetadata(
+        self,
+        SeriesInstanceUID: Union[str, list[str]],
+    ) -> Union[list[dict], None]:
+        assert isinstance(SeriesInstanceUID, (str, list)), \
+            "SeriesInstanceUID must be a string or list of strings"
+
+        if isinstance(SeriesInstanceUID, str):
+            SeriesInstanceUID = [SeriesInstanceUID]
+
+        metadata = []
+        for seriesUID in SeriesInstanceUID:
+            PARAMS = self.parsePARAMS({"SeriesInstanceUID": seriesUID})
+            response = self.query_api(
+                endpoint=NBIA_ENDPOINTS.GET_SERIES_METADATA, params=PARAMS
+            )
+
+            if not isinstance(response, list):
+                self.log.error("Expected list, but received: %s", type(response))
+                return None
+
+            metadata.extend(response)
+
+        return metadata
+
 
     def getNewSeries(
         self,

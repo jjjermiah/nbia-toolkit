@@ -8,6 +8,7 @@ import pytest
 from src.nbiatoolkit import NBIAClient
 from tempfile import TemporaryDirectory
 import os
+import requests
 
 @pytest.fixture(scope="session")
 def nbia_client():
@@ -211,3 +212,37 @@ def test_failed_getCollectionDescriptions(nbia_client):
     collectionName = "bad_collection"
     with pytest.raises(ValueError):
         nbia_client.getCollectionDescriptions(collectionName)
+
+
+
+def test_getSeriesMetadata_single(nbia_client):
+    seriesUID = "1.3.6.1.4.1.14519.5.2.1.6834.5010.227929163446067537882961857921"
+    metadata = nbia_client.getSeriesMetadata(seriesUID)
+    assert isinstance(metadata, list)
+    assert len(metadata) > 0
+    assert isinstance(metadata[0], dict)
+
+def test_getSeriesMetadata_multiple(nbia_client):
+    seriesUIDs = [
+        "1.3.6.1.4.1.14519.5.2.1.6834.5010.227929163446067537882961857921",
+        "1.3.6.1.4.1.14519.5.2.1.6834.5010.322628904903035357840500590726"]
+    metadata = nbia_client.getSeriesMetadata(seriesUIDs)
+    assert isinstance(metadata, list)
+    assert len(metadata) > 0
+    assert isinstance(metadata[0], dict)
+    assert len(metadata) == len(seriesUIDs)
+
+def test_getSeriesMetadata_invalid_input(nbia_client):
+    seriesUID = 12345
+
+    with pytest.raises(AssertionError):
+        metadata = nbia_client.getSeriesMetadata(seriesUID)
+
+    with pytest.raises(requests.exceptions.RequestException):
+        metadata = nbia_client.getSeriesMetadata(str(seriesUID))
+        assert metadata is None
+
+    with pytest.raises(requests.exceptions.RequestException):
+        seriesUIDs = ["12345", 67890]
+        metadata = nbia_client.getSeriesMetadata(seriesUIDs)
+        assert metadata is None
