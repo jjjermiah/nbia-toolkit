@@ -1,7 +1,7 @@
 import requests
 import time
 from typing import Union
-
+from .utils import NBIA_ENDPOINTS
 
 class OAuth2:
     """
@@ -68,7 +68,11 @@ class OAuth2:
     """
 
     def __init__(
-        self, username: str = "nbia_guest", password: str = "", client_id: str = "NBIA"
+        self,
+        username: str = "nbia_guest",
+        password: str = "",
+        client_id: str = "NBIA",
+        base_url: Union[str, NBIA_ENDPOINTS] = NBIA_ENDPOINTS.BASE_URL,
     ):
         """
         Initialize the OAuth2 class.
@@ -82,16 +86,25 @@ class OAuth2:
             The password for authentication. Default is an empty string.
         client_id : str, optional
             The client ID for authentication. Default is "NBIA".
+        base_url : str or NBIA_ENDPOINTS, optional. Default is NBIA_ENDPOINTS.BASE_URL
+
         """
         self.client_id = client_id
         self.username = username
         self.password = password
+
+        if isinstance(base_url, NBIA_ENDPOINTS):
+            self.base_url = base_url.value
+        else:
+            self.base_url = base_url
+
         self.access_token = None
         self.api_headers = None
         self.expiry_time = None
         self.refresh_token = None
         self.refresh_expiry = None
         self.scope = None
+
 
     def getToken(self) -> Union[dict, None]:
         """
@@ -115,14 +128,15 @@ class OAuth2:
             return None if self.access_token == None else self.access_token
 
         # Prepare the request data
-        data = {
+        data: dict[str, str] = {
             "username": self.username,
             "password": self.password,
             "client_id": self.client_id,
             "grant_type": "password",
         }
-        token_url = "https://services.cancerimagingarchive.net/nbia-api/oauth/token"
+        token_url: str = self.base_url + "oauth/token"
 
+        response : requests.models.Response
         response = requests.post(token_url, data=data)
 
         try:
