@@ -9,59 +9,59 @@ on:
     branches: [ main , development]
   
 jobs:  
-  # Unit-Tests:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest, macos-latest, macos-14]
-  #       python-version: ["3.12", "3.11"] # "3.10",
+  Unit-Tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, macos-14]
+        python-version: ["3.12", "3.11"] # "3.10",
   
-  #   steps:
-  #     - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-  #     - name: Install poetry
-  #       uses: snok/install-poetry@v1
+      - name: Install poetry
+        uses: snok/install-poetry@v1
 
-  #     - name: Install dependencies
-  #       run: poetry install
+      - name: Install dependencies
+        run: poetry install
 
-  #     - name: Test with pytest
-  #       run: |
-  #         # Github action runners now have 4 cores
-  #         poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
+      - name: Test with pytest
+        run: |
+          # Github action runners now have 4 cores
+          poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
 
-  #     - name: Upload coverage report artifact to be used by Codecov
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: coverage-report
-  #         path: coverage-report
+      - name: Upload coverage report artifact to be used by Codecov
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage-report
 
-  # Codecov:
-  #   needs: Unit-Tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  Codecov:
+    needs: Unit-Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Download coverage.xml artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: coverage-report
-  #         path: coverage-report
+      - name: Download coverage.xml artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage-report
 
-  #     - name: Use Codecov to track coverage
-  #       uses: codecov/codecov-action@v3
-  #       with:
-  #         token: ${{ secrets.CODECOV_TOKEN }}
-  #         files: ./coverage-report/coverage.xml
-  #         fail_ci_if_error: true
-  #         verbose: true
-  #         name: codecov-umbrella
+      - name: Use Codecov to track coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage-report/coverage.xml
+          fail_ci_if_error: true
+          verbose: true
+          name: codecov-umbrella
 
   Build-Documentation:
     runs-on: ubuntu-latest
@@ -82,285 +82,282 @@ jobs:
 
       - name: Build documentation
         run: |
+          pip install sphinx-tabs
           poetry run make html --directory docs/
 
+  Continuous-Deployment:
+    permissions:
+        contents: write
+        packages: write
+        issues: write
+        pull-requests: write
 
+    needs: [Unit-Tests]
 
+    # if pulling to main, deploy to PyPI
+    if: github.ref == 'refs/heads/main'
 
+    # Set up operating system
+    runs-on: ubuntu-latest
 
-  # Continuous-Deployment:
-  #   permissions:
-  #       contents: write
-  #       packages: write
-  #       issues: write
-  #       pull-requests: write
+    # Define job steps
+    steps:
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.12
 
-  #   needs: [Unit-Tests, Build-Documentation]
+    - name: Check-out repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
-  #   # if pulling to main, deploy to PyPI
-  #   if: github.ref == 'refs/heads/main'
+    - name: Install poetry
+      uses: snok/install-poetry@v1
 
-  #   # Set up operating system
-  #   runs-on: ubuntu-latest
+    - name: Install package
+      run: poetry install
 
-  #   # Define job steps
-  #   steps:
-  #   - name: Set up Python 3.12
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: 3.12
+   # This action uses Python Semantic Release v8
+   # What this action does:
+   # - Determines the next version number based on the commit history
+    # - Creates a new tag with the new version number
+    # - Pushes the new tag to GitHub
+    # - Creates a GitHub release with the new version number
+    - name: Python Semantic Release
+      id: release
+      uses: python-semantic-release/python-semantic-release@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
-  #   - name: Check-out repository
-  #     uses: actions/checkout@v2
-  #     with:
-  #       fetch-depth: 0
+    - name: Install packaging-related tool
+      run:
+        python3 -m pip install build twine
 
-  #   - name: Install poetry
-  #     uses: snok/install-poetry@v1
+    # Build Package step:
+    # After semantic release, we should have a new tag if the commit history
+    # has been updated. If there isnt a new tag, then we dont need to build
+    # a new package. If there is a new tag, then we need to build a new package
+    # and publish it to PyPI
+    - name: Build package
+      if: steps.release.outputs.released == 'true'
+      run: |
+        poetry version $(git describe --tags --abbrev=0 | sed 's/^v//')
+        python -m build --sdist --wheel --outdir dist/ .
+        echo "LATEST_TAG=$(poetry version | sed 's/^nbiatoolkit //')" >> "$GITHUB_ENV"
 
-  #   - name: Install package
-  #     run: poetry install
+    - name: Publish package distributions to PyPI
+      if: steps.release.outputs.released == 'true'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
 
-  #  # This action uses Python Semantic Release v8
-  #  # What this action does:
-  #  # - Determines the next version number based on the commit history
-  #   # - Creates a new tag with the new version number
-  #   # - Pushes the new tag to GitHub
-  #   # - Creates a GitHub release with the new version number
-  #   - name: Python Semantic Release
-  #     id: release
-  #     uses: python-semantic-release/python-semantic-release@master
-  #     with:
-  #       github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Print branch name
+      run: |
+        printf "LATEST TAG: %s\n" "${LATEST_TAG}"
+        echo "DOCKER_IMAGE_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
+        printf "DOCKER_IMAGE_TAG: %s\n" "${DOCKER_IMAGE_TAG}"
 
-  #   - name: Install packaging-related tool
-  #     run:
-  #       python3 -m pip install build twine
+    - name: Print outputs from semantic release
+      run: |
+        # Semantic release gha provides the following outputs:
+        # - released: true if a new release was created, false otherwise
+        # - version: the new version number
+        # - tag: The Git tag that was created
+        echo "${{ steps.release.outputs.released }}"
+        echo "${{ steps.release.outputs.version }}"
+        echo "${{ steps.release.outputs.tag }}"
+        echo "${{ steps.release.outputs.release_notes }}"
 
-  #   # Build Package step:
-  #   # After semantic release, we should have a new tag if the commit history
-  #   # has been updated. If there isnt a new tag, then we dont need to build
-  #   # a new package. If there is a new tag, then we need to build a new package
-  #   # and publish it to PyPI
-  #   - name: Build package
-  #     if: steps.release.outputs.released == 'true'
-  #     run: |
-  #       poetry version $(git describe --tags --abbrev=0 | sed 's/^v//')
-  #       python -m build --sdist --wheel --outdir dist/ .
-  #       echo "LATEST_TAG=$(poetry version | sed 's/^nbiatoolkit //')" >> "$GITHUB_ENV"
+    - name: Set up QEMU
+      if: steps.release.outputs.released == 'true'
+      uses: docker/setup-qemu-action@v3
 
-  #   - name: Publish package distributions to PyPI
-  #     if: steps.release.outputs.released == 'true'
-  #     uses: pypa/gh-action-pypi-publish@release/v1
-  #     with:
-  #       verbose: true
-  #       user: __token__
-  #       password: ${{ secrets.PYPI_API_TOKEN }}
+    - name: Set up Docker Buildx
+      if: steps.release.outputs.released == 'true'
+      uses: docker/setup-buildx-action@v3
 
-  #   - name: Print branch name
-  #     run: |
-  #       printf "LATEST TAG: %s\n" "${LATEST_TAG}"
-  #       echo "DOCKER_IMAGE_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
-  #       printf "DOCKER_IMAGE_TAG: %s\n" "${DOCKER_IMAGE_TAG}"
+    - name: Login to Docker Hub
+      if: steps.release.outputs.released == 'true'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  #   - name: Print outputs from semantic release
-  #     run: |
-  #       # Semantic release gha provides the following outputs:
-  #       # - released: true if a new release was created, false otherwise
-  #       # - version: the new version number
-  #       # - tag: The Git tag that was created
-  #       echo "${{ steps.release.outputs.released }}"
-  #       echo "${{ steps.release.outputs.version }}"
-  #       echo "${{ steps.release.outputs.tag }}"
-  #       echo "${{ steps.release.outputs.release_notes }}"
+    - name: Login to the GitHub Container Registry
+      if: steps.release.outputs.released == 'true'
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-  #   - name: Set up QEMU
-  #     if: steps.release.outputs.released == 'true'
-  #     uses: docker/setup-qemu-action@v3
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+          ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
 
-  #   - name: Set up Docker Buildx
-  #     if: steps.release.outputs.released == 'true'
-  #     uses: docker/setup-buildx-action@v3
+    - name: Build
+      if: steps.release.outputs.released == 'true'
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        file: ./Dockerfile
+        push: true
+        tags: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest
+          ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
+          ghcr.io/${{ github.repository }}/nbiatoolkit:latest
+        labels: ${{ steps.meta.outputs.labels }}
 
-  #   - name: Login to Docker Hub
-  #     if: steps.release.outputs.released == 'true'
-  #     uses: docker/login-action@v3
-  #     with:
-  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #       password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-  #   - name: Login to the GitHub Container Registry
-  #     if: steps.release.outputs.released == 'true'
-  #     uses: docker/login-action@v3
-  #     with:
-  #       registry: ghcr.io
-  #       username: ${{ github.actor }}
-  #       password: ${{ secrets.GITHUB_TOKEN }}
-
-  #   - name: Extract metadata (tags, labels) for Docker
-  #     id: meta
-  #     uses: docker/metadata-action@v3
-  #     with:
-  #       images: |
-  #         ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
-  #         ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
-
-  #   - name: Build
-  #     if: steps.release.outputs.released == 'true'
-  #     uses: docker/build-push-action@v5
-  #     with:
-  #       context: .
-  #       platforms: linux/amd64,linux/arm64
-  #       file: ./Dockerfile
-  #       push: true
-  #       tags: |
-  #         ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
-  #         ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest
-  #         ghcr.io/${{ github.repository }}/nbiatoolkit:${{ env.DOCKER_IMAGE_TAG }}
-  #         ghcr.io/${{ github.repository }}/nbiatoolkit:latest
-  #       labels: ${{ steps.meta.outputs.labels }}
-
-  # test_install_withPyPi:
-  #   needs: Continuous-Deployment
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest, macos-latest, macos-14]
-  #       python-version: ["3.12", "3.11"]
+  test_install_withPyPi:
+    needs: Continuous-Deployment
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, macos-14]
+        python-version: ["3.12", "3.11"]
     
-  #   steps:
-  #     - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
       
-  #     - name: Install using PyPi
-  #       run: |
-  #         pip install  nbiatoolkit;
-  #         NBIAToolkit
+      - name: Install using PyPi
+        run: |
+          pip install  nbiatoolkit;
+          NBIAToolkit
 
 
-  # test_image_with_new_tag:
-  #   needs: Continuous-Deployment
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  test_image_with_new_tag:
+    needs: Continuous-Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Test Image With new Tag
-  #       run: |
-  #         # get latest tag
-  #         LATEST_TAG=$(curl -s \
-  #           "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
-  #           | jq -r .tag_name | sed 's/^v//')
-  #         echo "LATEST_TAG=${LATEST_TAG}"
+      - name: Test Image With new Tag
+        run: |
+          # get latest tag
+          LATEST_TAG=$(curl -s \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+            | jq -r .tag_name | sed 's/^v//')
+          echo "LATEST_TAG=${LATEST_TAG}"
 
-  #         # test image with latest tag
-  #         docker run --rm \
-  #           ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${LATEST_TAG} \
-  #           NBIAToolkit
-
-
-  # test_image_with_latest_tag:
-  #   needs: Continuous-Deployment
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-
-  #     - name: Test Image with "latest" Tag
-  #       run: |
-  #         docker run --rm \
-  #           ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest \
-  #           NBIAToolkit
-
-  # Update-README:
-  #   needs: Continuous-Deployment
-  #   runs-on: ubuntu-latest
-  #   # if: github.ref == 'refs/heads/development'
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Get Current branch
-  #       run: |
-  #         echo "Current branch is: ${{ github.ref }}"
-  #         echo "Current branch is: ${{ github.head_ref }}"
-  #         echo "Current branch is: ${{ github.base_ref }}"
-  #         echo "Current branch is: ${{ github.event_name }}"
-
-  #         # if main, then git pull main
-  #         if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-  #             git pull origin main
-  #         fi
-
-  #         # fix diverged branch
-  #         git fetch origin ${{ github.head_ref }}
-  #         git checkout ${{ github.head_ref }}
-
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
-
-  #     - name: Install using PyPi
-  #       run: |
-  #         # update pip
-  #         pip install .
-  #         NBIAToolkit
-
-  #     - name: Update README code block
-  #       run: |
-  #         awk '/``` bash NBIAToolkit-Output/ {
-  #           print "``` bash NBIAToolkit-Output";
-  #           print "> NBIAToolkit --version";
-  #           system("NBIAToolkit --version");
-  #           f=1;
-  #           next
-  #           } f && /```/ {
-  #             print "```";
-  #             f=0;
-  #             next
-  #           } !f' README.md > temp && mv temp README.md
-
-  #     - name: Commit and push changes
-  #       run: |
-  #         LATEST_TAG=$(curl -s \
-  #             "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
-  #             | jq -r .tag_name | sed 's/^v//')
-  #         echo "LATEST_TAG=${LATEST_TAG}"
-  #         # Check for changes
-  #         if [[ $(git status --porcelain) ]]; then
-  #             # Changes are present
-  #             echo "Changes found. Committing and pushing..."
-
-  #             git config --global user.name 'jjjermiah'
-  #             git config --global user.email 'jjjermiah@users.noreply.github.com'
-
-  #             # Add all changes
-  #             git add .
-
-  #             # Commit with a timestamp
-  #             git commit -m "chore: Update README: $LATEST_TAG"
-
-  #             # Push changes to the remote repository
-  #             # if github.head_ref is not null
-  #             # then push to the branch
-  #             # else push to the base branch
-  #             if [ -n "${{ github.head_ref }}" ]; then
-  #                 git push origin HEAD:${{ github.head_ref }}
-  #             else
-  #                 git push origin HEAD:${{ github.ref }}
-  #             fi
+          # test image with latest tag
+          docker run --rm \
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${LATEST_TAG} \
+            NBIAToolkit
 
 
-  #             echo "Changes committed and pushed successfully."
-  #         else
-  #             # No changes
-  #             echo "No changes found. Nothing to commit or push."
-  #         fi
+  test_image_with_latest_tag:
+    needs: Continuous-Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Test Image with "latest" Tag
+        run: |
+          docker run --rm \
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:latest \
+            NBIAToolkit
+
+  Update-README:
+    needs: Continuous-Deployment
+    runs-on: ubuntu-latest
+    # if: github.ref == 'refs/heads/development'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get Current branch
+        run: |
+          echo "Current branch is: ${{ github.ref }}"
+          echo "Current branch is: ${{ github.head_ref }}"
+          echo "Current branch is: ${{ github.base_ref }}"
+          echo "Current branch is: ${{ github.event_name }}"
+
+          # if main, then git pull main
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+              git pull origin main
+          fi
+
+          # fix diverged branch
+          git fetch origin ${{ github.head_ref }}
+          git checkout ${{ github.head_ref }}
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install using PyPi
+        run: |
+          # update pip
+          pip install .
+          NBIAToolkit
+
+      - name: Update README code block
+        run: |
+          awk '/``` bash NBIAToolkit-Output/ {
+            print "``` bash NBIAToolkit-Output";
+            print "> NBIAToolkit --version";
+            system("NBIAToolkit --version");
+            f=1;
+            next
+            } f && /```/ {
+              print "```";
+              f=0;
+              next
+            } !f' README.md > temp && mv temp README.md
+
+      - name: Commit and push changes
+        run: |
+          LATEST_TAG=$(curl -s \
+              "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+              | jq -r .tag_name | sed 's/^v//')
+          echo "LATEST_TAG=${LATEST_TAG}"
+          # Check for changes
+          if [[ $(git status --porcelain) ]]; then
+              # Changes are present
+              echo "Changes found. Committing and pushing..."
+
+              git config --global user.name 'jjjermiah'
+              git config --global user.email 'jjjermiah@users.noreply.github.com'
+
+              # Add all changes
+              git add .
+
+              # Commit with a timestamp
+              git commit -m "chore: Update README: $LATEST_TAG"
+
+              # Push changes to the remote repository
+              # if github.head_ref is not null
+              # then push to the branch
+              # else push to the base branch
+              if [ -n "${{ github.head_ref }}" ]; then
+                  git push origin HEAD:${{ github.head_ref }}
+              else
+                  git push origin HEAD:${{ github.ref }}
+              fi
+
+
+              echo "Changes committed and pushed successfully."
+          else
+              # No changes
+              echo "No changes found. Nothing to commit or push."
+          fi
 
 
 
