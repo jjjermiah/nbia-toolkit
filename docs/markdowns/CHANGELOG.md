@@ -2,7 +2,36 @@
 
 
 
+## v0.25.4 (2024-02-04)
+
+### Chore
+
+* chore: Update README: 0.25.3 ([`7e6803d`](https://github.com/jjjermiah/nbia-toolkit/commit/7e6803d4a696aa1d2faab89e1cf97ad948f82d09))
+
+### Documentation
+
+* docs: added cool functionality for documentation ([`39c7994`](https://github.com/jjjermiah/nbia-toolkit/commit/39c7994d083c43d89aee46eaaedab19f5d809d95))
+
+* docs: add example initialization ([`1f242d5`](https://github.com/jjjermiah/nbia-toolkit/commit/1f242d51cd5ebf93cff5dfae9816c01b1dc961a5))
+
+* docs: update ([`26092e0`](https://github.com/jjjermiah/nbia-toolkit/commit/26092e074ae77ff1f77dd963c16697a2a0b28329))
+
+### Unknown
+
+* Merge pull request #93 from jjjermiah/docs
+
+Docs ([`d649614`](https://github.com/jjjermiah/nbia-toolkit/commit/d6496148dd9b98563882f3c273da7c01f96fee84))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`7aaa06b`](https://github.com/jjjermiah/nbia-toolkit/commit/7aaa06b0922c1a170a47049419081e67a6ad7316))
+
+* dont use poetry for build ([`579b621`](https://github.com/jjjermiah/nbia-toolkit/commit/579b6210b3319ec4c16aff33803de9f01832cb7d))
+
+
 ## v0.25.3 (2024-02-04)
+
+### Chore
+
+* chore(sem-ver): 0.25.3 ([`5e8af2d`](https://github.com/jjjermiah/nbia-toolkit/commit/5e8af2d66d27b517892b7165dc6417dadddc567f))
 
 ### Documentation
 
