@@ -59,7 +59,7 @@ def _initialize_parser(description: str) -> argparse.ArgumentParser:
     )
 
     credentials.add_argument(
-        "-p", "--password", action="store", type=str, default= "", #help="Password for the NBIA API (default: '')"
+        "-pw", "--password", action="store", type=str, default= "", #help="Password for the NBIA API (default: '')"
     )
 
     # make the credentials group show up first
