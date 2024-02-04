@@ -39,6 +39,10 @@ initialize the client when performing a query.
                client = NBIAClient()
                client.getCollections(prefix='TCGA')
 
+            .. raw:: html
+
+               <iframe src="_static/test_setup.html" width="100%" height="100%"></iframe>
+
          .. tab:: Your Account
 
             .. code-block:: python
@@ -48,9 +52,10 @@ initialize the client when performing a query.
                client = NBIAClient(username = "<USERNAME>", password = "<PASSWORD>")
                client.getCollections(prefix='TCGA')
 
-.. raw:: html
+            .. raw:: html
 
-   <iframe src="_static/test_setup.html" width="100%" height="100%"></iframe>
+               <iframe src="_static/test_setup.html" width="100%" height="100%"></iframe>
+
 
 Logging
 ^^^^^^^
