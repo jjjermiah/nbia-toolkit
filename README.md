@@ -41,8 +41,7 @@ pip install nbiatoolkit
 ```
 
 ## CLI Usage
-> [!TIP]
-> For quick access to the NBIA, the toolkit also provides a command line interface (CLI) 
+For quick access to the NBIA, the toolkit also provides a command line interface (CLI) 
 
 ``` bash NBIAToolkit-Output
 > NBIAToolkit --version
