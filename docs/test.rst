@@ -1,13 +1,9 @@
-.. Your Project Documentation
-   ===========================
-
-Introduction
-------------
-
-Your introduction goes here.
-
-Usage
+Initialize Client
 -----
+By default, nbiatoolkit uses the guest account to access all collections in the API that are publicly available.
+If you have a user account that has been granted specific access to a collection, you can use your credentials to
+initialize the client when performing a query.
+
 
 .. tabs::
 
