@@ -2,6 +2,41 @@
 
 
 
+## v0.25.3 (2024-02-04)
+
+### Documentation
+
+* docs: looks like it works? ([`3abd131`](https://github.com/jjjermiah/nbia-toolkit/commit/3abd1316da0302b2122d60e668ad1c03d6b8b138))
+
+### Fix
+
+* fix: bring it all back ([`cf9b3f5`](https://github.com/jjjermiah/nbia-toolkit/commit/cf9b3f5e734a2d9d6f72e26fc308fe126dc09322))
+
+* fix: any ([`2fd37bc`](https://github.com/jjjermiah/nbia-toolkit/commit/2fd37bc14511d0e1dce2b2ca4d11ae1be1b853e4))
+
+* fix: try sphinx 3.10 ([`afaf6b5`](https://github.com/jjjermiah/nbia-toolkit/commit/afaf6b5d006a6805842cd41af5a6025622ad6d5f))
+
+* fix: 3.10.4 ([`bd36124`](https://github.com/jjjermiah/nbia-toolkit/commit/bd3612499dd234317ea07201fe21ccd35cb8f770))
+
+* fix: 3.10.1 ([`88574f1`](https://github.com/jjjermiah/nbia-toolkit/commit/88574f14b15164ad67ff393dbb7028d4750929e8))
+
+* fix: change python ([`e1bc9b3`](https://github.com/jjjermiah/nbia-toolkit/commit/e1bc9b3a1c45103e025e282d6b7cfd6aaf83ddd0))
+
+* fix: turn all again ([`3394798`](https://github.com/jjjermiah/nbia-toolkit/commit/33947982d94aed3441ff46824acb4d7139f78f30))
+
+* fix: trying diff versions ([`a1e493a`](https://github.com/jjjermiah/nbia-toolkit/commit/a1e493a163c430afe3d1c5a319386868efd3cb64))
+
+* fix: turn off other gha ([`19cbf0e`](https://github.com/jjjermiah/nbia-toolkit/commit/19cbf0eef24db430f5407cf993d499cd3e216fed))
+
+### Unknown
+
+* try ([`22ee493`](https://github.com/jjjermiah/nbia-toolkit/commit/22ee4938071148185920b515c797818d5e3f9c4b))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`8ad996c`](https://github.com/jjjermiah/nbia-toolkit/commit/8ad996c245d2b01766f0c12384db415179b88df6))
+
+* add sphinx-tabs to poetry ([`9718ab7`](https://github.com/jjjermiah/nbia-toolkit/commit/9718ab7f9f5e904f541fa341ec0fd98c23ceb663))
+
+
 ## v0.25.2 (2024-02-04)
 
 ### Build
@@ -9,6 +44,8 @@
 * build: test variable usage ([`d954905`](https://github.com/jjjermiah/nbia-toolkit/commit/d9549057526d9d8695bb5e89462f778526d83fe8))
 
 ### Chore
+
+* chore(sem-ver): 0.25.2 ([`ba27a61`](https://github.com/jjjermiah/nbia-toolkit/commit/ba27a6175877c25bd1c21387a2a645511522f4a1))
 
 * chore: Update README: 0.25.1 ([`ab85e2e`](https://github.com/jjjermiah/nbia-toolkit/commit/ab85e2e37dc8861d9e2b46de6a06771e06367207))
 
