@@ -2,7 +2,30 @@
 
 
 
+## v0.22.1 (2024-02-04)
+
+### Documentation
+
+* docs: Update README.md ([`2326b43`](https://github.com/jjjermiah/nbia-toolkit/commit/2326b4354d66c8b5b7a4379389f35c0edbf336e3))
+
+### Unknown
+
+* Merge pull request #83 from jjjermiah/updateREADME
+
+Update readme [skip ci] --no-verify ([`69fa813`](https://github.com/jjjermiah/nbia-toolkit/commit/69fa813f51a6c3b2e75bfbcf2bef263ae4be1fcb))
+
+* Update README.md ([`0d46ccf`](https://github.com/jjjermiah/nbia-toolkit/commit/0d46ccfee49b00278cbb7514847ce89ec9760c6e))
+
+* Update README.md ([`5ac465d`](https://github.com/jjjermiah/nbia-toolkit/commit/5ac465d1819468a88dec4be373f1c094b6f2e40c))
+
+* Update README with latest version: 0.22.0 ([`95ef0a9`](https://github.com/jjjermiah/nbia-toolkit/commit/95ef0a9cfa951a88c4f991a945ff0d1e64751f71))
+
+
 ## v0.22.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.22.0 ([`623c467`](https://github.com/jjjermiah/nbia-toolkit/commit/623c46757641deb6d97a4059b072e041efe40340))
 
 ### Feature
 
