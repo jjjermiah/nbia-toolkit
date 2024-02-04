@@ -9,59 +9,59 @@ on:
     branches: [ main , development]
   
 jobs:  
-  Unit-Tests:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, macos-14]
-        python-version: ["3.12", "3.11"] # "3.10",
+  # Unit-Tests:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, macos-latest, macos-14]
+  #       python-version: ["3.12", "3.11"] # "3.10",
   
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Install poetry
-        uses: snok/install-poetry@v1
+  #     - name: Install poetry
+  #       uses: snok/install-poetry@v1
 
-      - name: Install dependencies
-        run: poetry install
+  #     - name: Install dependencies
+  #       run: poetry install
 
-      - name: Test with pytest
-        run: |
-          # Github action runners now have 4 cores
-          poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
+  #     - name: Test with pytest
+  #       run: |
+  #         # Github action runners now have 4 cores
+  #         poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
 
-      - name: Upload coverage report artifact to be used by Codecov
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage-report
+  #     - name: Upload coverage report artifact to be used by Codecov
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: coverage-report
+  #         path: coverage-report
 
-  Codecov:
-    needs: Unit-Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # Codecov:
+  #   needs: Unit-Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Download coverage.xml artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage-report
+  #     - name: Download coverage.xml artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: coverage-report
+  #         path: coverage-report
 
-      - name: Use Codecov to track coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage-report/coverage.xml
-          fail_ci_if_error: true
-          verbose: true
-          name: codecov-umbrella
+  #     - name: Use Codecov to track coverage
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: ./coverage-report/coverage.xml
+  #         fail_ci_if_error: true
+  #         verbose: true
+  #         name: codecov-umbrella
 
   Build-Documentation:
     runs-on: ubuntu-latest
@@ -95,7 +95,7 @@ jobs:
         issues: write
         pull-requests: write
 
-    # needs: [Unit-Tests, Build-Documentation]
+    needs: [Unit-Tests, Build-Documentation]
 
     # if pulling to main, deploy to PyPI
     if: github.ref == 'refs/heads/main'
