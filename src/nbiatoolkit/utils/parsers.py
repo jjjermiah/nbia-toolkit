@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from datetime import datetime
-
+from typing import Union
 
 def clean_html(html_string: str) -> str:
     """
@@ -39,7 +39,10 @@ def convertMillis(millis: int) -> str:
     return datetime.fromtimestamp(millis / 1000.0).strftime('%Y-%m-%d')
 
 
-def convertDateFormat(input_date: str, format: str = "%Y/%m/%d") -> str:
+def convertDateFormat(
+    input_date: Union[str, datetime],
+    format: str = "%Y/%m/%d"
+) -> str:
     """
     Converts the input date to the desired format.
 
@@ -56,6 +59,9 @@ def convertDateFormat(input_date: str, format: str = "%Y/%m/%d") -> str:
     possible_formats = [
         "%Y-%m-%d", "%Y/%m/%d", "%Y%m%d", "%m/%d/%Y", "%d/%m/%Y", "%d-%m-%Y"
     ]
+    if isinstance(input_date, datetime):
+        return input_date.strftime(format)
+
     # Try parsing the input date with each possible format
     for date_format in possible_formats:
         try:

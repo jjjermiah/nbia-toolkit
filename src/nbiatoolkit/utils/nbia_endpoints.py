@@ -22,15 +22,12 @@ class NBIA_ENDPOINTS(Enum):
     GET_STUDIES = "v2/getPatientStudy"
 
     GET_SERIES = "v2/getSeries"
+    GET_UPDATED_SERIES = "v2/getUpdatedSeries"  # ?fromDate=01/01/2024
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
 
-    GET_UPDATED_SERIES = "v2/getUpdatedSeries"  # ?fromDate=01/01/2024
 
-    # https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesMetaData?SeriesInstanceUID=1.3.6.1.4.1.9590.100.1.2.374115997511889073021386151921807063992
 
-    # https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesSize?SeriesInstanceUID=1.3.6.1.4.1.9590.100.1.2.374115997511889073021386151921807063992
 
-    # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeries"
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesMetaData"
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesSize"
 

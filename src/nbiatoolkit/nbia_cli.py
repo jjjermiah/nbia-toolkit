@@ -28,10 +28,12 @@ def version():
     # run each command with -h to see the available options
     commands = [
         "getCollections",
+        "getBodyPartCounts",
         "getPatients",
         "getNewPatients",
-        "getBodyPartCounts",
+        "getStudies",
         "getSeries",
+        "getNewSeries",
         "downloadSingleSeries",
         "dicomsort"
     ]
@@ -59,7 +61,7 @@ def _initialize_parser(description: str) -> argparse.ArgumentParser:
     )
 
     credentials.add_argument(
-        "-p", "--password", action="store", type=str, default= "", #help="Password for the NBIA API (default: '')"
+        "-pw", "--password", action="store", type=str, default= "", #help="Password for the NBIA API (default: '')"
     )
 
     # make the credentials group show up first
@@ -278,6 +280,40 @@ def getBodyPartCounts_cli() -> None:
         func=NBIAClient(args.username, args.password).getBodyPartCounts, Collection=args.collection
     )
 
+def getStudies_cli() -> None:
+    global query
+    query = f"getStudies"
+    p = _initialize_parser(description=f"NBIAToolkit: {query}. Get studies from a collection.")
+
+    p.add_argument(
+        "-c",
+        "--collection",
+        action="store",
+        required=True,
+        type=str,
+    )
+
+    p.add_argument(
+        "-p",
+        "--patientID",
+        action="store",
+        default="",
+        type=str,
+    )
+
+    p.add_argument(
+        "-s", "--studyInstanceUID",
+        action="store",
+        default="",
+        type=str,
+    )
+
+    args = _add_extra_args(p)
+
+    return getResults_cli(func=NBIAClient(args.username, args.password).getStudies, Collection=args.collection, PatientID=args.patientID, StudyInstanceUID=args.studyInstanceUID)
+
+
+
 
 def getSeries_cli() -> None:
     global query
@@ -367,6 +403,22 @@ def getSeries_cli() -> None:
         Manufacturer=args.manufacturer,
     )
 
+def getNewSeries_cli() -> None:
+    global query
+    query = f"newSeries"
+    p = _initialize_parser(description=f"NBIAToolkit: {query}. Get new series from a collection since a given date.")
+
+    p.add_argument(
+        "-d", "--date",
+        action="store",
+        required=True,
+        type=str,
+        help="The date to filter by, i.e '2021-01-01' or '2019/12/31",
+    )
+
+    args = _add_extra_args(p)
+
+    return getResults_cli(func=NBIAClient(args.username, args.password).getNewSeries, Date=args.date)
 
 def downloadSingleSeries_cli() -> None:
     global query

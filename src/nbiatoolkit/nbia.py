@@ -11,7 +11,7 @@ import zipfile
 from tqdm import tqdm
 from pyfiglet import Figlet
 import os
-
+from datetime import datetime
 # set __version__ variable
 __version__ = "0.22.1"
 
@@ -51,12 +51,14 @@ class NBIAClient:
     def headers(self):
         return self._api_headers
 
+
     def query_api(
         self, endpoint: NBIA_ENDPOINTS, params: dict = {}
     ) -> Union[list, dict, bytes]:
         query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
 
         self.log.debug("Querying API endpoint: %s", query_url)
+        self.log.debug("Query parameters: %s", params)
         response: requests.Response
         try:
             response = requests.get(url=query_url, headers=self.headers, params=params)
@@ -172,7 +174,10 @@ class NBIAClient:
 
         return patientList
 
-    def getNewPatients(self, Collection: str, Date: str) -> Union[list[dict[str, str]], None]:
+    def getNewPatients(self,
+        Collection: str,
+        Date: Union[str, datetime],
+    ) -> Union[list[dict[str, str]], None]:
         assert Collection is not None
         assert Date is not None
 
@@ -291,6 +296,25 @@ class NBIAClient:
         PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_SERIES, params=PARAMS)
+
+        if not isinstance(response, list):
+            self.log.error("Expected list, but received: %s", type(response))
+            return None
+
+        return response
+
+    def getNewSeries(
+        self,
+        Date: Union[str, datetime],
+    ) -> Union[list[dict], None]:
+        assert Date is not None and isinstance(Date, (str, datetime)), \
+            "Date must be a string or datetime object"
+
+        # for some reason this endpoint requires the date in %d/%m/%Y format
+        fromDate = convertDateFormat(input_date=Date, format="%d/%m/%Y")
+        PARAMS = self.parsePARAMS({"fromDate": fromDate})
+
+        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_UPDATED_SERIES, params=PARAMS)
 
         if not isinstance(response, list):
             self.log.error("Expected list, but received: %s", type(response))

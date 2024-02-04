@@ -32,12 +32,10 @@ jobs:
 
       - name: Test with pytest
         run: |
-          poetry run pytest -n 2 --cov --cov-report xml:coverage-report/coverage.xml
+          # Github action runners now have 4 cores
+          poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
 
-      - name: Build documentation
-        run: poetry run make html --directory docs/
-
-      - name: Upload coverage report
+      - name: Upload coverage report artifact to be used by Codecov
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
@@ -65,6 +63,29 @@ jobs:
           verbose: true
           name: codecov-umbrella
 
+  Build-Documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Build documentation
+        run: |
+          poetry run make html --directory docs/
+
+
+
 
 
   Continuous-Deployment:
@@ -74,10 +95,10 @@ jobs:
         issues: write
         pull-requests: write
 
-    # needs: Continuous-Integration
+    needs: [Continuous-Integration, Build-Documentation]
 
     # if pulling to main, deploy to PyPI
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     # Set up operating system
     runs-on: ubuntu-latest
@@ -100,11 +121,6 @@ jobs:
     - name: Install package
       run: poetry install
 
-
-    # Existing jobs...
-
-
-
    # This action uses Python Semantic Release v8
    # What this action does:
    # - Determines the next version number based on the commit history
@@ -116,7 +132,6 @@ jobs:
       uses: python-semantic-release/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        git_commit_message: 'chore(release): release ${next_version}'
 
     - name: Install packaging-related tool
       run:
@@ -141,10 +156,6 @@ jobs:
         verbose: true
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
-
-    - name: Print latest tag name
-      run: |
-        printf "%s\n" "${LATEST_TAG}"
 
     - name: Print branch name
       run: |
@@ -321,7 +332,7 @@ jobs:
               git add .
 
               # Commit with a timestamp
-              git commit -m "Update README with latest version: $LATEST_TAG"
+              git commit -m "chore: Update README: $LATEST_TAG"
 
               # Push changes to the remote repository
               # if github.head_ref is not null
