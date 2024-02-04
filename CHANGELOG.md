@@ -2,9 +2,32 @@
 
 
 
+## v0.25.0 (2024-02-04)
+
+### Chore
+
+* chore: Update README: 0.24.0 ([`a6b23ea`](https://github.com/jjjermiah/nbia-toolkit/commit/a6b23ea1e2d7ac5fda52a2fa989585de8fe09875))
+
+### Feature
+
+* feat: added base_url setter if user wants to use NLST.  added properties for logger and base_url. ([`5a992df`](https://github.com/jjjermiah/nbia-toolkit/commit/5a992df1d4495cb29e44158a61b68f14bbab013f))
+
+### Refactor
+
+* refactor: Refactor OAuth2 class to support configurable base URL, added some types ([`c1e8f3d`](https://github.com/jjjermiah/nbia-toolkit/commit/c1e8f3d1017e3b84bdc572232c8807cb1290779f))
+
+### Unknown
+
+* Merge pull request #89 from jjjermiah/52-feature-add-nslt-endpoint
+
+52 feature add nslt endpoint ([`682e50e`](https://github.com/jjjermiah/nbia-toolkit/commit/682e50ef22823aa72d4231d81aa3def3ef161408))
+
+
 ## v0.24.0 (2024-02-04)
 
 ### Chore
+
+* chore(sem-ver): 0.24.0 ([`589f2c4`](https://github.com/jjjermiah/nbia-toolkit/commit/589f2c4145bfb980a80d183d41de039a699b3002))
 
 * chore: Update README: 0.23.0 ([`0223550`](https://github.com/jjjermiah/nbia-toolkit/commit/02235504d30d063c37022119cadd25f10d5d9d1b))
 
