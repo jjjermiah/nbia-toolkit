@@ -51,7 +51,7 @@ For quick access to the NBIA, the toolkit also provides a command line interface
 /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/  
                                                        
 
-Version: 0.25.3
+Version: 0.25.4
 
 Available CLI tools: 
 
