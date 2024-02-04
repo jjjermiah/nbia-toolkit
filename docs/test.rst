@@ -1,79 +1,75 @@
-.. Your Project Documentation
-   ===========================
-
-Introduction
-------------
-
-Your introduction goes here.
-
-Usage
------
+Initialize Client
+-----------------
+By default, nbiatoolkit uses the guest account to access all collections in the API that are publicly available.
+If you have a user account that has been granted specific access to a collection, you can use your credentials to
+initialize the client when performing a query.
 
 .. tabs::
 
-    .. tab:: Command Line
+   .. tab:: Command Line
 
-        To perform an operation using the command line, use the following command:
-
-        .. code-block:: bash
-
-            your_command_line_tool --option1 value1 --option2 value2
-
-    .. tab:: Python
-
-        To perform the same operation using the Python package, follow these steps:
-
-        .. code-block:: python
-
-            from your_python_package import YourClass
-
-            instance = YourClass(option1='value1', option2='value2')
-            instance.run_operation()
-
-
-.. tabs::
-
-   .. tab:: Apples
-
-      Apples are green, or sometimes red.
-
-   .. tab:: Pears
-
-      Pears are green.
-
-   .. tab:: Oranges
-
-      Oranges are orange.
-
-.. tabs::
-
-   .. tab:: Stars
+      To get a list of available public collections that start with "TCGA", run the following command:
 
       .. tabs::
 
-         .. tab:: The Sun
+         .. tab:: Guest Account
 
-            The closest star to us.
+            .. code-block:: bash
 
-         .. tab:: Proxima Centauri
+               getCollections --prefix TCGA
 
-            The second closest star to us.
+         .. tab:: Your Account
 
-         .. tab:: Polaris
+            .. code-block:: bash
 
-            The North Star.
+               getCollections -u <USERNAME> -p <PASSWORD> --prefix TCGA
 
-   .. tab:: Moons
+   .. tab:: Python
+
+      To do the same in Python, run the following code:
 
       .. tabs::
 
-         .. tab:: The Moon
+         .. tab:: Guest Account
 
-            Orbits the Earth
+            .. code-block:: python
 
-         .. tab:: Titan
+               from nbiatoolkit import NBIAClient
 
-            Orbits Jupiter
+               client = NBIAClient()
+               client.getCollections(prefix='TCGA')
+
+         .. tab:: Your Account
+
+            .. code-block:: python
+
+               from nbiatoolkit import NBIAClient
+
+               client = NBIAClient(username = "<USERNAME>", password = "<PASSWORD>")
+               client.getCollections(prefix='TCGA')
+
+.. raw:: html
+
+   <iframe src="_static/test_setup.html" width="100%" height="100%"></iframe>
+
+Logging
+^^^^^^^
+.. tabs::
+
+   .. tab:: Python
+
+      .. code-block:: python
+
+         from nbiatoolkit import NBIAClient
+
+         client = NBIAClient(log_level='DEBUG)
+         client.getCollections(prefix='TCGA')
+
+   .. tab:: Command Line
+
+      .. code-block:: bash
+
+         getCollections --prefix TCGA # TODO:: implement logging for cli
 
 .. tabs::
 
@@ -175,10 +171,3 @@ Usage
          main <- function() {
             return(0)
          }
-Configuration
--------------
-
-Your configuration details go here.
-
-...
-

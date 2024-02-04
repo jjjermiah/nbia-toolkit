@@ -7,8 +7,8 @@
 
 markdowns/NBIA.md
 test.rst
+    test_setup.html
 markdowns/Installation.md
-Tutorial.ipynb
 markdowns/CHANGELOG.md
 markdowns/CONTRIBUTING.md
 markdowns/CONDUCT.md
