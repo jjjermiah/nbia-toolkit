@@ -98,42 +98,70 @@ class OAuth2:
         else:
             self.base_url = base_url
 
-        self.access_token = None
-        self.api_headers = None
+        self._access_token = None
         self.expiry_time = None
-        self.refresh_token = None
         self.refresh_expiry = None
+        self.refresh_token = ""  # Fix: Assign an empty string instead of None
         self.scope = None
 
+    @property
+    def access_token(self) -> str | None:
+        # Check if access token is not set or it's expired
+        if not self._access_token or self.is_token_expired():
+            self.refresh_token_or_request_new()
 
-    def getToken(self) -> Union[dict, None]:
-        """
-        Retrieves the access token from the API.
+        return self._access_token
 
-        Returns
-        -------
-        api_headers : dict
-            The authentication headers containing the access token.
+    def is_token_expired(self) -> bool:
+        # Check if the token expiration time is set and if it's expired
+        return self.expiry_time is not None and time.time() > self.expiry_time
 
-        Example Usage
-        -------------
-        >>> from nbiatoolkit import OAuth2
-        >>> oauth = OAuth2()
-        >>> api_headers = oauth.getToken()
+    def refresh_token_or_request_new(self) -> None:
+        if self.refresh_token != "":
+            self._refresh_access_token()
+        else:
+            self.request_new_access_token()
 
-        >>> requests.get(url=query_url, headers=api_headers)
-        """
-        # Check if the access token is valid and not expired
-        if self.access_token is not None:
-            return None if self.access_token == None else self.access_token
+    def _refresh_access_token(self) -> None:
+        assert self.refresh_token != "", "Refresh token is not set"
 
         # Prepare the request data
+        data: dict[str, str] = {
+            "refresh_token": self.refresh_token,
+            "client_id": self.client_id,
+            "grant_type": "refresh_token",
+        }
+
+        token_url: str = self.base_url + "oauth/token"
+
+        response = requests.post(token_url, data=data)
+
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            raise err
+        else:
+            token_data = response.json()
+            self.set_token_data(token_data)
+
+
+
+    def request_new_access_token(self):
+        # Implement logic to request a new access token using client credentials
+        # Set the new access token and update the expiration time
+        # Example:
+        # new_access_token, expires_in = your_token_request_logic()
+        # self.access_token = new_access_token
+        # self.token_expiration_time = time.time() + expires_in
+
+        #     # Prepare the request data
         data: dict[str, str] = {
             "username": self.username,
             "password": self.password,
             "client_id": self.client_id,
             "grant_type": "password",
         }
+
         token_url: str = self.base_url + "oauth/token"
 
         response : requests.models.Response
@@ -141,47 +169,44 @@ class OAuth2:
 
         try:
             response = requests.post(token_url, data=data)
-            response.raise_for_status()  # Raise an HTTPError for bad responses
-        except requests.exceptions.RequestException as e:
-            self.access_token = None
-            raise requests.exceptions.RequestException(
-                f"Failed to get access token. Status code:\
-                    {response.status_code}"
-            ) from e
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            raise err
         else:
-            # Code to execute if there is no exception
             token_data = response.json()
-            self.access_token = token_data.get("access_token")
+            self.set_token_data(token_data)
 
-            self.api_headers = {"Authorization": f"Bearer {self.access_token}"}
 
-            self.expiry_time = time.ctime(time.time() + token_data.get("expires_in"))
-            self.refresh_token = token_data.get("refresh_token")
-            self.refresh_expiry = token_data.get("refresh_expires_in")
-            self.scope = token_data.get("scope")
 
-            return self.api_headers
-
-    @property
-    def token(self):
-        """
-        Returns the access token.
-
-        Returns
-        -------
-        access_token : str or None
-            The access token retrieved from the API.
-        """
-        return self.access_token
+    def set_token_data(self, token_data: dict):
+        self._access_token = token_data["access_token"]
+        self.expiry_time = time.time() + int(token_data.get("expires_in") or 0)
+        self.refresh_token: str = token_data["refresh_token"]
+        self.refresh_expiry = token_data.get("refresh_expires_in")
+        self.scope = token_data.get("scope")
 
     @property
-    def headers(self):
-        """
-        Returns the API headers.
+    def api_headers(self) -> dict[str, str]:
+        return {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",}
 
-        Returns
-        -------
-        api_headers : dict or None
-            The authentication headers containing the access token.
-        """
-        return self.api_headers
+
+    @property
+    def token_expiration_time(self):
+        return self.expiry_time
+
+    @property
+    def refresh_expiration_time(self):
+        return self.refresh_expiry
+
+    @property
+    def token_scope(self):
+        return self.scope
+
+    def __repr__(self):
+        return f"OAuth2(username={self.username}, client_id={self.client_id})"
+
+    def __str__(self):
+        return f"OAuth2(username={self.username}, client_id={self.client_id})"
+

@@ -20,7 +20,11 @@
 ## Features
 > [!TIP]
 > For a thorough description of the package and its available features, please refer to the Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
-- Use NBIA Guest account to access public data OR authenticate using OAuth with user credentials for limited access data (requires approved data access).
+
+- ***Programmatic access*** to the National Biomedical Imaging Archive (NBIA) and The Cancer Imaging Archive (TCIA) databases
+  - Use NBIA Guest account to access public data OR authenticate using OAuth with user credentials for limited access data (requires approved data access).
+  - Custom `OAuth2` class for **NBIA**, **TCIA**, including special handling for dedicated server for the **NLST** collection.
+
 - ***Query NBIA database*** for metadata on ***collections***, ***patients***, ***studies***, ***series***, and ***images***
 - Download images from NBIA
   - ***Validate doownloads with MD5 checksums*** for downloaded images

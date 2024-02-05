@@ -43,12 +43,14 @@ class NBIAClient:
         self._oauth2_client = OAuth2(username=username, password=password)
 
         try:
-            self._api_headers = self._oauth2_client.getToken()
+            self._api_headers = {
+                "Authorization": f"Bearer {self._oauth2_client.access_token}",
+                "Content-Type": "application/json",
+            }
         except Exception as e:
             self._log.error("Error retrieving access token: %s", e)
             self._api_headers = None
             raise e
-
         self._base_url : NBIA_ENDPOINTS = NBIA_ENDPOINTS.BASE_URL
 
     @property
