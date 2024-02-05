@@ -1,6 +1,8 @@
 import logging
 import os
 from logging.handlers import TimedRotatingFileHandler
+
+import pytest
 from nbiatoolkit.logger.logger import setup_logger
 
 def test_setup_logger_name():
@@ -44,3 +46,15 @@ def test_setup_logger_log_dir():
 
     # close the file handler
     logger.handlers[0].close()
+
+def test_invalid_log_level():
+    # Test case 6: Verify that an error is raised for an invalid log level
+    try:
+        setup_logger("test_logger6", log_level="INVALID")
+    except ValueError as e:
+        assert str(e) == "Invalid log level: INVALID"
+
+def test_invalid_log_file():
+    # Test case 7: Verify that an error is raised for an invalid log file
+    with pytest.raises(IOError):
+        setup_logger("test_logger7", log_file="/invalid/log/file.log")
