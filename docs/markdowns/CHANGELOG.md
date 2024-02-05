@@ -2,9 +2,34 @@
 
 
 
+## v0.26.0 (2024-02-05)
+
+### Chore
+
+* chore: Update README: 0.25.4 ([`289f846`](https://github.com/jjjermiah/nbia-toolkit/commit/289f846f8a6073a39bfc000cc3d7dbd35cf077c4))
+
+### Documentation
+
+* docs: Add programmatic access to NBIA and TCIA databases ([`82542b1`](https://github.com/jjjermiah/nbia-toolkit/commit/82542b12e5d23ff7b3b40f10e0f97fb2082dc861))
+
+### Feature
+
+* feat: implement better Oauth algorithm graph and refresh token ([`3d81d2b`](https://github.com/jjjermiah/nbia-toolkit/commit/3d81d2bdeff970ea725727be95defa989c77f6b1))
+
+### Unknown
+
+* Merge pull request #97 from jjjermiah/18-authpy-accessrefresh-token-+-error-handling
+
+18 authpy accessrefresh token + error handling ([`c2fcdb2`](https://github.com/jjjermiah/nbia-toolkit/commit/c2fcdb2023978f7ed03522bfddb24963ee364b7c))
+
+* Fix error handling in OAuth2 class ([`67140b7`](https://github.com/jjjermiah/nbia-toolkit/commit/67140b7e1e315f5a7d62d0a8c10956c00e657e93))
+
+
 ## v0.25.4 (2024-02-04)
 
 ### Chore
+
+* chore(sem-ver): 0.25.4 ([`edd1104`](https://github.com/jjjermiah/nbia-toolkit/commit/edd1104b9583a337d08ec98739be0a2633ce4857))
 
 * chore: Update README: 0.25.3 ([`7e6803d`](https://github.com/jjjermiah/nbia-toolkit/commit/7e6803d4a696aa1d2faab89e1cf97ad948f82d09))
 
