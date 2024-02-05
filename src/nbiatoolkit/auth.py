@@ -1,7 +1,23 @@
 import requests
 import time
-from typing import Union
+from typing import Union, Tuple
 from .utils import NBIA_ENDPOINTS
+from cryptography.fernet import Fernet
+
+
+def encrypt_credentials(key: bytes, username: str, password: str) -> Tuple[str, str]:
+        cipher_suite = Fernet(key=key)
+        encrypted_password = cipher_suite.encrypt(password.encode()).decode()
+        encrypted_username = cipher_suite.encrypt(username.encode()).decode()
+        # return the encrypted client_id and username
+        return encrypted_username, encrypted_password
+
+def decrypt_credentials(key: bytes, encrypted_username: str, encrypted_password: str) -> tuple[str, str]:
+        cipher_suite = Fernet(key=key)
+        decrypted_username = cipher_suite.decrypt(encrypted_username.encode()).decode()
+        decrypted_password = cipher_suite.decrypt(encrypted_password.encode()).decode()
+        # return the decrypted client_id and username
+        return decrypted_username, decrypted_password
 
 class OAuth2:
     """
@@ -89,9 +105,11 @@ class OAuth2:
         base_url : str or NBIA_ENDPOINTS, optional. Default is NBIA_ENDPOINTS.BASE_URL
 
         """
+
         self.client_id = client_id
-        self.username = username
-        self.password = password
+
+        self._fernet_key: bytes = Fernet.generate_key()
+        self.username, self.password = encrypt_credentials(key=self.fernet_key, username=username, password=password)
 
         if isinstance(base_url, NBIA_ENDPOINTS):
             self.base_url = base_url.value
@@ -103,6 +121,11 @@ class OAuth2:
         self.refresh_expiry = None
         self.refresh_token = ""  # Fix: Assign an empty string instead of None
         self.scope = None
+
+
+    @property
+    def fernet_key(self) -> bytes:
+        return self._fernet_key
 
     @property
     def access_token(self) -> str | None:
@@ -155,9 +178,11 @@ class OAuth2:
         # self.token_expiration_time = time.time() + expires_in
 
         #     # Prepare the request data
+
+
         data: dict[str, str] = {
-            "username": self.username,
-            "password": self.password,
+            "username": decrypt_credentials(key=self.fernet_key, encrypted_username=self.username, encrypted_password=self.password)[0],
+            "password": decrypt_credentials(key=self.fernet_key, encrypted_username=self.username, encrypted_password=self.password)[1],
             "client_id": self.client_id,
             "grant_type": "password",
         }
