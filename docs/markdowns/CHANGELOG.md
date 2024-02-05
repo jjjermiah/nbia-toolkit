@@ -2,9 +2,28 @@
 
 
 
+## v0.28.0 (2024-02-05)
+
+### Chore
+
+* chore: Update README: 0.27.0 ([`79f7eda`](https://github.com/jjjermiah/nbia-toolkit/commit/79f7edafff8bf0ada9f0ea14909c9fe45f628a69))
+
+### Feature
+
+* feat: Implement logout functionality and add context manager support ([`67968fc`](https://github.com/jjjermiah/nbia-toolkit/commit/67968fc0c061b75a1966112abd6a823fac737191))
+
+### Unknown
+
+* Merge pull request #99 from jjjermiah/19-authpy-logout-functionality
+
+feat: Implement logout functionality and add context manager support ([`528d1a7`](https://github.com/jjjermiah/nbia-toolkit/commit/528d1a79f06f2cd3ae6cb78cbd16438eb165dba5))
+
+
 ## v0.27.0 (2024-02-05)
 
 ### Chore
+
+* chore(sem-ver): 0.27.0 ([`dfd1fa7`](https://github.com/jjjermiah/nbia-toolkit/commit/dfd1fa74938c49a298a4493da88134bbe6531187))
 
 * chore: Update README: 0.26.0 ([`d063000`](https://github.com/jjjermiah/nbia-toolkit/commit/d063000515e7dae39a48a03a51f29029d54084c6))
 
