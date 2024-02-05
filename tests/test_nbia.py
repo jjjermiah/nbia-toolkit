@@ -10,6 +10,7 @@ from tempfile import TemporaryDirectory
 import os
 import requests
 
+
 @pytest.fixture(scope="session")
 def nbia_client():
     nbia = NBIAClient()
@@ -246,3 +247,9 @@ def test_getSeriesMetadata_invalid_input(nbia_client):
         seriesUIDs = ["12345", 67890]
         metadata = nbia_client.getSeriesMetadata(seriesUIDs)
         assert metadata is None
+
+def test_nbiaclient_exit(nbia_client):
+    with nbia_client:
+        collections = nbia_client.getCollections()
+        assert not nbia_client._oauth2_client.is_logged_out()
+    assert nbia_client._oauth2_client.is_logged_out()  # Assuming there is a method to check if the client is logged out
