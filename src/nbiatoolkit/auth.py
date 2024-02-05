@@ -109,6 +109,8 @@ class OAuth2:
         self.client_id = client_id
 
         self._fernet_key: bytes = Fernet.generate_key()
+        self.username: str
+        self.password: str
         self.username, self.password = encrypt_credentials(key=self.fernet_key, username=username, password=password)
 
         if isinstance(base_url, NBIA_ENDPOINTS):
@@ -127,8 +129,14 @@ class OAuth2:
     def fernet_key(self) -> bytes:
         return self._fernet_key
 
+    def is_logged_out(self) -> bool:
+        return (self._access_token is "" and self.username == "" and self.password == "" and self.client_id == "" and self.base_url == "")
+
     @property
     def access_token(self) -> str | None:
+        if self.is_logged_out():
+            return None
+
         # Check if access token is not set or it's expired
         if not self._access_token or self.is_token_expired():
             self.refresh_token_or_request_new()
@@ -229,9 +237,51 @@ class OAuth2:
     def token_scope(self):
         return self.scope
 
-    def __repr__(self):
-        return f"OAuth2(username={self.username}, client_id={self.client_id})"
+    def __repr__(self) -> Union[str, None]:
+        if self.username:
+            return f"OAuth2(username={self.username}, client_id={self.client_id})"
+        else:
+            return ""
 
     def __str__(self):
-        return f"OAuth2(username={self.username}, client_id={self.client_id})"
+        if self.username:
+            return f"OAuth2(username={self.username}, client_id={self.client_id})"
+        else:
+            return ""
+
+
+    def logout(self) -> None:
+        """
+        Logs out the user and revokes the access token.
+
+        This method sends a request to the NBIA API to revoke the access token
+        and logs out the user.
+
+        Notes
+        -----
+        This method is not yet implemented in the NBIA API.
+        """
+        if not self.access_token:
+            return None
+
+        query_url = NBIA_ENDPOINTS.LOGOUT_URL.value
+        response = requests.get(query_url, headers=self.api_headers)
+        response.raise_for_status()
+
+        # set the entire object to None
+        self.__dict__.clear()
+        self.username = ""
+        self.password = ""
+        self.client_id = ""
+        self.base_url = ""
+        self._access_token = ""
+        self.expiry_time = None
+        self.refresh_expiry = None
+        self.refresh_token = ""
+        self.scope = None
+        self._fernet_key = b''
+        self = None
+        return None
+
+
 

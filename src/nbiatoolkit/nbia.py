@@ -53,6 +53,16 @@ class NBIAClient:
             raise e
         self._base_url : NBIA_ENDPOINTS = NBIA_ENDPOINTS.BASE_URL
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        self._oauth2_client.logout()
+
+    @property
+    def OAuth_client(self) -> OAuth2:
+        return self._oauth2_client
+
     @property
     def headers(self):
         return self._api_headers

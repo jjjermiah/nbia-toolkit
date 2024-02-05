@@ -67,3 +67,22 @@ def test_request_new_access_token(oauth: OAuth2) -> None:
     assert oauth.expiry_time is not None
     assert oauth.is_token_expired() == False
 
+def test_logout(oauth: OAuth2) -> None:
+    oauth.logout()
+    assert oauth.access_token is None
+    assert oauth.refresh_token is ""
+    assert oauth.refresh_expiry is None
+    assert oauth.expiry_time is None
+    assert oauth.api_headers == {
+        "Authorization": "Bearer None",
+        "Content-Type": "application/json",
+    }
+    assert oauth.token_expiration_time == None
+    assert oauth.refresh_expiration_time == None
+    assert oauth.token_scope == None
+    assert oauth.__repr__() == ""
+    assert oauth.__str__() == ""
+    assert oauth.username == ""
+    assert oauth.client_id == ""
+    assert oauth.password == ""
+    assert oauth.base_url == ""
