@@ -2,9 +2,28 @@
 
 
 
+## v0.27.0 (2024-02-05)
+
+### Chore
+
+* chore: Update README: 0.26.0 ([`d063000`](https://github.com/jjjermiah/nbia-toolkit/commit/d063000515e7dae39a48a03a51f29029d54084c6))
+
+### Feature
+
+* feat: Add encryption and decryption functions for credentials ([`bbbd1d2`](https://github.com/jjjermiah/nbia-toolkit/commit/bbbd1d2503bd80cd0b80a933651a5a507b2dd95b))
+
+### Unknown
+
+* Merge pull request #98 from jjjermiah/20-authpy-username-and-password-encryption
+
+feat: Add encryption and decryption functions for credentials ([`e08caa0`](https://github.com/jjjermiah/nbia-toolkit/commit/e08caa00c33d0fc8086155f9a9168258b245b9cc))
+
+
 ## v0.26.0 (2024-02-05)
 
 ### Chore
+
+* chore(sem-ver): 0.26.0 ([`e60590e`](https://github.com/jjjermiah/nbia-toolkit/commit/e60590e296f111c1bfec8e0b63e9f54e6099d8b8))
 
 * chore: Update README: 0.25.4 ([`289f846`](https://github.com/jjjermiah/nbia-toolkit/commit/289f846f8a6073a39bfc000cc3d7dbd35cf077c4))
 
