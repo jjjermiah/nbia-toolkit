@@ -27,7 +27,7 @@ class NBIA_ENDPOINTS(Enum):
     GET_UPDATED_SERIES = "v2/getUpdatedSeries"  # ?fromDate=01/01/2024
     GET_SERIES_METADATA = "v1/getSeriesMetaData"
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
-
+    GET_DICOM_TAGS = "getDicomTags"
 
 
 
