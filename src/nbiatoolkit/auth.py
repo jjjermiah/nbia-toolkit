@@ -111,7 +111,7 @@ class OAuth2:
         self._fernet_key: bytes = Fernet.generate_key()
         self.username: str
         self.password: str
-        self.username, self.password = encrypt_credentials(key=self.fernet_key, username=username, password=password)
+        self.username, self.password = encrypt_credentials(key=self._fernet_key, username=username, password=password)
 
         if isinstance(base_url, NBIA_ENDPOINTS):
             self.base_url = base_url.value
@@ -124,10 +124,6 @@ class OAuth2:
         self.refresh_token = ""  # Fix: Assign an empty string instead of None
         self.scope = None
 
-
-    @property
-    def fernet_key(self) -> bytes:
-        return self._fernet_key
 
     def is_logged_out(self) -> bool:
         return (self._access_token is "" and self.username == "" and self.password == "" and self.client_id == "" and self.base_url == "")
