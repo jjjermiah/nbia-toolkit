@@ -35,7 +35,7 @@ def version():
         "getSeries",
         "getNewSeries",
         "downloadSingleSeries",
-        "dicomsort"
+        "dicomsort",
     ]
     for command in commands:
         result = subprocess.run([command, "-h"], capture_output=True, text=True)
@@ -48,20 +48,30 @@ def version():
 
     return
 
+
 def _initialize_parser(description: str) -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=description)
 
     # create an argparse group called "Credentials" to hold the username and password arguments
     credentials = p.add_argument_group(
         title="authentication parameters",
-        description="The username and password for the NBIA API if querying restricted datasets, defaults to the NBIA Guest Account")
-
-    credentials.add_argument(
-        "-u",  "--username", action="store", type=str, default= "nbia_guest", #help="Username for the NBIA API (default: nbia_guest)"
+        description="The username and password for the NBIA API if querying restricted datasets, defaults to the NBIA Guest Account",
     )
 
     credentials.add_argument(
-        "-pw", "--password", action="store", type=str, default= "", #help="Password for the NBIA API (default: '')"
+        "-u",
+        "--username",
+        action="store",
+        type=str,
+        default="nbia_guest",  # help="Username for the NBIA API (default: nbia_guest)"
+    )
+
+    credentials.add_argument(
+        "-pw",
+        "--password",
+        action="store",
+        type=str,
+        default="",  # help="Password for the NBIA API (default: '')"
     )
 
     # make the credentials group show up first
@@ -69,9 +79,8 @@ def _initialize_parser(description: str) -> argparse.ArgumentParser:
 
     return p
 
+
 def _add_extra_args(parser: argparse.ArgumentParser) -> argparse.Namespace:
-
-
     parser.add_argument(
         "-o",
         "--output",
@@ -212,7 +221,10 @@ def getPatients_cli() -> None:
 
     args = _add_extra_args(p)
 
-    return getResults_cli(func=NBIAClient(args.username, args.password).getPatients, Collection=args.collection)
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getPatients,
+        Collection=args.collection,
+    )
 
 
 def getCollections_cli() -> None:
@@ -231,12 +243,17 @@ def getCollections_cli() -> None:
 
     args = _add_extra_args(p)
 
-    return getResults_cli(func=NBIAClient(args.username, args.password).getCollections, prefix=args.prefix)
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getCollections, prefix=args.prefix
+    )
+
 
 def getNewPatients_cli() -> None:
     global query
     query = "newPatients"
-    p = _initialize_parser(description=f"NBIAToolkit: {query}. Get new patients from a collection since a given date.")
+    p = _initialize_parser(
+        description=f"NBIAToolkit: {query}. Get new patients from a collection since a given date."
+    )
 
     p.add_argument(
         "-c",
@@ -247,7 +264,8 @@ def getNewPatients_cli() -> None:
     )
 
     p.add_argument(
-        "-d", "--date",
+        "-d",
+        "--date",
         action="store",
         required=True,
         type=str,
@@ -256,7 +274,12 @@ def getNewPatients_cli() -> None:
 
     args = _add_extra_args(p)
 
-    return getResults_cli(func=NBIAClient(args.username, args.password).getNewPatients, Collection=args.collection, Date=args.date)
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getNewPatients,
+        Collection=args.collection,
+        Date=args.date,
+    )
+
 
 def getBodyPartCounts_cli() -> None:
     global query
@@ -277,13 +300,17 @@ def getBodyPartCounts_cli() -> None:
     args = _add_extra_args(p)
 
     return getResults_cli(
-        func=NBIAClient(args.username, args.password).getBodyPartCounts, Collection=args.collection
+        func=NBIAClient(args.username, args.password).getBodyPartCounts,
+        Collection=args.collection,
     )
+
 
 def getStudies_cli() -> None:
     global query
     query = f"getStudies"
-    p = _initialize_parser(description=f"NBIAToolkit: {query}. Get studies from a collection.")
+    p = _initialize_parser(
+        description=f"NBIAToolkit: {query}. Get studies from a collection."
+    )
 
     p.add_argument(
         "-c",
@@ -302,7 +329,8 @@ def getStudies_cli() -> None:
     )
 
     p.add_argument(
-        "-s", "--studyInstanceUID",
+        "-s",
+        "--studyInstanceUID",
         action="store",
         default="",
         type=str,
@@ -310,9 +338,12 @@ def getStudies_cli() -> None:
 
     args = _add_extra_args(p)
 
-    return getResults_cli(func=NBIAClient(args.username, args.password).getStudies, Collection=args.collection, PatientID=args.patientID, StudyInstanceUID=args.studyInstanceUID)
-
-
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getStudies,
+        Collection=args.collection,
+        PatientID=args.patientID,
+        StudyInstanceUID=args.studyInstanceUID,
+    )
 
 
 def getSeries_cli() -> None:
@@ -403,13 +434,17 @@ def getSeries_cli() -> None:
         Manufacturer=args.manufacturer,
     )
 
+
 def getNewSeries_cli() -> None:
     global query
     query = f"newSeries"
-    p = _initialize_parser(description=f"NBIAToolkit: {query}. Get new series from a collection since a given date.")
+    p = _initialize_parser(
+        description=f"NBIAToolkit: {query}. Get new series from a collection since a given date."
+    )
 
     p.add_argument(
-        "-d", "--date",
+        "-d",
+        "--date",
         action="store",
         required=True,
         type=str,
@@ -418,7 +453,10 @@ def getNewSeries_cli() -> None:
 
     args = _add_extra_args(p)
 
-    return getResults_cli(func=NBIAClient(args.username, args.password).getNewSeries, Date=args.date)
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getNewSeries, Date=args.date
+    )
+
 
 def downloadSingleSeries_cli() -> None:
     global query
@@ -469,6 +507,7 @@ def downloadSingleSeries_cli() -> None:
         filePattern=args.filePattern,
         overwrite=args.overwrite,
     )
+
 
 # Create command line interface
 

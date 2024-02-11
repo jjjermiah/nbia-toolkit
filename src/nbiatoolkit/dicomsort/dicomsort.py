@@ -99,7 +99,7 @@ class DICOMSorter:
     def sortDICOMFiles(
         self, option: str = "copy", overwrite: bool = False, nParallel: int = 1
     ) -> bool:
-        dicom_file_paths = self._get_dicom_files()
+        dicom_file_paths = _get_dicom_files(self.sourceDir)
         result = []
         print("Running with {} parallel threads".format(nParallel))
 
@@ -114,15 +114,34 @@ class DICOMSorter:
 
         return all(result)
 
-    def _get_dicom_files(self) -> "list[str]":
+
+
+def _get_dicom_files(sourceDir) -> "list[str]":
         dicom_file_paths = []
         # Iterate over all files in the source directory
-        for root, dirs, files in os.walk(self.sourceDir):
+        for root, dirs, files in os.walk(sourceDir):
             for f in files:
                 dicom_file_paths.append(os.path.join(root, f)) if f.endswith(
                     ".dcm"
                 ) else None
-
         return dicom_file_paths
 
+# parallel function to read in each file using dcmread only
 
+def _read_in_dicom_file(filePath: str) -> Optional[pydicom.FileDataset]:
+    try:
+        dataset: pydicom.FileDataset = pydicom.dcmread(filePath, stop_before_pixels=True)
+        return dataset
+    except InvalidDicomError as e:
+        print(f"Error reading file {filePath}: {e}")
+        return None
+    except TypeError as e:
+        print(f"Error reading file {filePath}: is ``None`` or of an unsupported type.")
+        return None
+
+sourceDir = "/Users/bhklab/Documents/GitHub/NBIA-toolkit/NBIA-Download"
+files = _get_dicom_files(sourceDir=sourceDir)
+dcm_list = []
+for file in files:
+    dcm = _read_in_dicom_file(file)
+    dcm_list.append(dcm)

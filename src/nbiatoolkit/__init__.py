@@ -15,4 +15,11 @@ from .logger.logger import setup_logger
 from .utils.nbia_endpoints import NBIA_ENDPOINTS
 
 # define the __all__ variable
-__all__ = ["NBIAClient", "OAuth2", "setup_logger", "NBIA_ENDPOINTS", "version", "__version__"]
+__all__ = [
+    "NBIAClient",
+    "OAuth2",
+    "setup_logger",
+    "NBIA_ENDPOINTS",
+    "version",
+    "__version__",
+]
