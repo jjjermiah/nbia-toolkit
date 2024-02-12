@@ -2,9 +2,72 @@
 
 
 
+## v0.28.0 (2024-02-05)
+
+### Chore
+
+* chore: Update README: 0.27.0 ([`79f7eda`](https://github.com/jjjermiah/nbia-toolkit/commit/79f7edafff8bf0ada9f0ea14909c9fe45f628a69))
+
+### Feature
+
+* feat: Implement logout functionality and add context manager support ([`67968fc`](https://github.com/jjjermiah/nbia-toolkit/commit/67968fc0c061b75a1966112abd6a823fac737191))
+
+### Unknown
+
+* Merge pull request #99 from jjjermiah/19-authpy-logout-functionality
+
+feat: Implement logout functionality and add context manager support ([`528d1a7`](https://github.com/jjjermiah/nbia-toolkit/commit/528d1a79f06f2cd3ae6cb78cbd16438eb165dba5))
+
+
+## v0.27.0 (2024-02-05)
+
+### Chore
+
+* chore(sem-ver): 0.27.0 ([`dfd1fa7`](https://github.com/jjjermiah/nbia-toolkit/commit/dfd1fa74938c49a298a4493da88134bbe6531187))
+
+* chore: Update README: 0.26.0 ([`d063000`](https://github.com/jjjermiah/nbia-toolkit/commit/d063000515e7dae39a48a03a51f29029d54084c6))
+
+### Feature
+
+* feat: Add encryption and decryption functions for credentials ([`bbbd1d2`](https://github.com/jjjermiah/nbia-toolkit/commit/bbbd1d2503bd80cd0b80a933651a5a507b2dd95b))
+
+### Unknown
+
+* Merge pull request #98 from jjjermiah/20-authpy-username-and-password-encryption
+
+feat: Add encryption and decryption functions for credentials ([`e08caa0`](https://github.com/jjjermiah/nbia-toolkit/commit/e08caa00c33d0fc8086155f9a9168258b245b9cc))
+
+
+## v0.26.0 (2024-02-05)
+
+### Chore
+
+* chore(sem-ver): 0.26.0 ([`e60590e`](https://github.com/jjjermiah/nbia-toolkit/commit/e60590e296f111c1bfec8e0b63e9f54e6099d8b8))
+
+* chore: Update README: 0.25.4 ([`289f846`](https://github.com/jjjermiah/nbia-toolkit/commit/289f846f8a6073a39bfc000cc3d7dbd35cf077c4))
+
+### Documentation
+
+* docs: Add programmatic access to NBIA and TCIA databases ([`82542b1`](https://github.com/jjjermiah/nbia-toolkit/commit/82542b12e5d23ff7b3b40f10e0f97fb2082dc861))
+
+### Feature
+
+* feat: implement better Oauth algorithm graph and refresh token ([`3d81d2b`](https://github.com/jjjermiah/nbia-toolkit/commit/3d81d2bdeff970ea725727be95defa989c77f6b1))
+
+### Unknown
+
+* Merge pull request #97 from jjjermiah/18-authpy-accessrefresh-token-+-error-handling
+
+18 authpy accessrefresh token + error handling ([`c2fcdb2`](https://github.com/jjjermiah/nbia-toolkit/commit/c2fcdb2023978f7ed03522bfddb24963ee364b7c))
+
+* Fix error handling in OAuth2 class ([`67140b7`](https://github.com/jjjermiah/nbia-toolkit/commit/67140b7e1e315f5a7d62d0a8c10956c00e657e93))
+
+
 ## v0.25.4 (2024-02-04)
 
 ### Chore
+
+* chore(sem-ver): 0.25.4 ([`edd1104`](https://github.com/jjjermiah/nbia-toolkit/commit/edd1104b9583a337d08ec98739be0a2633ce4857))
 
 * chore: Update README: 0.25.3 ([`7e6803d`](https://github.com/jjjermiah/nbia-toolkit/commit/7e6803d4a696aa1d2faab89e1cf97ad948f82d09))
 

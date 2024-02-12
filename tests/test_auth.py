@@ -8,51 +8,81 @@ from src.nbiatoolkit import OAuth2
 import time 
 import requests
 
-@pytest.fixture(scope="session")
-def oauth2():
-    oauth = OAuth2()
-    oauth.getToken()
-    return oauth
+@pytest.fixture
+def oauth() -> OAuth2:
+    return OAuth2()
 
-@pytest.fixture(scope="session")
-def failed_oauth2():
-    oauth = OAuth2(username="bad_username", password="bad_password")
-    return oauth
+def test_oauth2(oauth: OAuth2) -> None:
+    assert oauth.client_id == "NBIA"
+    assert oauth.username != "nbia_guest"
+    assert oauth.password != ""
+    assert oauth.access_token is not None
+    assert oauth.api_headers is not None
+    assert oauth.expiry_time is not None
+    assert oauth.refresh_token is not None
+    assert oauth.refresh_expiry is not None
+    assert oauth.scope is not None
 
-def test_getToken(oauth2):
-    assert oauth2.access_token is not None
-    assert oauth2.token is not None
+def test_is_token_expired(oauth: OAuth2) -> None:
+    assert oauth.is_token_expired() == False
+    oauth.expiry_time = time.time() - 100
+    assert oauth.is_token_expired() == True
 
-def test_expiry(oauth2):
-    # expiry should be in the form of :'Tue Jun 29 13:58:57 2077'
-    # and test for roughly 2 hours from now
-    print(oauth2.expiry_time)
-    assert oauth2.expiry_time <= time.ctime(time.time() + 7200)
+def test_refresh_token_or_request_new(oauth: OAuth2) -> None:
+    oauth.refresh_token_or_request_new()
+    assert oauth.access_token is not None
+    assert oauth.refresh_token is not None
+    assert oauth.refresh_expiry is not None
+    assert oauth.expiry_time is not None
 
-def test_failed_oauth(failed_oauth2):
-    # should raise requests.exceptions.RequestException
-    with pytest.raises(requests.exceptions.RequestException):
-        failed_oauth2.getToken()
-        assert failed_oauth2.getToken() is None
-    assert failed_oauth2.access_token is None
-    assert failed_oauth2.token is None
-    assert failed_oauth2.api_headers is None
-    assert failed_oauth2.expiry_time is None
-    assert failed_oauth2.refresh_token is None
-    assert failed_oauth2.refresh_expiry is None
-    assert failed_oauth2.scope is None
+def test_refresh_after_expiry(oauth: OAuth2) -> None:
+    access_token_before = oauth.access_token
 
+    oauth.expiry_time = time.time() - 100
+    oauth.refresh_token_or_request_new()
+    assert oauth.access_token is not None
+    assert oauth.access_token != access_token_before
 
-def test_getToken_valid_token(oauth2):
-    # Test if the access token is valid and not expired
-    assert oauth2.getToken() == oauth2.access_token
-    assert oauth2.getToken() is not None
-    assert oauth2.access_token is not None
-    assert oauth2.token is not None
-    assert oauth2.headers is not None
-    assert oauth2.expiry_time is not None
-    assert oauth2.refresh_token is not None
-    assert oauth2.refresh_expiry is not None
-    assert oauth2.scope is not None
+    assert oauth.refresh_token is not None
+    assert oauth.refresh_expiry is not None
+    assert oauth.expiry_time is not None
+    assert oauth.is_token_expired() == False
 
+def test_failed_refresh(oauth: OAuth2) -> None:
+    oauth.refresh_token = ""
+    with pytest.raises(AssertionError):
+        oauth._refresh_access_token()
 
+    oauth.refresh_token = "invalid_refresh_token"
+
+    with pytest.raises(requests.exceptions.HTTPError):
+        oauth._refresh_access_token()
+
+def test_request_new_access_token(oauth: OAuth2) -> None:
+    oauth.refresh_token = ""
+    oauth.request_new_access_token()
+    assert oauth.access_token is not None
+    assert oauth.refresh_token is not None
+    assert oauth.refresh_expiry is not None
+    assert oauth.expiry_time is not None
+    assert oauth.is_token_expired() == False
+
+def test_logout(oauth: OAuth2) -> None:
+    oauth.logout()
+    assert oauth.access_token is None
+    assert oauth.refresh_token is ""
+    assert oauth.refresh_expiry is None
+    assert oauth.expiry_time is None
+    assert oauth.api_headers == {
+        "Authorization": "Bearer None",
+        "Content-Type": "application/json",
+    }
+    assert oauth.token_expiration_time == None
+    assert oauth.refresh_expiration_time == None
+    assert oauth.token_scope == None
+    assert oauth.__repr__() == ""
+    assert oauth.__str__() == ""
+    assert oauth.username == ""
+    assert oauth.client_id == ""
+    assert oauth.password == ""
+    assert oauth.base_url == ""

@@ -1,7 +1,13 @@
 from .auth import OAuth2
 from .logger.logger import setup_logger
 from logging import Logger
-from .utils import NBIA_ENDPOINTS, validateMD5, clean_html, convertMillis, convertDateFormat
+from .utils import (
+    NBIA_ENDPOINTS,
+    validateMD5,
+    clean_html,
+    convertMillis,
+    convertDateFormat,
+)
 from .dicomsort import DICOMSorter
 
 import requests
@@ -12,8 +18,9 @@ import zipfile
 
 import os
 from datetime import datetime
+
 # set __version__ variable
-__version__ = "0.25.4"
+__version__ = "0.28.0"
 
 
 class NBIAClient:
@@ -28,10 +35,7 @@ class NBIAClient:
     """
 
     def __init__(
-        self,
-        username: str = "nbia_guest",
-        password: str = "",
-        log_level: str = "INFO"
+        self, username: str = "nbia_guest", password: str = "", log_level: str = "INFO"
     ) -> None:
         # Setup logger
         self._log: Logger = setup_logger(
@@ -43,13 +47,25 @@ class NBIAClient:
         self._oauth2_client = OAuth2(username=username, password=password)
 
         try:
-            self._api_headers = self._oauth2_client.getToken()
+            self._api_headers = {
+                "Authorization": f"Bearer {self._oauth2_client.access_token}",
+                "Content-Type": "application/json",
+            }
         except Exception as e:
             self._log.error("Error retrieving access token: %s", e)
             self._api_headers = None
             raise e
+        self._base_url: NBIA_ENDPOINTS = NBIA_ENDPOINTS.BASE_URL
 
-        self._base_url : NBIA_ENDPOINTS = NBIA_ENDPOINTS.BASE_URL
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        self._oauth2_client.logout()
+
+    @property
+    def OAuth_client(self) -> OAuth2:
+        return self._oauth2_client
 
     @property
     def headers(self):
@@ -72,51 +88,82 @@ class NBIAClient:
     def logger(self, logger: Logger) -> None:
         self._log = logger
 
-
     def query_api(
         self, endpoint: NBIA_ENDPOINTS, params: dict = {}
-    ) -> Union[list, dict, bytes]:
-
+    ) -> Union[dict | list, bytes, None]:
         # query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
         query_url: str = self._base_url.value + endpoint.value
 
         self._log.debug("Querying API endpoint: %s", query_url)
         self._log.debug("Query parameters: %s", params)
-        response: requests.Response
+
+        response: requests.Response | None = None
+
         try:
             response = requests.get(url=query_url, headers=self.headers, params=params)
             response.raise_for_status()  # Raise an HTTPError for bad responses
+
+            if response.headers.get("Content-Type") == "application/json":
+                return response.json()
+            else:
+                return response.content
+        except JSONDecodeError as j:
+            self._log.error("Error parsing response as JSON: %s", j)
+            if response is not None:
+                self._log.debug("Response: %s", response.text)
+                if not response.text.strip():
+                    self._log.error("Response text is empty.")
+            raise j
+        except requests.exceptions.HTTPError as http_err:
+            self._log.error("HTTP error occurred: %s", http_err)
+            if response is None:
+                self._log.error("Response is None")
+                raise http_err
+            if response.status_code != 200:
+                self._log.error(
+                    "Error querying API: %s %s", response.status_code, response.reason
+                )
+                raise http_err
         except requests.exceptions.RequestException as e:
             self._log.error("Error querying API: %s", e)
             raise e
-
-        if response.status_code != 200:
-            self._log.error(
-                "Error querying API: %s %s", response.status_code, response.reason
-            )
-            raise requests.exceptions.RequestException(
-                f"Error querying API: {response.status_code} {response.reason}"
-            )
-
-
-        try:
-            if response.headers.get("Content-Type") == "application/json":
-                response_json: dict | list = response.json()
-                return response_json
-            else:
-                # If response is binary data, return raw response
-                response_data: bytes = response.content
-                return response_data
-        except JSONDecodeError as j:
-            self._log.debug("Response: %s", response.text)
-            if response.text == "":
-                self._log.error("Response text is empty.")
-            else:
-                self._log.error("Error parsing response as JSON: %s", j)
-            raise j
         except Exception as e:
             self._log.error("Error querying API: %s", e)
             raise e
+
+        # try:
+        #     response = requests.get(url=query_url, headers=self.headers, params=params)
+        #     response.raise_for_status()  # Raise an HTTPError for bad responses
+        # except requests.exceptions.RequestException as e:
+        #     self._log.error("Error querying API: %s", e)
+        #     raise e
+
+        # if response.status_code != 200:
+        #     self._log.error(
+        #         "Error querying API: %s %s", response.status_code, response.reason
+        #     )
+        #     raise requests.exceptions.RequestException(
+        #         f"Error querying API: {response.status_code} {response.reason}"
+        #     )
+
+        # try:
+        #     if response.headers.get("Content-Type") == "application/json":
+        #         response_json: dict | list = response.json()
+        #         return response_json
+        #     else:
+        #         # If response is binary data, return raw response
+        #         response_data: bytes = response.content
+        #         return response_data
+        # except JSONDecodeError as j:
+        #     self._log.debug("Response: %s", response.text)
+        #     if response.text == "":
+        #         self._log.error("Response text is empty.")
+        #     else:
+        #         self._log.error("Error parsing response as JSON: %s", j)
+        #     raise j
+        # except Exception as e:
+        #     self._log.error("Error querying API: %s", e)
+        #     raise e
 
     def getCollections(self, prefix: str = "") -> Union[list[str], None]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTIONS)
@@ -132,23 +179,29 @@ class NBIAClient:
                 collections.append(name)
         return collections
 
-    def getCollectionDescriptions(self, collectionName : str) -> Union[list[dict[str, str]], None]:
+    def getCollectionDescriptions(
+        self, collectionName: str
+    ) -> Union[list[dict[str, str]], None]:
         PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_DESCRIPTIONS, PARAMS)
 
         if len(response) == 0:
-            raise ValueError("The response from the API is empty. Please check the collection name.")
+            raise ValueError(
+                "The response from the API is empty. Please check the collection name."
+            )
 
         api_response = response[0]
         if not isinstance(api_response, dict):
             raise ValueError("The response from the API is not a dictionary")
 
-        returnVal : dict[str, str] = {
-            "collectionName" : api_response['collectionName'],
-            "description" : clean_html(api_response['description']),
-            "descriptionURI" : api_response['descriptionURI'],
-            "lastUpdated" : convertMillis(millis=int(api_response['collectionDescTimestamp'])),
+        returnVal: dict[str, str] = {
+            "collectionName": api_response["collectionName"],
+            "description": clean_html(api_response["description"]),
+            "descriptionURI": api_response["descriptionURI"],
+            "lastUpdated": convertMillis(
+                millis=int(api_response["collectionDescTimestamp"])
+            ),
         }
 
         return [returnVal]
@@ -197,7 +250,8 @@ class NBIAClient:
 
         return patientList
 
-    def getNewPatients(self,
+    def getNewPatients(
+        self,
         Collection: str,
         Date: Union[str, datetime],
     ) -> Union[list[dict[str, str]], None]:
@@ -209,8 +263,12 @@ class NBIAClient:
 
         PARAMS = self.parsePARAMS(locals())
 
-        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS)
-        assert isinstance(response, list), "Expected list, but received: %s" % type(response)
+        response = self.query_api(
+            endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS
+        )
+        assert isinstance(response, list), "Expected list, but received: %s" % type(
+            response
+        )
 
         patientList = []
         for patient in response:
@@ -330,8 +388,9 @@ class NBIAClient:
         self,
         SeriesInstanceUID: Union[str, list[str]],
     ) -> Union[list[dict], None]:
-        assert isinstance(SeriesInstanceUID, (str, list)), \
-            "SeriesInstanceUID must be a string or list of strings"
+        assert isinstance(
+            SeriesInstanceUID, (str, list)
+        ), "SeriesInstanceUID must be a string or list of strings"
 
         if isinstance(SeriesInstanceUID, str):
             SeriesInstanceUID = [SeriesInstanceUID]
@@ -351,19 +410,21 @@ class NBIAClient:
 
         return metadata
 
-
     def getNewSeries(
         self,
         Date: Union[str, datetime],
     ) -> Union[list[dict], None]:
-        assert Date is not None and isinstance(Date, (str, datetime)), \
-            "Date must be a string or datetime object"
+        assert Date is not None and isinstance(
+            Date, (str, datetime)
+        ), "Date must be a string or datetime object"
 
         # for some reason this endpoint requires the date in %d/%m/%Y format
         fromDate = convertDateFormat(input_date=Date, format="%d/%m/%Y")
         PARAMS = self.parsePARAMS({"fromDate": fromDate})
 
-        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_UPDATED_SERIES, params=PARAMS)
+        response = self.query_api(
+            endpoint=NBIA_ENDPOINTS.GET_UPDATED_SERIES, params=PARAMS
+        )
 
         if not isinstance(response, list):
             self._log.error("Expected list, but received: %s", type(response))
