@@ -2,9 +2,74 @@
 
 
 
+## v0.29.0 (2024-02-12)
+
+### Build
+
+* build: Add conditional upload of coverage report artifact ([`972c785`](https://github.com/jjjermiah/nbia-toolkit/commit/972c785b9ffef735ab9544819917d0a23b0d909f))
+
+### Chore
+
+* chore: Update README: 0.28.0 ([`92ff4eb`](https://github.com/jjjermiah/nbia-toolkit/commit/92ff4ebe8420bd3f63011424ec3bb44ebe286f4c))
+
+### Feature
+
+* feat: Add getDICOMTags method to NBIAClient class ([`18b6625`](https://github.com/jjjermiah/nbia-toolkit/commit/18b6625df5a1d435aaad37d4d920b5198e0e58d3))
+
+### Fix
+
+* fix: remove err ([`58a9ada`](https://github.com/jjjermiah/nbia-toolkit/commit/58a9ada2bdfc0ec126ff80ce3adff4608562001b))
+
+* fix: remove extra files ([`91b277b`](https://github.com/jjjermiah/nbia-toolkit/commit/91b277ba1a09f491bf8c8943dc4cf6f940f523d0))
+
+* fix: Update pydicom version to 2.4.0 ([`b78edd8`](https://github.com/jjjermiah/nbia-toolkit/commit/b78edd842f230b75d54e11d91a91c9979a2b8380))
+
+* fix: merge ([`544c682`](https://github.com/jjjermiah/nbia-toolkit/commit/544c682d9300aae80def16a22e379602ef5a8370))
+
+* fix: Fix encryption key in OAuth2 class ([`1082e47`](https://github.com/jjjermiah/nbia-toolkit/commit/1082e476f9f00bd4e45df2f9262b344718a83ee6))
+
+### Refactor
+
+* refactor: clean, lint ([`688a1a6`](https://github.com/jjjermiah/nbia-toolkit/commit/688a1a6de485c14a9e20150fc1335635f3221f01))
+
+### Unknown
+
+* Merge pull request #104 from jjjermiah/dicomtags
+
+feat: Dicomtags ([`25760ef`](https://github.com/jjjermiah/nbia-toolkit/commit/25760ef89c94dce23c4bf4ba8e5ba00fabe32c29))
+
+* Merge pull request #103 from jjjermiah/devel
+
+refactor: clean, lint ([`f9ab11e`](https://github.com/jjjermiah/nbia-toolkit/commit/f9ab11e6980cd95b7b661465a0cc4796d8e8df66))
+
+* remove unused lines ([`c1dc231`](https://github.com/jjjermiah/nbia-toolkit/commit/c1dc23113340d358cd201c36f2e1e9b1505644cc))
+
+* Merge pull request #102 from jjjermiah/19-authpy-logout-functionality
+
+19 authpy logout functionality ([`fee4ee0`](https://github.com/jjjermiah/nbia-toolkit/commit/fee4ee0c870a178a459db9e15d8f521456daa170))
+
+* tests: remove main code in md5 ([`2972b5f`](https://github.com/jjjermiah/nbia-toolkit/commit/2972b5fc9b7bb37dea525abeb9a1e8f1748bc072))
+
+* tests: add more coverage for logger ([`b90c74c`](https://github.com/jjjermiah/nbia-toolkit/commit/b90c74c0bd7af5940e72401d17a5e41982466897))
+
+* Merge pull request #101 from jjjermiah/19-authpy-logout-functionality
+
+19 authpy logout functionality ([`a6f40cc`](https://github.com/jjjermiah/nbia-toolkit/commit/a6f40cc506ce035e2a6568e1af546ded37b34677))
+
+* tests: fix small error ([`977df6c`](https://github.com/jjjermiah/nbia-toolkit/commit/977df6c1ae29262f45963cb929d70fb446f5768a))
+
+* Merge pull request #100 from jjjermiah/main
+
+merge ([`d2a6f55`](https://github.com/jjjermiah/nbia-toolkit/commit/d2a6f55cd6df0e98a122f8f94cb6512c8f3da65a))
+
+* tests:  add tests and Update user authentication logic ([`bf4b8d8`](https://github.com/jjjermiah/nbia-toolkit/commit/bf4b8d8737a5621c778c07c52d517a379741139a))
+
+
 ## v0.28.0 (2024-02-05)
 
 ### Chore
+
+* chore(sem-ver): 0.28.0 ([`4f78b7a`](https://github.com/jjjermiah/nbia-toolkit/commit/4f78b7a01e3d58d60ad83b039079198c0181324d))
 
 * chore: Update README: 0.27.0 ([`79f7eda`](https://github.com/jjjermiah/nbia-toolkit/commit/79f7edafff8bf0ada9f0ea14909c9fe45f628a69))
 
