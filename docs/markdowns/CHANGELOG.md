@@ -2,6 +2,25 @@
 
 
 
+## v0.29.1 (2024-02-12)
+
+### Build
+
+* build: docker file cleanup ([`34a6942`](https://github.com/jjjermiah/nbia-toolkit/commit/34a694231e7465f60b4743958d9a93660750b15b))
+
+### Chore
+
+* chore: Update README: 0.29.0 ([`d10a38d`](https://github.com/jjjermiah/nbia-toolkit/commit/d10a38d401080863597e68818341fcdb0b77ba23))
+
+### Unknown
+
+* Merge pull request #105 from jjjermiah/95-chore-removere-organize-files
+
+fiz #95 chore removere organize files ([`3d00000`](https://github.com/jjjermiah/nbia-toolkit/commit/3d0000082fb4b01cc99ce85442e697fe21b9e291))
+
+* Remove unnecessary files and update autoapi_dirs ([`96cb669`](https://github.com/jjjermiah/nbia-toolkit/commit/96cb669ecbe0bcdaac29a01a72f7dddf63d1922a))
+
+
 ## v0.29.0 (2024-02-12)
 
 ### Build
@@ -9,6 +28,8 @@
 * build: Add conditional upload of coverage report artifact ([`972c785`](https://github.com/jjjermiah/nbia-toolkit/commit/972c785b9ffef735ab9544819917d0a23b0d909f))
 
 ### Chore
+
+* chore(sem-ver): 0.29.0 ([`8b67ab0`](https://github.com/jjjermiah/nbia-toolkit/commit/8b67ab0a7b853e192c7112d7c3d6f6710153a510))
 
 * chore: Update README: 0.28.0 ([`92ff4eb`](https://github.com/jjjermiah/nbia-toolkit/commit/92ff4ebe8420bd3f63011424ec3bb44ebe286f4c))
 
