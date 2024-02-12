@@ -6,6 +6,30 @@ initialize the client when performing a query.
 
 .. tabs::
 
+   .. tab:: Python
+
+      To do the same in Python, run the following code:
+
+      .. tabs::
+
+         .. tab:: Guest Account
+
+            .. code-block:: python
+
+               from nbiatoolkit import NBIAClient
+
+               client = NBIAClient()
+               client.getCollections(prefix='TCGA')
+
+         .. tab:: Your Account
+
+            .. code-block:: python
+
+               from nbiatoolkit import NBIAClient
+
+               client = NBIAClient(username = "<USERNAME>", password = "<PASSWORD>")
+               client.getCollections(prefix='TCGA')
+
    .. tab:: Command Line
 
       To get a list of available public collections that start with "TCGA", run the following command:
@@ -24,37 +48,7 @@ initialize the client when performing a query.
 
                getCollections -u <USERNAME> -p <PASSWORD> --prefix TCGA
 
-   .. tab:: Python
 
-      To do the same in Python, run the following code:
-
-      .. tabs::
-
-         .. tab:: Guest Account
-
-            .. code-block:: python
-
-               from nbiatoolkit import NBIAClient
-
-               client = NBIAClient()
-               client.getCollections(prefix='TCGA')
-
-            .. raw:: html
-
-               <iframe src="_static/test_setup.html" width="100%" height="100%"></iframe>
-
-         .. tab:: Your Account
-
-            .. code-block:: python
-
-               from nbiatoolkit import NBIAClient
-
-               client = NBIAClient(username = "<USERNAME>", password = "<PASSWORD>")
-               client.getCollections(prefix='TCGA')
-
-            .. raw:: html
-
-               <iframe src="_static/test_setup.html" width="100%" height="100%"></iframe>
 
 
 Logging
