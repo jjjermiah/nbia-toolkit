@@ -36,6 +36,8 @@ jobs:
           poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
 
       - name: Upload coverage report artifact to be used by Codecov
+        # only upload if matrix.os is ubuntu-latest and matrix.python-version is 3.12
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
