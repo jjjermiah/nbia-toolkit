@@ -45,7 +45,6 @@ build-backend = "poetry.core.masonry.api"
 # https://python-semantic-release.readthedocs.io/en/latest/configuration.html
 [tool.semantic_release]
 version_variables = [
-    "setup.py:__version__",
     "src/nbiatoolkit/nbia.py:__version__",
 ]
 version_toml = [
