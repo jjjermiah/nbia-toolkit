@@ -139,9 +139,9 @@ def _read_in_dicom_file(filePath: str) -> Optional[pydicom.FileDataset]:
         print(f"Error reading file {filePath}: is ``None`` or of an unsupported type.")
         return None
 
-sourceDir = "/Users/bhklab/Documents/GitHub/NBIA-toolkit/NBIA-Download"
-files = _get_dicom_files(sourceDir=sourceDir)
-dcm_list = []
-for file in files:
-    dcm = _read_in_dicom_file(file)
-    dcm_list.append(dcm)
+# sourceDir = "/Users/bhklab/Documents/GitHub/NBIA-toolkit/NBIA-Download"
+# files = _get_dicom_files(sourceDir=sourceDir)
+# dcm_list = []
+# for file in files:
+#     dcm = _read_in_dicom_file(file)
+#     dcm_list.append(dcm)
