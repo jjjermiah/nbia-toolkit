@@ -46,7 +46,6 @@ jobs:
   Codecov:
     needs: Unit-Tests
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/docs'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -68,6 +67,7 @@ jobs:
 
   Build-Documentation:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/docs'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

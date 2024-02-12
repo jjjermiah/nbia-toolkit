@@ -131,40 +131,6 @@ class NBIAClient:
             self._log.error("Error querying API: %s", e)
             raise e
 
-        # try:
-        #     response = requests.get(url=query_url, headers=self.headers, params=params)
-        #     response.raise_for_status()  # Raise an HTTPError for bad responses
-        # except requests.exceptions.RequestException as e:
-        #     self._log.error("Error querying API: %s", e)
-        #     raise e
-
-        # if response.status_code != 200:
-        #     self._log.error(
-        #         "Error querying API: %s %s", response.status_code, response.reason
-        #     )
-        #     raise requests.exceptions.RequestException(
-        #         f"Error querying API: {response.status_code} {response.reason}"
-        #     )
-
-        # try:
-        #     if response.headers.get("Content-Type") == "application/json":
-        #         response_json: dict | list = response.json()
-        #         return response_json
-        #     else:
-        #         # If response is binary data, return raw response
-        #         response_data: bytes = response.content
-        #         return response_data
-        # except JSONDecodeError as j:
-        #     self._log.debug("Response: %s", response.text)
-        #     if response.text == "":
-        #         self._log.error("Response text is empty.")
-        #     else:
-        #         self._log.error("Error parsing response as JSON: %s", j)
-        #     raise j
-        # except Exception as e:
-        #     self._log.error("Error querying API: %s", e)
-        #     raise e
-
     def getCollections(self, prefix: str = "") -> Union[list[str], None]:
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTIONS)
 

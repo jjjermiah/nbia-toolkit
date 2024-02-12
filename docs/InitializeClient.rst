@@ -8,7 +8,8 @@ initialize the client when performing a query.
 
    .. tab:: Python
 
-      To do the same in Python, run the following code:
+      Initializing without any credientials will use the guest account.
+      To use your credentials, simply pass them as arguments to the NBIAClient class.
 
       .. tabs::
 
@@ -50,6 +51,25 @@ initialize the client when performing a query.
                getCollections -u <USERNAME> -pw <PASSWORD> --prefix TCGA
 
 
+Context Manager for Client
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+The client can be used as a context manager to ensure that the client is properly logged out after use.
+This is especially useful when using the client in a script with a predefined scope and lifetime to ensure graceful termination of the client.
+
+.. tabs::
+
+   .. tab:: Python
+
+      .. code-block:: python
+
+         from nbiatoolkit import NBIAClient
+
+         with NBIAClient() as client:
+            client.getCollections(prefix='TCGA')
+
+   .. tab:: Command Line
+
+      The context manager is not available in the command line interface.
 
 
 Logging
@@ -67,3 +87,7 @@ The default log level is 'INFO' and the available log levels are 'DEBUG', 'INFO'
 
          client = NBIAClient(log_level='DEBUG)
          client.getCollections(prefix='TCGA')
+
+   .. tab:: Command Line
+
+         Logging is not yet available in the command line interface. Feel free to open an issue on the GitHub repository if you would like to see this feature added.
