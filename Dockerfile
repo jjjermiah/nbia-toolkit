@@ -4,8 +4,7 @@
 # To build the container, run the following command from the root of the
 # repository:
 # docker build -t nbiatoolkit .
-#
-# ADD LABELS HERE
+
 
 FROM python:3.12-slim
 
