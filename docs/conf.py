@@ -26,7 +26,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx_tabs.tabs",
 ]
-autoapi_dirs = ["../src"]
+autoapi_dirs = ["../src/nbiatoolkit"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
