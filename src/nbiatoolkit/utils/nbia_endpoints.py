@@ -28,9 +28,6 @@ class NBIA_ENDPOINTS(Enum):
     GET_SERIES_METADATA = "v1/getSeriesMetaData"
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
 
-
-
-
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesMetaData"
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesSize"
 

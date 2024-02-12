@@ -150,3 +150,5 @@ sandbox
 
 docs/data/*
 docs/autoapi
+NBIA-Download
+src/nbiatoolkit/.DS_Store
