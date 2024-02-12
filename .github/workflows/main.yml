@@ -4,7 +4,7 @@ name: CI-CD
 on:
   push:
     # push to any branch
-    branches: [ main ]
+    branches: [ main , docs]
   pull_request:
     branches: [ main , development]
   
@@ -67,6 +67,7 @@ jobs:
 
   Build-Documentation:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/docs'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
