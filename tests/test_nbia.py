@@ -253,3 +253,42 @@ def test_nbiaclient_exit(nbia_client):
         collections = nbia_client.getCollections()
         assert not nbia_client._oauth2_client.is_logged_out()
     assert nbia_client._oauth2_client.is_logged_out()  # Assuming there is a method to check if the client is logged out
+
+
+def test_getDICOMTags(nbia_client: NBIAClient):
+    seriesUID = "1.3.6.1.4.1.14519.5.2.1.6834.5010.322628904903035357840500590726"
+    tags = nbia_client.getDICOMTags(seriesUID)
+    importantTags = [
+        "Study Instance UID",
+        "Series Instance UID",
+        "SOP Instance UID",
+        "Image Type",
+        "Study ID",
+        "Series Number",
+        "Acquisition Number",
+        "Instance Number",
+        "Image Position (Patient)",
+        "Image Orientation (Patient)",
+        "Frame of Reference UID",
+        "Position Reference Indicator",
+        "Slice Location",
+        "Samples per Pixel",
+        "Rows",
+        "Columns",
+        "Pixel Spacing",
+        "Study Date",
+        "Series Date",
+        "Modality",
+        "Study Description",
+        "Series Description",
+        "Patient's Name",
+        "Patient ID",
+        "Patient's Birth Date",
+        "Patient's Sex",
+        "Patient's Age",
+        "Instance Creation Date",
+        "Instance Creation Time",]
+    print(seriesUID)
+    all_names = [tag["name"] for tag in tags]
+    for tag in importantTags:
+        assert tag in all_names

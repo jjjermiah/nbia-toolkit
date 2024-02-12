@@ -432,6 +432,24 @@ class NBIAClient:
 
         return response
 
+    def getDICOMTags(
+        self,
+        SeriesInstanceUID: str,
+    ) -> Union[list[dict], None]:
+        assert SeriesInstanceUID is not None and isinstance(SeriesInstanceUID, str), \
+            "SeriesInstanceUID must be a string"
+
+        PARAMS = self.parsePARAMS({"SeriesUID": SeriesInstanceUID})
+
+        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_DICOM_TAGS, params=PARAMS)
+
+        if not isinstance(response, list):
+            self._log.error("Expected list, but received: %s", type(response))
+            return None
+
+        return response
+
+
     def downloadSeries(
         self,
         SeriesInstanceUID: Union[str, list],
