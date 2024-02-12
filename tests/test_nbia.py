@@ -4,7 +4,6 @@
 # To run only one of the tests:
 # pytest -v -n 8 tests/test_nbia.py::test_getCollections
 
-import imp
 import pytest
 from src.nbiatoolkit import NBIAClient
 from tempfile import TemporaryDirectory
