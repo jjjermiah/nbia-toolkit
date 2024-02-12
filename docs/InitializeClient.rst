@@ -32,7 +32,8 @@ initialize the client when performing a query.
 
    .. tab:: Command Line
 
-      To get a list of available public collections that start with "TCGA", run the following command:
+      All of the shell commands made available by nbiatoolkit have the option to use your credentials instead of the guest account.
+      To do so, simply add the -u `USERNAME` and -pw `PASSWORD` flags to the command. For example:
 
       .. tabs::
 
@@ -46,13 +47,16 @@ initialize the client when performing a query.
 
             .. code-block:: bash
 
-               getCollections -u <USERNAME> -p <PASSWORD> --prefix TCGA
+               getCollections -u <USERNAME> -pw <PASSWORD> --prefix TCGA
 
 
 
 
 Logging
 ^^^^^^^
+The client can be initialized with a log level to control the verbosity of the logs. This is primarily intended for debugging and development purposes.
+The default log level is 'INFO' and the available log levels are 'DEBUG', 'INFO', 'WARNING', 'ERROR'.
+
 .. tabs::
 
    .. tab:: Python
@@ -63,110 +67,3 @@ Logging
 
          client = NBIAClient(log_level='DEBUG)
          client.getCollections(prefix='TCGA')
-
-   .. tab:: Command Line
-
-      .. code-block:: bash
-
-         getCollections --prefix TCGA # TODO:: implement logging for cli
-
-.. tabs::
-
-   .. group-tab:: Linux
-
-      Linux tab content - tab set 1
-
-   .. group-tab:: Mac OSX
-
-      Mac OSX tab content - tab set 1
-
-   .. group-tab:: Windows
-
-      Windows tab content - tab set 1
-
-.. tabs::
-
-   .. group-tab:: Linux
-
-      Linux tab content - tab set 2
-
-   .. group-tab:: Mac OSX
-
-      Mac OSX tab content - tab set 2
-
-   .. group-tab:: Windows
-
-      Windows tab content - tab set 2
-
-
-.. tabs::
-
-   .. code-tab:: c
-
-         C Main Function
-
-   .. code-tab:: c++
-
-         C++ Main Function
-
-   .. code-tab:: py
-
-         Python Main Function
-
-   .. code-tab:: java
-
-         Java Main Function
-
-   .. code-tab:: julia
-
-         Julia Main Function
-
-   .. code-tab:: fortran
-
-         Fortran Main Function
-
-   .. code-tab:: r R
-
-         R Main Function
-
-.. tabs::
-
-   .. code-tab:: c
-
-         int main(const int argc, const char **argv) {
-         return 0;
-         }
-
-   .. code-tab:: c++
-
-         int main(const int argc, const char **argv) {
-         return 0;
-         }
-
-   .. code-tab:: py
-
-         def main():
-            return
-
-   .. code-tab:: java
-
-         class Main {
-            public static void main(String[] args) {
-            }
-         }
-
-   .. code-tab:: julia
-
-         function main()
-         end
-
-   .. code-tab:: fortran
-
-         PROGRAM main
-         END PROGRAM main
-
-   .. code-tab:: r R
-
-         main <- function() {
-            return(0)
-         }

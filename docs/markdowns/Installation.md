@@ -1,4 +1,4 @@
-# INSTALLATION
+# Installation
 
 > [!WARNING]
 > `nbiatoolkit` is currently under development and is not guaranteed to be stable.
