@@ -26,21 +26,10 @@ from datetime import datetime
 __version__ = "0.29.2"
 
 
-def get_real_ReturnType(return_type: ReturnType):
-
-    if return_type == ReturnType.LIST:
-        return list
-    elif return_type == ReturnType.DATAFRAME:
-        return pd.DataFrame
-
-
 # function that takes a list of dictionaries and returns either a list or a dataframe
 def conv_response_list(
     response_json: List[dict[Any, Any]], return_type: ReturnType = ReturnType.LIST
 ) -> List[dict[Any, Any]] | pd.DataFrame:
-
-    if isinstance(response_json, bytes):
-        return response_json
 
     assert isinstance(response_json, list), "The response JSON must be a list"
 
@@ -59,8 +48,6 @@ class NBIAClient:
 
     The default authentication uses the guest account. If you have a username
     and password, you can pass them to the constructor.
-
-    TODO:: Add docstring
     """
 
     def __init__(
@@ -79,17 +66,12 @@ class NBIAClient:
         self._log.debug("Setting up OAuth2 client... with username %s", username)
         self._oauth2_client = OAuth2(username=username, password=password)
 
-        try:
-            self._api_headers = {
-                "Authorization": f"Bearer {self._oauth2_client.access_token}",
-                "Content-Type": "application/json",
-            }
-        except Exception as e:
-            self._log.error("Error retrieving access token: %s", e)
-            self._api_headers = None
-            raise e
+        self._api_headers: dict[str, str] = {
+            "Authorization": f"Bearer {self._oauth2_client.access_token}",
+            "Content-Type": "application/json",
+        }
 
-        self._base_url: NBIA_ENDPOINTS = NBIA_ENDPOINTS.BASE_URL
+        self._base_url: NBIA_ENDPOINTS = NBIA_ENDPOINTS.NBIA
         self._return_type: ReturnType = (
             return_type
             if isinstance(return_type, ReturnType)

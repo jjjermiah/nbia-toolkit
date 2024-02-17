@@ -18,12 +18,6 @@ def nbia_client():
 
 
 @pytest.fixture(scope="session")
-def nbia_client_bad_username():
-    nbia = NBIAClient(username="bad_username", password="bad_password")
-    return nbia
-
-
-@pytest.fixture(scope="session")
 def nbia_collections(nbia_client):
     collections = nbia_client.getCollections()
     return collections

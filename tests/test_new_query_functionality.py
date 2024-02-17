@@ -1,7 +1,7 @@
 import pytest
 
 from src.nbiatoolkit import NBIAClient
-
+from src.nbiatoolkit.utils import *
 import pandas as pd
 
 
@@ -9,6 +9,12 @@ import pandas as pd
 def nbia_client():
     nbia_client = NBIAClient()
     return nbia_client
+
+
+@pytest.fixture(scope="session")
+def nbia_client_bad_username():
+    nbia = NBIAClient(username="bad_username", password="bad_password")
+    return nbia
 
 
 @pytest.fixture(scope="session")
@@ -23,6 +29,16 @@ def tcga_collection_df(nbia_client):
         prefix="TCGA", return_type="dataframe"
     )
     return tcga_collection_df
+
+
+def test_change_base_url(nbia_client):
+    nbia_client.base_url = NBIA_ENDPOINTS.NLST
+    assert nbia_client.base_url == NBIA_ENDPOINTS.NLST
+
+
+def test_failed_NBIA_CLIENT():
+    with pytest.raises(Exception) as e:
+        nbia = NBIAClient(username="bad_username", password="bad_password")
 
 
 def test_tcga_collection(tcga_collections):

@@ -113,7 +113,7 @@ class OAuth2:
         username: str = "nbia_guest",
         password: str = "",
         client_id: str = "NBIA",
-        base_url: Union[str, NBIA_ENDPOINTS] = NBIA_ENDPOINTS.BASE_URL,
+        base_url: Union[str, NBIA_ENDPOINTS] = NBIA_ENDPOINTS.NBIA,
     ) -> None:
         """
         Initialize the OAuth2 class.
@@ -127,7 +127,7 @@ class OAuth2:
             The password for authentication. Default is an empty string.
         client_id : str, optional
             The client ID for authentication. Default is "NBIA".
-        base_url : str or NBIA_ENDPOINTS, optional. Default is NBIA_ENDPOINTS.BASE_URL
+        base_url : str or NBIA_ENDPOINTS, optional. Default is NBIA_ENDPOINTS.NBIA
 
         """
 
