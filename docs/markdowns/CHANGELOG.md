@@ -2,6 +2,27 @@
 
 
 
+## v0.29.2 (2024-02-12)
+
+### Chore
+
+* chore: Update README: 0.29.1 ([`385d972`](https://github.com/jjjermiah/nbia-toolkit/commit/385d97273275c9294231233a3dc1bde0b4273ab5))
+
+### Documentation
+
+* docs: rename file for readthedocs ([`0b8197c`](https://github.com/jjjermiah/nbia-toolkit/commit/0b8197ca0b216ec60bb35932b2752af3f56aa010))
+
+### Unknown
+
+* Merge pull request #107 from jjjermiah/docs
+
+docs: merge with main ([`86621f1`](https://github.com/jjjermiah/nbia-toolkit/commit/86621f19c7b25c843a765e0fee3943984f0b4719))
+
+* Merge pull request #106 from jjjermiah/main
+
+merge_fix ([`57b64ae`](https://github.com/jjjermiah/nbia-toolkit/commit/57b64aef7e0eb3ced98bc0f29c06c760b5499aff))
+
+
 ## v0.29.1 (2024-02-12)
 
 ### Build
@@ -10,15 +31,27 @@
 
 ### Chore
 
+* chore(sem-ver): 0.29.1 ([`8d67efc`](https://github.com/jjjermiah/nbia-toolkit/commit/8d67efcc41db39ebcb78df8c99e2f252fec300f1))
+
 * chore: Update README: 0.29.0 ([`d10a38d`](https://github.com/jjjermiah/nbia-toolkit/commit/d10a38d401080863597e68818341fcdb0b77ba23))
 
+### Documentation
+
+* docs: added some more details on initializing client ([`abc2dc1`](https://github.com/jjjermiah/nbia-toolkit/commit/abc2dc1de9c2587c33e0c7e37017d380e6c1b8eb))
+
+* docs: Update CI/CD workflow and documentation ([`8b8c7f8`](https://github.com/jjjermiah/nbia-toolkit/commit/8b8c7f8fd9a794da842e2e36d2d86f259a694f7b))
+
 ### Unknown
+
+* Merge remote-tracking branch &#39;origin&#39; into docs ([`3163edb`](https://github.com/jjjermiah/nbia-toolkit/commit/3163edb8a3a03afce13a3255bd7b28878b40d825))
 
 * Merge pull request #105 from jjjermiah/95-chore-removere-organize-files
 
 fiz #95 chore removere organize files ([`3d00000`](https://github.com/jjjermiah/nbia-toolkit/commit/3d0000082fb4b01cc99ce85442e697fe21b9e291))
 
 * Remove unnecessary files and update autoapi_dirs ([`96cb669`](https://github.com/jjjermiah/nbia-toolkit/commit/96cb669ecbe0bcdaac29a01a72f7dddf63d1922a))
+
+* ierge remote-tracking branch &#39;origin&#39; into docs ([`ad0ec3a`](https://github.com/jjjermiah/nbia-toolkit/commit/ad0ec3a409e83b490e13d9aed3ec0d0bdcc9fa28))
 
 
 ## v0.29.0 (2024-02-12)
@@ -32,6 +65,12 @@ fiz #95 chore removere organize files ([`3d00000`](https://github.com/jjjermiah/
 * chore(sem-ver): 0.29.0 ([`8b67ab0`](https://github.com/jjjermiah/nbia-toolkit/commit/8b67ab0a7b853e192c7112d7c3d6f6710153a510))
 
 * chore: Update README: 0.28.0 ([`92ff4eb`](https://github.com/jjjermiah/nbia-toolkit/commit/92ff4ebe8420bd3f63011424ec3bb44ebe286f4c))
+
+### Documentation
+
+* docs: add tutorial back ([`7625694`](https://github.com/jjjermiah/nbia-toolkit/commit/7625694725892526ddb41af9b6667c2049c71e32))
+
+* docs: rearrange ([`750e4fd`](https://github.com/jjjermiah/nbia-toolkit/commit/750e4fdbc49d97546968cc8ef0b1200f2d6ac9ab))
 
 ### Feature
 
@@ -58,6 +97,10 @@ fiz #95 chore removere organize files ([`3d00000`](https://github.com/jjjermiah/
 * Merge pull request #104 from jjjermiah/dicomtags
 
 feat: Dicomtags ([`25760ef`](https://github.com/jjjermiah/nbia-toolkit/commit/25760ef89c94dce23c4bf4ba8e5ba00fabe32c29))
+
+* Merge remote-tracking branch &#39;origin&#39; into docs ([`c8ffa76`](https://github.com/jjjermiah/nbia-toolkit/commit/c8ffa7641df6560959113dcdee03144ac4f5483d))
+
+* update git ignore ([`734cf19`](https://github.com/jjjermiah/nbia-toolkit/commit/734cf1948f8dad60226c146629404ff87788e690))
 
 * Merge pull request #103 from jjjermiah/devel
 
@@ -147,6 +190,8 @@ feat: Add encryption and decryption functions for credentials ([`e08caa0`](https
 18 authpy accessrefresh token + error handling ([`c2fcdb2`](https://github.com/jjjermiah/nbia-toolkit/commit/c2fcdb2023978f7ed03522bfddb24963ee364b7c))
 
 * Fix error handling in OAuth2 class ([`67140b7`](https://github.com/jjjermiah/nbia-toolkit/commit/67140b7e1e315f5a7d62d0a8c10956c00e657e93))
+
+* Add iframe for test setup ([`5d02ba1`](https://github.com/jjjermiah/nbia-toolkit/commit/5d02ba1046cd0b4a9d02b16993a4a6073b0a9415))
 
 
 ## v0.25.4 (2024-02-04)
