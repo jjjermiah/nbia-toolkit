@@ -53,29 +53,29 @@ def test_getModalityValues(nbia_ModalityValues):
 
 def test_nbiaclient_access_token(nbia_client):
     assert nbia_client.headers is not None
-    
+
 def test_getCollections(nbia_collections):
     assert isinstance(nbia_collections, list)
     assert len(nbia_collections) > 0
-    
+
 def test_getBodyPartCounts_all(nbia_client):
     bodyparts = nbia_client.getBodyPartCounts()
     assert isinstance(bodyparts, list)
     assert len(bodyparts) > 0
-    assert "BodyPartExamined" in bodyparts[0]    
+    assert "BodyPartExamined" in bodyparts[0]
     assert "Count" in bodyparts[0]
     assert int(bodyparts[0]["Count"]) > 0
-    
+
 def test_getBodyPartCounts_4DLung(nbia_client):
     bodyparts = nbia_client.getBodyPartCounts(Collection="4D-Lung")
     assert isinstance(bodyparts, list)
     assert len(bodyparts) > 0
     assert isinstance(bodyparts[0], dict)
-    assert "BodyPartExamined" in bodyparts[0]    
+    assert "BodyPartExamined" in bodyparts[0]
     assert "Count" in bodyparts[0]
     assert bodyparts[0]["BodyPartExamined"] == "LUNG"
     assert int(bodyparts[0]["Count"]) > 0
-    
+
 def test_getCollectionPatientCount(nbia_client):
     patientCount = nbia_client.getCollectionPatientCount()
     assert isinstance(patientCount, list)
@@ -84,7 +84,7 @@ def test_getCollectionPatientCount(nbia_client):
     assert "Collection" in patientCount[0]
     assert "PatientCount" in patientCount[0]
     assert int(patientCount[0]["PatientCount"]) > 0
-    
+
 def test_getPatients(nbia_patients):
     assert isinstance(nbia_patients, list)
     assert len(nbia_patients) > 0
@@ -133,7 +133,7 @@ def test_getSeries(nbia_client, nbia_collections, nbia_patients):
     assert isinstance(seriesList, list)
     assert len(seriesList) > 0
     assert isinstance(seriesList[0], dict)
-    
+
 def test_fail_getSeries(nbia_client, nbia_collections, nbia_patients):
     with pytest.raises(Exception):
         seriesList = nbia_client.getSeries(

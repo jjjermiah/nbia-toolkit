@@ -82,4 +82,3 @@ def test_validateMD5_all_hashes_match():
 
         assert validateMD5(tempDir)
         assert not os.path.isfile(md5File)
-

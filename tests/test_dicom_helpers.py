@@ -42,7 +42,7 @@ def test_parseDICOMKeysFromFormat_duplicate_keys():
 
     assert format_string == expected_format
     assert keys == expected_keys
-    
+
 ###############################################################################
 # sanitizeFileName
 
@@ -90,14 +90,13 @@ def test_truncateUID_with_lastDigits_greater_than_length_of_UID(uid):
     lastDigits = 100
     expected_output = uid
     assert truncateUID(uid, lastDigits) == expected_output
-    
+
 def test_truncateUID_with_invalid_input_types(uid):
     lastDigits = "5"
     with pytest.raises(AssertionError):
         truncateUID(uid, lastDigits)
-        
+
 def test_truncateUID_with_None_input(uid):
     lastDigits = None
     with pytest.raises(AssertionError):
         truncateUID(uid, lastDigits)
-        

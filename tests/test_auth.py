@@ -1,11 +1,11 @@
 # Path: projects/nbia-toolkit/src/nbiatoolkit/tests/test_auth.py
 # this is a file that will test the auth.py file
 # to run this test file use the following command from the src directory :
-# pytest -v -s 
+# pytest -v -s
 
 import pytest
 from src.nbiatoolkit import OAuth2
-import time 
+import time
 import requests
 
 @pytest.fixture
