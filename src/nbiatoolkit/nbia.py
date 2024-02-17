@@ -402,8 +402,9 @@ class NBIAClient:
         self,
         SeriesInstanceUID: str,
     ) -> Union[list[dict], None]:
-        assert SeriesInstanceUID is not None and isinstance(SeriesInstanceUID, str), \
-            "SeriesInstanceUID must be a string"
+        assert SeriesInstanceUID is not None and isinstance(
+            SeriesInstanceUID, str
+        ), "SeriesInstanceUID must be a string"
 
         PARAMS = self.parsePARAMS({"SeriesUID": SeriesInstanceUID})
 
@@ -414,7 +415,6 @@ class NBIAClient:
             return None
 
         return response
-
 
     def downloadSeries(
         self,

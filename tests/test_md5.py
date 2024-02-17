@@ -6,11 +6,13 @@ import pytest
 from tempfile import TemporaryDirectory
 import hashlib, os
 
+
 def test_validateMD5_file_not_found():
     # Test case for when the MD5 hash file is not found
     seriesDir = "/path/to/seriesDir"
     with pytest.raises(FileNotFoundError):
         validateMD5(seriesDir)
+
 
 # Test case for when a file mentioned in the MD5 hash file
 # is not found in the seriesDir
@@ -37,6 +39,7 @@ def test_validateMD5_file_not_found_in_seriesDir():
         with pytest.raises(FileNotFoundError):
             validateMD5(tempDir)
 
+
 # Test case for when the calculated MD5 hash does not match
 # the expected MD5 hash
 def test_validateMD5_md5_hash_mismatch():
@@ -62,6 +65,7 @@ def test_validateMD5_md5_hash_mismatch():
 
         with pytest.raises(MD5HashMismatchError):
             validateMD5(tempDir)
+
 
 def test_validateMD5_all_hashes_match():
     with TemporaryDirectory() as tempDir:

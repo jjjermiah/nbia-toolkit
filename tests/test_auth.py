@@ -8,9 +8,11 @@ from src.nbiatoolkit import OAuth2
 import time
 import requests
 
+
 @pytest.fixture
 def oauth() -> OAuth2:
     return OAuth2()
+
 
 def test_oauth2(oauth: OAuth2) -> None:
     assert oauth.client_id == "NBIA"
@@ -23,10 +25,12 @@ def test_oauth2(oauth: OAuth2) -> None:
     assert oauth.refresh_expiry is not None
     assert oauth.scope is not None
 
+
 def test_is_token_expired(oauth: OAuth2) -> None:
     assert oauth.is_token_expired() == False
     oauth.expiry_time = time.time() - 100
     assert oauth.is_token_expired() == True
+
 
 def test_refresh_token_or_request_new(oauth: OAuth2) -> None:
     oauth.refresh_token_or_request_new()
@@ -34,6 +38,7 @@ def test_refresh_token_or_request_new(oauth: OAuth2) -> None:
     assert oauth.refresh_token is not None
     assert oauth.refresh_expiry is not None
     assert oauth.expiry_time is not None
+
 
 def test_refresh_after_expiry(oauth: OAuth2) -> None:
     access_token_before = oauth.access_token
@@ -48,6 +53,7 @@ def test_refresh_after_expiry(oauth: OAuth2) -> None:
     assert oauth.expiry_time is not None
     assert oauth.is_token_expired() == False
 
+
 def test_failed_refresh(oauth: OAuth2) -> None:
     oauth.refresh_token = ""
     with pytest.raises(AssertionError):
@@ -58,6 +64,7 @@ def test_failed_refresh(oauth: OAuth2) -> None:
     with pytest.raises(requests.exceptions.HTTPError):
         oauth._refresh_access_token()
 
+
 def test_request_new_access_token(oauth: OAuth2) -> None:
     oauth.refresh_token = ""
     oauth.request_new_access_token()
@@ -66,6 +73,7 @@ def test_request_new_access_token(oauth: OAuth2) -> None:
     assert oauth.refresh_expiry is not None
     assert oauth.expiry_time is not None
     assert oauth.is_token_expired() == False
+
 
 def test_logout(oauth: OAuth2) -> None:
     oauth.logout()

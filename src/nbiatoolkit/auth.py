@@ -5,9 +5,7 @@ from .utils import NBIA_ENDPOINTS
 from cryptography.fernet import Fernet
 
 
-def encrypt_credentials(
-    key: bytes, username: str, password: str
-) -> Tuple[str, str]:
+def encrypt_credentials(key: bytes, username: str, password: str) -> Tuple[str, str]:
     """
     Encrypts the given username and password using the provided key.
 
@@ -141,7 +139,9 @@ class OAuth2:
         self.username, self.password = encrypt_credentials(
             key=self.fernet_key, username=username, password=password
         )
-        self.username, self.password = encrypt_credentials(key=self._fernet_key, username=username, password=password)
+        self.username, self.password = encrypt_credentials(
+            key=self._fernet_key, username=username, password=password
+        )
 
         if isinstance(base_url, NBIA_ENDPOINTS):
             self.base_url = base_url.value
@@ -153,7 +153,6 @@ class OAuth2:
         self.refresh_expiry = None
         self.refresh_token = ""  # Fix: Assign an empty string instead of None
         self.scope = None
-
 
     @property
     def fernet_key(self) -> bytes:

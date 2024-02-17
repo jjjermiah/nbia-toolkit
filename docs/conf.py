@@ -10,9 +10,9 @@ import sys
 sys.path.insert(0, os.path.abspath("../src"))
 # -- Project information -----------------------------------------------------
 
-project = u"nbiatoolkit"
-copyright = u"2023, Jermiah Joseph"
-author = u"Jermiah Joseph"
+project = "nbiatoolkit"
+copyright = "2023, Jermiah Joseph"
+author = "Jermiah Joseph"
 
 # -- General configuration ---------------------------------------------------
 

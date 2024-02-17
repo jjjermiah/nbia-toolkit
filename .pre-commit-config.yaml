@@ -1,4 +1,8 @@
 repos:
+-   repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
@@ -6,3 +10,23 @@ repos:
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
+    -   id: check-json
+    -   id: check-toml
+    -   id: pretty-format-json
+
+-   repo: https://gitlab.com/smop/pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+    -   id: check-poetry
+
+-   repo: https://github.com/lorenzwalthert/precommit
+    rev: v0.4.0
+    hooks:
+    -   id: lintr
+        args: [--warn_only, --key=value]
+    -   id: roxygenize
+    -   id: no-print-statement
+    -   id: no-debug-statement
+    -   id: deps-in-desc
+    -   id: use-tidy-description
+    -   id: parsable-R
