@@ -1,9 +1,9 @@
 # National Biomedical Imaging Archive (NBIA)
 
-The National Biomedical Imaging Archive (NBIA) is a free and open-source platform that provides the biomedical research community with access to biomedical images, annotations, and related data. 
+The National Biomedical Imaging Archive (NBIA) is a free and open-source platform that provides the biomedical research community with access to biomedical images, annotations, and related data.
 - It is developed by the [National Cancer Institue (NCI)](https://www.cancer.gov/) and aims to improve healthcare by fostering research in areas including cancer, lung diseases, and brain disorders.
 
-The NBIA is primarily used in the fields of medical and health research. 
+The NBIA is primarily used in the fields of medical and health research.
 - This includes areas such as radiology, oncology, neurology, pathology and more.
 
 1. Radiology: Radiologists use this archive to access a variety of images such as CT scans, MRI scans that help them in the diagnosis and treatment of various diseases.

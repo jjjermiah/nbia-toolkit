@@ -1,3 +1,4 @@
+from inspect import getmodule
 from .auth import OAuth2
 from .logger.logger import setup_logger
 from logging import Logger
@@ -7,12 +8,14 @@ from .utils import (
     clean_html,
     convertMillis,
     convertDateFormat,
+    parse_response,
+    ReturnType,
 )
 from .dicomsort import DICOMSorter
-
+import pandas as pd
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
-from typing import Union
+from typing import Union, Optional, Any, Dict, List
 import io
 import zipfile
 
@@ -21,6 +24,32 @@ from datetime import datetime
 
 # set __version__ variable
 __version__ = "0.29.2"
+
+
+def get_real_ReturnType(return_type: ReturnType):
+
+    if return_type == ReturnType.LIST:
+        return list
+    elif return_type == ReturnType.DATAFRAME:
+        return pd.DataFrame
+
+
+# function that takes a list of dictionaries and returns either a list or a dataframe
+def conv_response_list(
+    response_json: List[dict[Any, Any]], return_type: ReturnType = ReturnType.LIST
+) -> List[dict[Any, Any]] | pd.DataFrame:
+
+    if isinstance(response_json, bytes):
+        return response_json
+
+    assert isinstance(response_json, list), "The response JSON must be a list"
+
+    if return_type == ReturnType.LIST:
+        return response_json
+    elif return_type == ReturnType.DATAFRAME:
+        import pandas as pd
+
+        return pd.DataFrame(data=response_json)
 
 
 class NBIAClient:
@@ -35,7 +64,11 @@ class NBIAClient:
     """
 
     def __init__(
-        self, username: str = "nbia_guest", password: str = "", log_level: str = "INFO"
+        self,
+        username: str = "nbia_guest",
+        password: str = "",
+        log_level: str = "INFO",
+        return_type: Union[ReturnType, str] = ReturnType.LIST,
     ) -> None:
         # Setup logger
         self._log: Logger = setup_logger(
@@ -55,7 +88,13 @@ class NBIAClient:
             self._log.error("Error retrieving access token: %s", e)
             self._api_headers = None
             raise e
+
         self._base_url: NBIA_ENDPOINTS = NBIA_ENDPOINTS.BASE_URL
+        self._return_type: ReturnType = (
+            return_type
+            if isinstance(return_type, ReturnType)
+            else ReturnType(return_type)
+        )
 
     def __enter__(self):
         return self
@@ -88,25 +127,41 @@ class NBIAClient:
     def logger(self, logger: Logger) -> None:
         self._log = logger
 
+    @property
+    def return_type(self) -> str:
+        return self._return_type.value
+
+    @return_type.setter
+    def return_type(self, return_type: str) -> None:
+        assert isinstance(return_type, str), "return_type must be a string"
+        self._return_type = ReturnType(return_type)
+
+    # Helper function for:
+    def _get_return(self, return_type: Optional[Union[ReturnType, str]]) -> ReturnType:
+        """
+        helper function to replace the following code:
+        returnType: ReturnType = (
+            ReturnType(return_type) if return_type is not None else self._return_type
+        )
+        """
+        return ReturnType(return_type) if return_type is not None else self._return_type
+
     def query_api(
         self, endpoint: NBIA_ENDPOINTS, params: dict = {}
-    ) -> Union[dict | list, bytes, None]:
-        # query_url = NBIA_ENDPOINTS.BASE_URL.value + endpoint.value
+    ) -> List[dict[Any, Any]]:
         query_url: str = self._base_url.value + endpoint.value
 
         self._log.debug("Querying API endpoint: %s", query_url)
         self._log.debug("Query parameters: %s", params)
-
-        response: requests.Response | None = None
+        response: requests.Response
 
         try:
             response = requests.get(url=query_url, headers=self.headers, params=params)
             response.raise_for_status()  # Raise an HTTPError for bad responses
+            parsed_response: List[dict[Any, Any]] | bytes = parse_response(
+                response=response
+            )
 
-            if response.headers.get("Content-Type") == "application/json":
-                return response.json()
-            else:
-                return response.content
         except JSONDecodeError as j:
             self._log.error("Error parsing response as JSON: %s", j)
             if response is not None:
@@ -131,126 +186,140 @@ class NBIAClient:
             self._log.error("Error querying API: %s", e)
             raise e
 
-    def getCollections(self, prefix: str = "") -> Union[list[str], None]:
-        response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTIONS)
+        return parsed_response
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
+    def getCollections(
+        self, prefix: str = "", return_type: Optional[Union[ReturnType, str]] = None
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
 
-        collections = []
-        for collection in response:
-            name = collection["Collection"]
-            if name.lower().startswith(prefix.lower()):
-                collections.append(name)
-        return collections
+        returnType: ReturnType = self._get_return(return_type)
+
+        response: List[dict[Any, Any]]
+        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_COLLECTIONS)
+
+        if prefix:
+            response = [
+                d
+                for d in response
+                if d["Collection"].lower().startswith(prefix.lower())
+            ]
+
+        return conv_response_list(response, returnType)
 
     def getCollectionDescriptions(
-        self, collectionName: str
-    ) -> Union[list[dict[str, str]], None]:
-        PARAMS = self.parsePARAMS(locals())
+        self, collectionName: str, return_type: Optional[Union[ReturnType, str]] = None
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
 
-        response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_DESCRIPTIONS, PARAMS)
+        returnType: ReturnType = self._get_return(return_type)
+        PARAMS: dict = self.parsePARAMS(params=locals())
 
-        if len(response) == 0:
-            raise ValueError(
-                "The response from the API is empty. Please check the collection name."
-            )
+        response: List[dict[Any, Any]]
+        response = self.query_api(
+            endpoint=NBIA_ENDPOINTS.GET_COLLECTION_DESCRIPTIONS, params=PARAMS
+        )
+        assert (
+            len(response) == 1
+        ), "The response from the API is empty. Please check the collection name."
 
-        api_response = response[0]
-        if not isinstance(api_response, dict):
-            raise ValueError("The response from the API is not a dictionary")
-
-        returnVal: dict[str, str] = {
-            "collectionName": api_response["collectionName"],
-            "description": clean_html(api_response["description"]),
-            "descriptionURI": api_response["descriptionURI"],
+        response[0] = {
+            "collectionName": response[0]["collectionName"],
+            "description": clean_html(response[0]["description"]),
+            "descriptionURI": response[0]["descriptionURI"],
             "lastUpdated": convertMillis(
-                millis=int(api_response["collectionDescTimestamp"])
+                millis=int(response[0]["collectionDescTimestamp"])
             ),
         }
 
-        return [returnVal]
+        return conv_response_list(response, returnType)
 
     def getModalityValues(
-        self, Collection: str = "", BodyPartExamined: str = ""
-    ) -> Union[list[str], None]:
-        PARAMS = self.parsePARAMS(locals())
+        self,
+        Collection: str = "",
+        BodyPartExamined: str = "",
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
 
+        returnType: ReturnType = self._get_return(return_type)
+
+        PARAMS: dict = self.parsePARAMS(params=locals())
+
+        response: List[dict[Any, Any]]
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_MODALITY_VALUES, params=PARAMS
         )
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
+        return conv_response_list(response, returnType)
 
-        modalities = []
-        for modality in response:
-            modalities.append(modality["Modality"])
-        return modalities
+    def getPatients(
+        self,
+        Collection: str = "",
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
 
-    def getPatients(self, Collection: str = "") -> Union[list[dict[str, str]], None]:
-        assert isinstance(Collection, str), "Collection must be a string"
+        returnType: ReturnType = self._get_return(return_type)
 
-        PARAMS = self.parsePARAMS(locals())
+        PARAMS: dict = self.parsePARAMS(locals())
 
+        response: List[dict[Any, Any]]
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_PATIENTS, params=PARAMS)
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
 
-        patientList = []
-        for patient in response:
-            assert isinstance(patient, dict), "Expected dict, but received: %s" % type(
-                patient
-            )
-            assert "PatientId" in patient, "PatientId not in patient dict"
-            assert isinstance(
-                patient["PatientId"], str
-            ), "PatientId must be a string, but received: %s" % type(
-                patient["PatientId"]
-            )
-
-            patientList.append(patient)
-
-        return patientList
+        return conv_response_list(response, returnType)
 
     def getNewPatients(
         self,
         Collection: str,
         Date: Union[str, datetime],
-    ) -> Union[list[dict[str, str]], None]:
-        assert Collection is not None
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+        returnType: ReturnType = self._get_return(return_type)
+
         assert Date is not None
 
         # convert date to %Y/%m/%d format
         Date = convertDateFormat(input_date=Date, format="%Y/%m/%d")
 
-        PARAMS = self.parsePARAMS(locals())
-
+        PARAMS: dict = self.parsePARAMS(locals())
+        response: List[dict[Any, Any]]
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS
         )
-        assert isinstance(response, list), "Expected list, but received: %s" % type(
-            response
-        )
+        return conv_response_list(response, returnType)
 
-        patientList = []
-        for patient in response:
-            assert isinstance(patient, dict), "Expected dict, but received: %s" % type(
-                patient
-            )
-            assert "PatientId" in patient, "PatientId not in patient dict"
-            assert isinstance(
-                patient["PatientId"], str
-            ), "PatientId must be a string, but received: %s" % type(
-                patient["PatientId"]
-            )
+    # def getNewPatients(
+    #     self,
+    #     Collection: str,
+    #     Date: Union[str, datetime],
+    # ) -> Union[list[dict[str, str]], None]:
+    #     assert Collection is not None
+    #     assert Date is not None
 
-            patientList.append(patient)
+    #     # convert date to %Y/%m/%d format
+    #     Date = convertDateFormat(input_date=Date, format="%Y/%m/%d")
 
-        return patientList
+    #     PARAMS = self.parsePARAMS(locals())
+
+    #     response = self.query_api(
+    #         endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS
+    #     )
+    #     assert isinstance(response, list), "Expected list, but received: %s" % type(
+    #         response
+    #     )
+
+    #     patientList = []
+    #     for patient in response:
+    #         assert isinstance(patient, dict), "Expected dict, but received: %s" % type(
+    #             patient
+    #         )
+    #         assert "PatientId" in patient, "PatientId not in patient dict"
+    #         assert isinstance(
+    #             patient["PatientId"], str
+    #         ), "PatientId must be a string, but received: %s" % type(
+    #             patient["PatientId"]
+    #         )
+
+    #         patientList.append(patient)
+
+    #     return patientList
 
     def getPatientsByCollectionAndModality(
         self, Collection: str, Modality: str
@@ -402,8 +471,9 @@ class NBIAClient:
         self,
         SeriesInstanceUID: str,
     ) -> Union[list[dict], None]:
-        assert SeriesInstanceUID is not None and isinstance(SeriesInstanceUID, str), \
-            "SeriesInstanceUID must be a string"
+        assert SeriesInstanceUID is not None and isinstance(
+            SeriesInstanceUID, str
+        ), "SeriesInstanceUID must be a string"
 
         PARAMS = self.parsePARAMS({"SeriesUID": SeriesInstanceUID})
 
@@ -415,110 +485,109 @@ class NBIAClient:
 
         return response
 
+    # def downloadSeries(
+    #     self,
+    #     SeriesInstanceUID: Union[str, list],
+    #     downloadDir: str = "./NBIA-Download",
+    #     filePattern: str = "%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm",
+    #     overwrite: bool = False,
+    #     nParallel: int = 1,
+    # ) -> bool:
+    #     assert isinstance(
+    #         SeriesInstanceUID, (str, list)
+    #     ), "SeriesInstanceUID must be a string or list"
+    #     assert isinstance(downloadDir, str), "downloadDir must be a string"
+    #     assert isinstance(filePattern, str), "filePattern must be a string"
+    #     assert isinstance(overwrite, bool), "overwrite must be a boolean"
 
-    def downloadSeries(
-        self,
-        SeriesInstanceUID: Union[str, list],
-        downloadDir: str = "./NBIA-Download",
-        filePattern: str = "%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm",
-        overwrite: bool = False,
-        nParallel: int = 1,
-    ) -> bool:
-        assert isinstance(
-            SeriesInstanceUID, (str, list)
-        ), "SeriesInstanceUID must be a string or list"
-        assert isinstance(downloadDir, str), "downloadDir must be a string"
-        assert isinstance(filePattern, str), "filePattern must be a string"
-        assert isinstance(overwrite, bool), "overwrite must be a boolean"
+    #     import concurrent.futures as cf
+    #     from tqdm import tqdm
 
-        import concurrent.futures as cf
-        from tqdm import tqdm
+    #     if isinstance(SeriesInstanceUID, str):
+    #         SeriesInstanceUID = [SeriesInstanceUID]
 
-        if isinstance(SeriesInstanceUID, str):
-            SeriesInstanceUID = [SeriesInstanceUID]
+    #     with cf.ThreadPoolExecutor(max_workers=nParallel) as executor:
+    #         futures = []
 
-        with cf.ThreadPoolExecutor(max_workers=nParallel) as executor:
-            futures = []
+    #         try:
+    #             os.makedirs(downloadDir)
+    #         except FileExistsError:
+    #             pass
 
-            try:
-                os.makedirs(downloadDir)
-            except FileExistsError:
-                pass
+    #         for seriesUID in SeriesInstanceUID:
+    #             future = executor.submit(
+    #                 self._downloadSingleSeries,
+    #                 SeriesInstanceUID=seriesUID,
+    #                 downloadDir=downloadDir,
+    #                 filePattern=filePattern,
+    #                 overwrite=overwrite,
+    #             )
+    #             futures.append(future)
 
-            for seriesUID in SeriesInstanceUID:
-                future = executor.submit(
-                    self._downloadSingleSeries,
-                    SeriesInstanceUID=seriesUID,
-                    downloadDir=downloadDir,
-                    filePattern=filePattern,
-                    overwrite=overwrite,
-                )
-                futures.append(future)
+    #         # Use tqdm to create a progress bar
+    #         with tqdm(
+    #             total=len(futures), desc=f"Downloading {len(futures)} series"
+    #         ) as pbar:
+    #             for future in cf.as_completed(futures):
+    #                 pbar.update(1)
 
-            # Use tqdm to create a progress bar
-            with tqdm(
-                total=len(futures), desc=f"Downloading {len(futures)} series"
-            ) as pbar:
-                for future in cf.as_completed(futures):
-                    pbar.update(1)
+    #         return True
 
-            return True
+    # # _downloadSingleSeries is a helper function that downloads a single series
+    # # to simplify the code in downloadSeries and also allow for parallel
+    # # downloads in the future
+    # def _downloadSingleSeries(
+    #     self,
+    #     SeriesInstanceUID: str,
+    #     downloadDir: str,
+    #     filePattern: str,
+    #     overwrite: bool,
+    # ) -> bool:
+    #     # create temporary directory
+    #     from tempfile import TemporaryDirectory
 
-    # _downloadSingleSeries is a helper function that downloads a single series
-    # to simplify the code in downloadSeries and also allow for parallel
-    # downloads in the future
-    def _downloadSingleSeries(
-        self,
-        SeriesInstanceUID: str,
-        downloadDir: str,
-        filePattern: str,
-        overwrite: bool,
-    ) -> bool:
-        # create temporary directory
-        from tempfile import TemporaryDirectory
+    #     params = dict()
+    #     params["SeriesInstanceUID"] = SeriesInstanceUID
 
-        params = dict()
-        params["SeriesInstanceUID"] = SeriesInstanceUID
+    #     self._log.debug("Downloading series: %s", SeriesInstanceUID)
+    #     response = self.query_api(
+    #         endpoint=NBIA_ENDPOINTS.DOWNLOAD_SERIES, params=params
+    #     )
 
-        self._log.debug("Downloading series: %s", SeriesInstanceUID)
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.DOWNLOAD_SERIES, params=params
-        )
+    #     if not isinstance(response, bytes):
+    #         self._log.error(f"Expected binary data, but received: {type(response)}")
+    #         return False
 
-        if not isinstance(response, bytes):
-            self._log.error(f"Expected binary data, but received: {type(response)}")
-            return False
+    #     file = zipfile.ZipFile(io.BytesIO(response))
 
-        file = zipfile.ZipFile(io.BytesIO(response))
+    #     with TemporaryDirectory() as tempDir:
+    #         file.extractall(path=tempDir)
 
-        with TemporaryDirectory() as tempDir:
-            file.extractall(path=tempDir)
+    #         try:
+    #             validateMD5(seriesDir=tempDir)
+    #         except Exception as e:
+    #             self._log.error("Error validating MD5 hash: %s", e)
+    #             return False
 
-            try:
-                validateMD5(seriesDir=tempDir)
-            except Exception as e:
-                self._log.error("Error validating MD5 hash: %s", e)
-                return False
+    #         # Create an instance of DICOMSorter with the desired target pattern
+    #         sorter = DICOMSorter(
+    #             sourceDir=tempDir,
+    #             destinationDir=downloadDir,
+    #             targetPattern=filePattern,
+    #             truncateUID=True,
+    #             sanitizeFilename=True,
+    #         )
+    #         # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
+    #         if not sorter.sortDICOMFiles(option="move", overwrite=overwrite):
+    #             self._log.error(
+    #                 "Error sorting DICOM files for series %s\n \
+    #                     failed files located at %s",
+    #                 SeriesInstanceUID,
+    #                 tempDir,
+    #             )
+    #             return False
 
-            # Create an instance of DICOMSorter with the desired target pattern
-            sorter = DICOMSorter(
-                sourceDir=tempDir,
-                destinationDir=downloadDir,
-                targetPattern=filePattern,
-                truncateUID=True,
-                sanitizeFilename=True,
-            )
-            # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
-            if not sorter.sortDICOMFiles(option="move", overwrite=overwrite):
-                self._log.error(
-                    "Error sorting DICOM files for series %s\n \
-                        failed files located at %s",
-                    SeriesInstanceUID,
-                    tempDir,
-                )
-                return False
-
-        return True
+    #     return True
 
     # parsePARAMS is a helper function that takes a locals() dict and returns
     # a dict with only the non-empty values
@@ -526,7 +595,7 @@ class NBIAClient:
         self._log.debug("Parsing params: %s", params)
         PARAMS = dict()
         for key, value in params.items():
-            if (value != "") and (key != "self"):
+            if (value != "") and (key != "self") and (key != "return_type"):
                 PARAMS[key] = value
         return PARAMS
 

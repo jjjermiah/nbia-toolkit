@@ -36,5 +36,3 @@ Then activate the virtual environment and install the package using the commands
 source /path/to/new/virtual/environment/bin/activate
 pip install nbiatoolkit
 ```
-
-

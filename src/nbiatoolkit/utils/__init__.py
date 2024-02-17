@@ -1,6 +1,12 @@
 from .nbia_endpoints import NBIA_ENDPOINTS
 from .md5 import validateMD5
-from .parsers import convertMillis, clean_html, convertDateFormat
+from .parsers import (
+    convertMillis,
+    clean_html,
+    convertDateFormat,
+    parse_response,
+    ReturnType,
+)
 
 __all__ = [
     "NBIA_ENDPOINTS",
@@ -8,4 +14,6 @@ __all__ = [
     "convertMillis",
     "clean_html",
     "convertDateFormat",
+    "parse_response",
+    "ReturnType",
 ]
