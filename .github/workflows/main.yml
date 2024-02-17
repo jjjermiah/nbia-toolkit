@@ -1,21 +1,21 @@
-name: Unit Tests
-  
+name: CI-CD
+
 # only run on pushes to main or pull requests
 on:
   push:
-    # push to any branch
-    branches: [ main ]
+    # push to any branch *
+    branches: [ "*"]
   pull_request:
     branches: [ main , development]
-  
-jobs:  
-  Continuous-Integration:
+
+jobs:
+  Unit-Tests:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, macos-14]
         python-version: ["3.12", "3.11"] # "3.10",
-  
+
     steps:
       - uses: actions/checkout@v3
 
@@ -32,19 +32,19 @@ jobs:
 
       - name: Test with pytest
         run: |
-          poetry run pytest -n 2 --cov --cov-report xml:coverage-report/coverage.xml
+          # Github action runners now have 4 cores
+          poetry run pytest -n 4 --cov --cov-report xml:coverage-report/coverage.xml
 
-      - name: Build documentation
-        run: poetry run make html --directory docs/
-
-      - name: Upload coverage report
+      - name: Upload coverage report artifact to be used by Codecov
+        # only upload if matrix.os is ubuntu-latest and matrix.python-version is 3.12
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         uses: actions/upload-artifact@v2
         with:
           name: coverage-report
           path: coverage-report
 
   Codecov:
-    needs: Continuous-Integration
+    needs: Unit-Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -65,7 +65,29 @@ jobs:
           verbose: true
           name: codecov-umbrella
 
+  Build-Documentation:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/docs'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.4
+
+      - name: Install poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Build documentation
+        run: |
+          pip install -r docs/requirements.txt
+          pip install .
+          make html --directory=docs
 
   Continuous-Deployment:
     permissions:
@@ -74,10 +96,10 @@ jobs:
         issues: write
         pull-requests: write
 
-    # needs: Continuous-Integration
+    needs: [Unit-Tests]
 
     # if pulling to main, deploy to PyPI
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     # Set up operating system
     runs-on: ubuntu-latest
@@ -100,11 +122,6 @@ jobs:
     - name: Install package
       run: poetry install
 
-
-    # Existing jobs...
-
-
-
    # This action uses Python Semantic Release v8
    # What this action does:
    # - Determines the next version number based on the commit history
@@ -116,7 +133,6 @@ jobs:
       uses: python-semantic-release/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        git_commit_message: 'chore(release): release ${next_version}'
 
     - name: Install packaging-related tool
       run:
@@ -142,15 +158,22 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
 
-    - name: Print latest tag name
-      run: |
-        printf "%s\n" "${LATEST_TAG}"
-
     - name: Print branch name
       run: |
         printf "LATEST TAG: %s\n" "${LATEST_TAG}"
         echo "DOCKER_IMAGE_TAG=${LATEST_TAG}" >> "$GITHUB_ENV"
         printf "DOCKER_IMAGE_TAG: %s\n" "${DOCKER_IMAGE_TAG}"
+
+    - name: Print outputs from semantic release
+      run: |
+        # Semantic release gha provides the following outputs:
+        # - released: true if a new release was created, false otherwise
+        # - version: the new version number
+        # - tag: The Git tag that was created
+        echo "${{ steps.release.outputs.released }}"
+        echo "${{ steps.release.outputs.version }}"
+        echo "${{ steps.release.outputs.tag }}"
+        echo "${{ steps.release.outputs.release_notes }}"
 
     - name: Set up QEMU
       if: steps.release.outputs.released == 'true'
@@ -205,7 +228,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, macos-14]
         python-version: ["3.12", "3.11"]
-    
+
     steps:
       - uses: actions/checkout@v3
 
@@ -213,7 +236,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install using PyPi
         run: |
           pip install  nbiatoolkit;
@@ -321,7 +344,7 @@ jobs:
               git add .
 
               # Commit with a timestamp
-              git commit -m "Update README with latest version: $LATEST_TAG"
+              git commit -m "chore: Update README: $LATEST_TAG"
 
               # Push changes to the remote repository
               # if github.head_ref is not null
@@ -342,10 +365,10 @@ jobs:
 
 
 
-          # git add README.md
+  #         # git add README.md
 
-          # git commit -m "Update README with latest version"
-          # git push
+  #         # git commit -m "Update README with latest version"
+  #         # git push
 
 
 # #!/bin/bash
@@ -369,4 +392,3 @@ jobs:
 #     # No changes
 #     echo "No changes found. Nothing to commit or push."
 # fi
-

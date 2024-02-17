@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nbiatoolkit"
-version = "0.20.0"
+version = "0.29.2"
 description = "A python package to query the National Biomedical Imaging Archive (NBIA) database."
 authors = ["Jermiah Joseph"]
 license = "MIT"
@@ -10,50 +10,60 @@ readme = "README.md"
 dicomsort = "nbiatoolkit.nbia_cli:DICOMSorter_cli"
 NBIAToolkit = "nbiatoolkit:version"
 getCollections = "nbiatoolkit.nbia_cli:getCollections_cli"
-getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
 getBodyPartCounts = "nbiatoolkit.nbia_cli:getBodyPartCounts_cli"
-downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
+getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
+getNewPatients = "nbiatoolkit.nbia_cli:getNewPatients_cli"
+getStudies = "nbiatoolkit.nbia_cli:getStudies_cli"
 getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
+getNewSeries = "nbiatoolkit.nbia_cli:getNewSeries_cli"
+downloadSingleSeries = "nbiatoolkit.nbia_cli:downloadSingleSeries_cli"
 
 [tool.poetry.dependencies]
 python = ">=3.10 || 3.12"
 requests = "2.31.0"
-pydicom = "^2.4.3"
+pydicom = "^2.4.0"
 tqdm = "^4.66.1"
 pyfiglet = "^1.0"
 beautifulsoup4 = "^4.12.3"
+cryptography = "^42.0.2"
+pandas = "^2.2.0"
+pyarrow = "^15.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
 jupyter = "^1.0.0"
 pytest-cov = ">=4.0.0"
 pytest-xdist = ">=3.5.0"
+mkdocs = "1.5.3"
 myst-nb = {version = "^1.0.0", python = "^3.9"}
 sphinx-autoapi = "^3.0.0"
 sphinx-rtd-theme = "^1.3.0"
 python-semantic-release = "^8.5.1"
+pre-commit = "^3.6.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-# https://python-semantic-release.readthedocs.io/en/latest/configuration.html
 [tool.semantic_release]
 version_variables = [
-    "setup.py:__version__",
     "src/nbiatoolkit/nbia.py:__version__",
 ]
 version_toml = [
     "pyproject.toml:tool.poetry.version",
 ]
 branch = "main"
-changelog_file = "CHANGELOG.md"
 dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
 remove_dist = false
-commit_message = "chore(release): {version}"
+commit_message = "chore(sem-ver): {version}"
 patch_without_tag = true
+
+[tool.semantic_release.changelog]
+changelog_file = "docs/markdowns/CHANGELOG.md"
+exclude_commit_types = ["docs", "style", "refactor", "test", "chore"]
+
 
 [tool.semantic_release.commit_parser_options]
 allowed_tags = [

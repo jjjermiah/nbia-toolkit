@@ -5,9 +5,12 @@
 :maxdepth: 2
 :hidden:
 
-wiki/NBIA.md
+markdowns/NBIA.md
+markdowns/Installation.md
+InitializeClient.rst
 Tutorial.ipynb
-CONTRIBUTING.md
-CONDUCT.md
+markdowns/CHANGELOG.md
+markdowns/CONTRIBUTING.md
+markdowns/CONDUCT.md
 autoapi/index
 ```

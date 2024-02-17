@@ -7,6 +7,8 @@ class NBIA_ENDPOINTS(Enum):
     """
 
     BASE_URL = "https://services.cancerimagingarchive.net/nbia-api/services/"
+    NLST_URL = "https://nlst.cancerimagingarchive.net/nbia-api/services/"
+    LOGOUT_URL = "https://services.cancerimagingarchive.net/nbia-api/logout"
 
     GET_COLLECTIONS = "v2/getCollectionValues"
     GET_COLLECTION_PATIENT_COUNT = "getCollectionValuesAndCounts"
@@ -22,15 +24,11 @@ class NBIA_ENDPOINTS(Enum):
     GET_STUDIES = "v2/getPatientStudy"
 
     GET_SERIES = "v2/getSeries"
-    DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
-
     GET_UPDATED_SERIES = "v2/getUpdatedSeries"  # ?fromDate=01/01/2024
+    GET_SERIES_METADATA = "v1/getSeriesMetaData"
+    DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
+    GET_DICOM_TAGS = "getDicomTags"
 
-    # https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesMetaData?SeriesInstanceUID=1.3.6.1.4.1.9590.100.1.2.374115997511889073021386151921807063992
-
-    # https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesSize?SeriesInstanceUID=1.3.6.1.4.1.9590.100.1.2.374115997511889073021386151921807063992
-
-    # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeries"
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesMetaData"
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesSize"
 

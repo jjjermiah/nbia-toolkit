@@ -10,9 +10,9 @@ import sys
 sys.path.insert(0, os.path.abspath("../src"))
 # -- Project information -----------------------------------------------------
 
-project = u"nbiatoolkit"
-copyright = u"2023, Jermiah Joseph"
-author = u"Jermiah Joseph"
+project = "nbiatoolkit"
+copyright = "2023, Jermiah Joseph"
+author = "Jermiah Joseph"
 
 # -- General configuration ---------------------------------------------------
 
@@ -24,13 +24,14 @@ extensions = [
     "autoapi.extension",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
+    "sphinx_tabs.tabs",
 ]
-autoapi_dirs = ["../src"]
+autoapi_dirs = ["../src/nbiatoolkit"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "_html_notebooks"]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -38,3 +39,5 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"
+
+html_static_path = ["_static"]

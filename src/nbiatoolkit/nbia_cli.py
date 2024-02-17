@@ -28,11 +28,14 @@ def version():
     # run each command with -h to see the available options
     commands = [
         "getCollections",
-        "getPatients",
         "getBodyPartCounts",
+        "getPatients",
+        "getNewPatients",
+        "getStudies",
         "getSeries",
+        "getNewSeries",
         "downloadSingleSeries",
-        "dicomsort"
+        "dicomsort",
     ]
     for command in commands:
         result = subprocess.run([command, "-h"], capture_output=True, text=True)
@@ -46,7 +49,38 @@ def version():
     return
 
 
-def general_parser(parser: argparse.ArgumentParser) -> argparse.Namespace:
+def _initialize_parser(description: str) -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(description=description)
+
+    # create an argparse group called "Credentials" to hold the username and password arguments
+    credentials = p.add_argument_group(
+        title="authentication parameters",
+        description="The username and password for the NBIA API if querying restricted datasets, defaults to the NBIA Guest Account",
+    )
+
+    credentials.add_argument(
+        "-u",
+        "--username",
+        action="store",
+        type=str,
+        default="nbia_guest",  # help="Username for the NBIA API (default: nbia_guest)"
+    )
+
+    credentials.add_argument(
+        "-pw",
+        "--password",
+        action="store",
+        type=str,
+        default="",  # help="Password for the NBIA API (default: '')"
+    )
+
+    # make the credentials group show up first
+    p._action_groups.insert(0, p._action_groups.pop())
+
+    return p
+
+
+def _add_extra_args(parser: argparse.ArgumentParser) -> argparse.Namespace:
     parser.add_argument(
         "-o",
         "--output",
@@ -175,7 +209,7 @@ def cli_wrapper(func, **kwargs) -> List[str] | None:
 def getPatients_cli() -> None:
     global query
     query = "patients"
-    p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
+    p = _initialize_parser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
         "-c",
@@ -185,15 +219,18 @@ def getPatients_cli() -> None:
         type=str,
     )
 
-    args = general_parser(p)
+    args = _add_extra_args(p)
 
-    return getResults_cli(func=NBIAClient().getPatients, Collection=args.collection)
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getPatients,
+        Collection=args.collection,
+    )
 
 
 def getCollections_cli() -> None:
     global query
     query = "collections"
-    p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
+    p = _initialize_parser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
         "-p",
@@ -204,9 +241,44 @@ def getCollections_cli() -> None:
         help="The prefix to filter collections by, i.e 'TCGA', 'LIDC', 'NSCLC'",
     )
 
-    args = general_parser(p)
+    args = _add_extra_args(p)
 
-    return getResults_cli(func=NBIAClient().getCollections, prefix=args.prefix)
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getCollections, prefix=args.prefix
+    )
+
+
+def getNewPatients_cli() -> None:
+    global query
+    query = "newPatients"
+    p = _initialize_parser(
+        description=f"NBIAToolkit: {query}. Get new patients from a collection since a given date."
+    )
+
+    p.add_argument(
+        "-c",
+        "--collection",
+        action="store",
+        required=True,
+        type=str,
+    )
+
+    p.add_argument(
+        "-d",
+        "--date",
+        action="store",
+        required=True,
+        type=str,
+        help="The date to filter by, i.e '2021-01-01' or '2019/12/31",
+    )
+
+    args = _add_extra_args(p)
+
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getNewPatients,
+        Collection=args.collection,
+        Date=args.date,
+    )
 
 
 def getBodyPartCounts_cli() -> None:
@@ -214,7 +286,7 @@ def getBodyPartCounts_cli() -> None:
     global output
     query = f"BodyPartCounts"
 
-    p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
+    p = _initialize_parser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
         "-c",
@@ -225,10 +297,52 @@ def getBodyPartCounts_cli() -> None:
         type=str,
     )
 
-    args = general_parser(p)
+    args = _add_extra_args(p)
 
     return getResults_cli(
-        func=NBIAClient().getBodyPartCounts, Collection=args.collection
+        func=NBIAClient(args.username, args.password).getBodyPartCounts,
+        Collection=args.collection,
+    )
+
+
+def getStudies_cli() -> None:
+    global query
+    query = f"getStudies"
+    p = _initialize_parser(
+        description=f"NBIAToolkit: {query}. Get studies from a collection."
+    )
+
+    p.add_argument(
+        "-c",
+        "--collection",
+        action="store",
+        required=True,
+        type=str,
+    )
+
+    p.add_argument(
+        "-p",
+        "--patientID",
+        action="store",
+        default="",
+        type=str,
+    )
+
+    p.add_argument(
+        "-s",
+        "--studyInstanceUID",
+        action="store",
+        default="",
+        type=str,
+    )
+
+    args = _add_extra_args(p)
+
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getStudies,
+        Collection=args.collection,
+        PatientID=args.patientID,
+        StudyInstanceUID=args.studyInstanceUID,
     )
 
 
@@ -237,7 +351,7 @@ def getSeries_cli() -> None:
     global output
     query = f"series"
 
-    p = argparse.ArgumentParser(description=f"NBIAToolkit: {query} ")
+    p = _initialize_parser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
         "-c",
@@ -307,9 +421,9 @@ def getSeries_cli() -> None:
         type=str,
     )
 
-    args = general_parser(p)
+    args = _add_extra_args(p)
     return getResults_cli(
-        func=NBIAClient().getSeries,
+        func=NBIAClient(args.username, args.password).getSeries,
         Collection=args.collection,
         PatientID=args.patientID,
         StudyInstanceUID=args.studyInstanceUID,
@@ -321,12 +435,35 @@ def getSeries_cli() -> None:
     )
 
 
+def getNewSeries_cli() -> None:
+    global query
+    query = f"newSeries"
+    p = _initialize_parser(
+        description=f"NBIAToolkit: {query}. Get new series from a collection since a given date."
+    )
+
+    p.add_argument(
+        "-d",
+        "--date",
+        action="store",
+        required=True,
+        type=str,
+        help="The date to filter by, i.e '2021-01-01' or '2019/12/31",
+    )
+
+    args = _add_extra_args(p)
+
+    return getResults_cli(
+        func=NBIAClient(args.username, args.password).getNewSeries, Date=args.date
+    )
+
+
 def downloadSingleSeries_cli() -> None:
     global query
     query = f"series"
     # use the NBIAClient._downloadSingleSeries function to download a single series
 
-    p = argparse.ArgumentParser(description="NBIAToolkit: download a single series")
+    p = _initialize_parser(description="NBIAToolkit: download a single series")
 
     p.add_argument(
         "--seriesUID",
@@ -364,12 +501,13 @@ def downloadSingleSeries_cli() -> None:
     args = p.parse_args()
 
     return getResults_cli(
-        func=NBIAClient()._downloadSingleSeries,
+        func=NBIAClient(args.username, args.password)._downloadSingleSeries,
         SeriesInstanceUID=args.seriesUID,
         downloadDir=args.downloadDir,
         filePattern=args.filePattern,
         overwrite=args.overwrite,
     )
+
 
 # Create command line interface
 
@@ -379,7 +517,7 @@ def downloadSingleSeries_cli() -> None:
 
 
 def DICOMSorter_cli():
-    parser = argparse.ArgumentParser(
+    parser = _initialize_parser(
         description="NBIAToolkit: Sort DICOM files into destination directory according to target pattern."
     )
 

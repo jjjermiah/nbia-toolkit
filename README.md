@@ -1,4 +1,5 @@
 # *NBIA Toolkit*
+## A python package that provides programmatic access to query and download images from the National Biomedical Imaging Archive (**NBIA**) and The Cancer Imaging Archive (**TCIA**) databases.
 [![PyTests](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/jjjermiah/nbia-toolkit/graph/badge.svg?token=JKREY71D0R)](https://codecov.io/gh/jjjermiah/nbia-toolkit)
@@ -9,6 +10,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/nbiatoolkit.svg?label=pypi%20downloads)](https://pypi.org/project/nbiatoolkit/)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jjjermiah/nbia-toolkit)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jjjermiah/nbiatoolkit)](https://hub.docker.com/r/jjjermiah/nbiatoolkit)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 
 
@@ -16,21 +18,26 @@
 
 
 
-`nbiatoolkit` is a python package that provides programmatic access to query and download images from the National Biomedical Imaging Archive (**NBIA**) and The Cancer Imaging Archive (**TCIA**) databases.
-
 ## Features
-- Use NBIA Guest account to access public data OR authenticate using OAuth with user credentials for limited access data (requires approved data access).
+> [!TIP]
+> For a thorough description of the package and its available features, please refer to the Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
+
+- ***Programmatic access*** to the National Biomedical Imaging Archive (NBIA) and The Cancer Imaging Archive (TCIA) databases
+  - Use NBIA Guest account to access public data OR authenticate using OAuth with user credentials for limited access data (requires approved data access).
+  - Custom `OAuth2` class for **NBIA**, **TCIA**, including special handling for dedicated server for the **NLST** collection.
+
 - ***Query NBIA database*** for metadata on ***collections***, ***patients***, ***studies***, ***series***, and ***images***
 - Download images from NBIA
   - ***Validate doownloads with MD5 checksums*** for downloaded images
   - **Auto-sort** DICOM files using a user-defined pattern of DICOM tags with specialized ***DICOMSorter class***
 
-See Documentation at [NBIA-Toolkit Read The Docs](https://nbia-toolkit.readthedocs.io/en/latest/)
 
 
 ## Installation
 
-`nbiatoolkit` is currently under development.
+> [!WARNING]
+> `nbiatoolkit` is currently under development and is not guaranteed to be stable.
+
 It is made available via PyPI and can be installed using pip:
 ****
 ```bash
@@ -38,40 +45,53 @@ pip install nbiatoolkit
 ```
 
 ## CLI Usage
+For quick access to the NBIA, the toolkit also provides a command line interface (CLI)
 
-# getCollections Output
-nbia-toolkit also provides a command line interface (CLI) to query the NBIA database for some queries.
 ``` bash NBIAToolkit-Output
 > NBIAToolkit --version
-    _   ______  _______  ______            ____   _ __ 
+    _   ______  _______  ______            ____   _ __
    / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
   /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
- / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_  
-/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/  
-                                                       
+ / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
+/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
 
-Version: 0.19.2
 
-Available CLI tools: 
+Version: 0.29.2
 
-getCollections [-h] [-p PREFIX] [-o OUTPUTFILE] [--version]
+Available CLI tools:
 
-getPatients [-h] -c COLLECTION [-o OUTPUTFILE] [--version]
+getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
+               [-o OUTPUTFILE] [--version]
 
-getBodyPartCounts [-h] [-c COLLECTION] [-o OUTPUTFILE] [--version]
+getBodyPartCounts [-h] [-u USERNAME] [-pw PASSWORD] [-c COLLECTION]
+                  [-o OUTPUTFILE] [--version]
 
-getSeries [-h] [-c COLLECTION] [-p PATIENTID] [-m MODALITY]
-          [-study STUDYINSTANCEUID]
+getPatients [-h] [-u USERNAME] [-pw PASSWORD] -c COLLECTION
+            [-o OUTPUTFILE] [--version]
+
+getNewPatients [-h] [-u USERNAME] [-pw PASSWORD] -c COLLECTION -d DATE
+               [-o OUTPUTFILE] [--version]
+
+getStudies [-h] [-u USERNAME] [-pw PASSWORD] -c COLLECTION
+           [-p PATIENTID] [-s STUDYINSTANCEUID] [-o OUTPUTFILE]
+           [--version]
+
+getSeries [-h] [-u USERNAME] [-pw PASSWORD] [-c COLLECTION]
+          [-p PATIENTID] [-m MODALITY] [-study STUDYINSTANCEUID]
           [--seriesInstanceUID SERIESINSTANCEUID]
           [--bodyPartExamined BODYPARTEXAMINED]
           [--manufacturerModelName MANUFACTURERMODELNAME]
           [--manufacturer MANUFACTURER] [-o OUTPUTFILE] [--version]
 
-downloadSingleSeries [-h] --seriesUID SERIESUID --downloadDir
-                     DOWNLOADDIR [--filePattern FILEPATTERN]
-                     [--overwrite]
+getNewSeries [-h] [-u USERNAME] [-pw PASSWORD] -d DATE [-o OUTPUTFILE]
+             [--version]
 
-dicomsort [-h] [--targetPattern TARGETPATTERN] [--truncateUID]
+downloadSingleSeries [-h] [-u USERNAME] [-pw PASSWORD] --seriesUID
+                     SERIESUID --downloadDir DOWNLOADDIR
+                     [--filePattern FILEPATTERN] [--overwrite]
+
+dicomsort [-h] [-u USERNAME] [-pw PASSWORD]
+          [--targetPattern TARGETPATTERN] [--truncateUID]
           [--sanitizeFilename] [--overwrite] [--nParallel NPARALLEL]
           sourceDir destinationDir
 
@@ -83,14 +103,11 @@ dicomsort [-h] [--targetPattern TARGETPATTERN] [--truncateUID]
 Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.
 
 ## License
-
 `nbiatoolkit` was created by Jermiah Joseph. It is licensed under the terms of the MIT license.
 
 ## User Agreements and Disclaimers
-The NBIA-toolkit is NOT a product of the National Cancer Institute (NCI) and is not endorsed by the NCI.
-The NBIA-toolkit is provided as an open-source tool based on the [NBIA REST API](https://wiki.cancerimagingarchive.net/display/Public/NBIA+Advanced+REST+API+Guide).
-The NBIA-toolkit is provided "AS IS" without warranty of any kind.
-
-In no event shall the authors or contributors be liable for any claim, damages or other liability, arising from, out of or in connection with the NBIA-toolkit or the use or other dealings in the NBIA-toolkit.
-
-Users of the NBIA-toolkit are required to abide by the NBIA REST API Terms of Service and the [NBIA Data Usage Policies and Restrictions](https://www.cancerimagingarchive.net/data-usage-policies-and-restrictions/)
+> [!IMPORTANT]
+>The NBIA-toolkit is NOT a product of the National Cancer Institute (NCI) and is not endorsed by the NCI.
+> Users of the NBIA-toolkit are required to abide by the NBIA REST API Terms of Service and the [NBIA Data Usage Policies and Restrictions](https://www.cancerimagingarchive.net/data-usage-policies-and-restrictions/)
+> The NBIA-toolkit is provided as an open-source tool based on the [NBIA REST API](https://wiki.cancerimagingarchive.net/display/Public/NBIA+Advanced+REST+API+Guide) and is provided "AS IS" without warranty of any kind.
+> In no event shall the authors or contributors be liable for any claim, damages or other liability, arising from, out of or in connection with the NBIA-toolkit or the use or other dealings in the NBIA-toolkit.

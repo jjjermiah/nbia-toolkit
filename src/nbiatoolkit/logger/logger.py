@@ -59,13 +59,10 @@ def setup_logger(
 
     # Set up console handler if console_logging is True
     if console_logging:
-        try:
-            console_handler = logging.StreamHandler()
-            console_handler.setFormatter(formatter)
-            console_handler.setLevel(level)
-            logger.addHandler(console_handler)
-        except Exception as e:
-            raise IOError(f"Error setting up console handler for logger: {e}") from e
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        console_handler.setLevel(level)
+        logger.addHandler(console_handler)
 
     return logger
 

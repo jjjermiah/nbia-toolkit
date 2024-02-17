@@ -2,7 +2,490 @@
 
 
 
+## v0.29.2 (2024-02-12)
+
+### Chore
+
+* chore: Update README: 0.29.1 ([`385d972`](https://github.com/jjjermiah/nbia-toolkit/commit/385d97273275c9294231233a3dc1bde0b4273ab5))
+
+### Documentation
+
+* docs: rename file for readthedocs ([`0b8197c`](https://github.com/jjjermiah/nbia-toolkit/commit/0b8197ca0b216ec60bb35932b2752af3f56aa010))
+
+### Unknown
+
+* Merge pull request #107 from jjjermiah/docs
+
+docs: merge with main ([`86621f1`](https://github.com/jjjermiah/nbia-toolkit/commit/86621f19c7b25c843a765e0fee3943984f0b4719))
+
+* Merge pull request #106 from jjjermiah/main
+
+merge_fix ([`57b64ae`](https://github.com/jjjermiah/nbia-toolkit/commit/57b64aef7e0eb3ced98bc0f29c06c760b5499aff))
+
+
+## v0.29.1 (2024-02-12)
+
+### Build
+
+* build: docker file cleanup ([`34a6942`](https://github.com/jjjermiah/nbia-toolkit/commit/34a694231e7465f60b4743958d9a93660750b15b))
+
+### Chore
+
+* chore(sem-ver): 0.29.1 ([`8d67efc`](https://github.com/jjjermiah/nbia-toolkit/commit/8d67efcc41db39ebcb78df8c99e2f252fec300f1))
+
+* chore: Update README: 0.29.0 ([`d10a38d`](https://github.com/jjjermiah/nbia-toolkit/commit/d10a38d401080863597e68818341fcdb0b77ba23))
+
+### Documentation
+
+* docs: added some more details on initializing client ([`abc2dc1`](https://github.com/jjjermiah/nbia-toolkit/commit/abc2dc1de9c2587c33e0c7e37017d380e6c1b8eb))
+
+* docs: Update CI/CD workflow and documentation ([`8b8c7f8`](https://github.com/jjjermiah/nbia-toolkit/commit/8b8c7f8fd9a794da842e2e36d2d86f259a694f7b))
+
+### Unknown
+
+* Merge remote-tracking branch &#39;origin&#39; into docs ([`3163edb`](https://github.com/jjjermiah/nbia-toolkit/commit/3163edb8a3a03afce13a3255bd7b28878b40d825))
+
+* Merge pull request #105 from jjjermiah/95-chore-removere-organize-files
+
+fiz #95 chore removere organize files ([`3d00000`](https://github.com/jjjermiah/nbia-toolkit/commit/3d0000082fb4b01cc99ce85442e697fe21b9e291))
+
+* Remove unnecessary files and update autoapi_dirs ([`96cb669`](https://github.com/jjjermiah/nbia-toolkit/commit/96cb669ecbe0bcdaac29a01a72f7dddf63d1922a))
+
+* ierge remote-tracking branch &#39;origin&#39; into docs ([`ad0ec3a`](https://github.com/jjjermiah/nbia-toolkit/commit/ad0ec3a409e83b490e13d9aed3ec0d0bdcc9fa28))
+
+
+## v0.29.0 (2024-02-12)
+
+### Build
+
+* build: Add conditional upload of coverage report artifact ([`972c785`](https://github.com/jjjermiah/nbia-toolkit/commit/972c785b9ffef735ab9544819917d0a23b0d909f))
+
+### Chore
+
+* chore(sem-ver): 0.29.0 ([`8b67ab0`](https://github.com/jjjermiah/nbia-toolkit/commit/8b67ab0a7b853e192c7112d7c3d6f6710153a510))
+
+* chore: Update README: 0.28.0 ([`92ff4eb`](https://github.com/jjjermiah/nbia-toolkit/commit/92ff4ebe8420bd3f63011424ec3bb44ebe286f4c))
+
+### Documentation
+
+* docs: add tutorial back ([`7625694`](https://github.com/jjjermiah/nbia-toolkit/commit/7625694725892526ddb41af9b6667c2049c71e32))
+
+* docs: rearrange ([`750e4fd`](https://github.com/jjjermiah/nbia-toolkit/commit/750e4fdbc49d97546968cc8ef0b1200f2d6ac9ab))
+
+### Feature
+
+* feat: Add getDICOMTags method to NBIAClient class ([`18b6625`](https://github.com/jjjermiah/nbia-toolkit/commit/18b6625df5a1d435aaad37d4d920b5198e0e58d3))
+
+### Fix
+
+* fix: remove err ([`58a9ada`](https://github.com/jjjermiah/nbia-toolkit/commit/58a9ada2bdfc0ec126ff80ce3adff4608562001b))
+
+* fix: remove extra files ([`91b277b`](https://github.com/jjjermiah/nbia-toolkit/commit/91b277ba1a09f491bf8c8943dc4cf6f940f523d0))
+
+* fix: Update pydicom version to 2.4.0 ([`b78edd8`](https://github.com/jjjermiah/nbia-toolkit/commit/b78edd842f230b75d54e11d91a91c9979a2b8380))
+
+* fix: merge ([`544c682`](https://github.com/jjjermiah/nbia-toolkit/commit/544c682d9300aae80def16a22e379602ef5a8370))
+
+* fix: Fix encryption key in OAuth2 class ([`1082e47`](https://github.com/jjjermiah/nbia-toolkit/commit/1082e476f9f00bd4e45df2f9262b344718a83ee6))
+
+### Refactor
+
+* refactor: clean, lint ([`688a1a6`](https://github.com/jjjermiah/nbia-toolkit/commit/688a1a6de485c14a9e20150fc1335635f3221f01))
+
+### Unknown
+
+* Merge pull request #104 from jjjermiah/dicomtags
+
+feat: Dicomtags ([`25760ef`](https://github.com/jjjermiah/nbia-toolkit/commit/25760ef89c94dce23c4bf4ba8e5ba00fabe32c29))
+
+* Merge remote-tracking branch &#39;origin&#39; into docs ([`c8ffa76`](https://github.com/jjjermiah/nbia-toolkit/commit/c8ffa7641df6560959113dcdee03144ac4f5483d))
+
+* update git ignore ([`734cf19`](https://github.com/jjjermiah/nbia-toolkit/commit/734cf1948f8dad60226c146629404ff87788e690))
+
+* Merge pull request #103 from jjjermiah/devel
+
+refactor: clean, lint ([`f9ab11e`](https://github.com/jjjermiah/nbia-toolkit/commit/f9ab11e6980cd95b7b661465a0cc4796d8e8df66))
+
+* remove unused lines ([`c1dc231`](https://github.com/jjjermiah/nbia-toolkit/commit/c1dc23113340d358cd201c36f2e1e9b1505644cc))
+
+* Merge pull request #102 from jjjermiah/19-authpy-logout-functionality
+
+19 authpy logout functionality ([`fee4ee0`](https://github.com/jjjermiah/nbia-toolkit/commit/fee4ee0c870a178a459db9e15d8f521456daa170))
+
+* tests: remove main code in md5 ([`2972b5f`](https://github.com/jjjermiah/nbia-toolkit/commit/2972b5fc9b7bb37dea525abeb9a1e8f1748bc072))
+
+* tests: add more coverage for logger ([`b90c74c`](https://github.com/jjjermiah/nbia-toolkit/commit/b90c74c0bd7af5940e72401d17a5e41982466897))
+
+* Merge pull request #101 from jjjermiah/19-authpy-logout-functionality
+
+19 authpy logout functionality ([`a6f40cc`](https://github.com/jjjermiah/nbia-toolkit/commit/a6f40cc506ce035e2a6568e1af546ded37b34677))
+
+* tests: fix small error ([`977df6c`](https://github.com/jjjermiah/nbia-toolkit/commit/977df6c1ae29262f45963cb929d70fb446f5768a))
+
+* Merge pull request #100 from jjjermiah/main
+
+merge ([`d2a6f55`](https://github.com/jjjermiah/nbia-toolkit/commit/d2a6f55cd6df0e98a122f8f94cb6512c8f3da65a))
+
+* tests:  add tests and Update user authentication logic ([`bf4b8d8`](https://github.com/jjjermiah/nbia-toolkit/commit/bf4b8d8737a5621c778c07c52d517a379741139a))
+
+
+## v0.28.0 (2024-02-05)
+
+### Chore
+
+* chore(sem-ver): 0.28.0 ([`4f78b7a`](https://github.com/jjjermiah/nbia-toolkit/commit/4f78b7a01e3d58d60ad83b039079198c0181324d))
+
+* chore: Update README: 0.27.0 ([`79f7eda`](https://github.com/jjjermiah/nbia-toolkit/commit/79f7edafff8bf0ada9f0ea14909c9fe45f628a69))
+
+### Feature
+
+* feat: Implement logout functionality and add context manager support ([`67968fc`](https://github.com/jjjermiah/nbia-toolkit/commit/67968fc0c061b75a1966112abd6a823fac737191))
+
+### Unknown
+
+* Merge pull request #99 from jjjermiah/19-authpy-logout-functionality
+
+feat: Implement logout functionality and add context manager support ([`528d1a7`](https://github.com/jjjermiah/nbia-toolkit/commit/528d1a79f06f2cd3ae6cb78cbd16438eb165dba5))
+
+
+## v0.27.0 (2024-02-05)
+
+### Chore
+
+* chore(sem-ver): 0.27.0 ([`dfd1fa7`](https://github.com/jjjermiah/nbia-toolkit/commit/dfd1fa74938c49a298a4493da88134bbe6531187))
+
+* chore: Update README: 0.26.0 ([`d063000`](https://github.com/jjjermiah/nbia-toolkit/commit/d063000515e7dae39a48a03a51f29029d54084c6))
+
+### Feature
+
+* feat: Add encryption and decryption functions for credentials ([`bbbd1d2`](https://github.com/jjjermiah/nbia-toolkit/commit/bbbd1d2503bd80cd0b80a933651a5a507b2dd95b))
+
+### Unknown
+
+* Merge pull request #98 from jjjermiah/20-authpy-username-and-password-encryption
+
+feat: Add encryption and decryption functions for credentials ([`e08caa0`](https://github.com/jjjermiah/nbia-toolkit/commit/e08caa00c33d0fc8086155f9a9168258b245b9cc))
+
+
+## v0.26.0 (2024-02-05)
+
+### Chore
+
+* chore(sem-ver): 0.26.0 ([`e60590e`](https://github.com/jjjermiah/nbia-toolkit/commit/e60590e296f111c1bfec8e0b63e9f54e6099d8b8))
+
+* chore: Update README: 0.25.4 ([`289f846`](https://github.com/jjjermiah/nbia-toolkit/commit/289f846f8a6073a39bfc000cc3d7dbd35cf077c4))
+
+### Documentation
+
+* docs: Add programmatic access to NBIA and TCIA databases ([`82542b1`](https://github.com/jjjermiah/nbia-toolkit/commit/82542b12e5d23ff7b3b40f10e0f97fb2082dc861))
+
+### Feature
+
+* feat: implement better Oauth algorithm graph and refresh token ([`3d81d2b`](https://github.com/jjjermiah/nbia-toolkit/commit/3d81d2bdeff970ea725727be95defa989c77f6b1))
+
+### Unknown
+
+* Merge pull request #97 from jjjermiah/18-authpy-accessrefresh-token-+-error-handling
+
+18 authpy accessrefresh token + error handling ([`c2fcdb2`](https://github.com/jjjermiah/nbia-toolkit/commit/c2fcdb2023978f7ed03522bfddb24963ee364b7c))
+
+* Fix error handling in OAuth2 class ([`67140b7`](https://github.com/jjjermiah/nbia-toolkit/commit/67140b7e1e315f5a7d62d0a8c10956c00e657e93))
+
+* Add iframe for test setup ([`5d02ba1`](https://github.com/jjjermiah/nbia-toolkit/commit/5d02ba1046cd0b4a9d02b16993a4a6073b0a9415))
+
+
+## v0.25.4 (2024-02-04)
+
+### Chore
+
+* chore(sem-ver): 0.25.4 ([`edd1104`](https://github.com/jjjermiah/nbia-toolkit/commit/edd1104b9583a337d08ec98739be0a2633ce4857))
+
+* chore: Update README: 0.25.3 ([`7e6803d`](https://github.com/jjjermiah/nbia-toolkit/commit/7e6803d4a696aa1d2faab89e1cf97ad948f82d09))
+
+### Documentation
+
+* docs: added cool functionality for documentation ([`39c7994`](https://github.com/jjjermiah/nbia-toolkit/commit/39c7994d083c43d89aee46eaaedab19f5d809d95))
+
+* docs: add example initialization ([`1f242d5`](https://github.com/jjjermiah/nbia-toolkit/commit/1f242d51cd5ebf93cff5dfae9816c01b1dc961a5))
+
+* docs: update ([`26092e0`](https://github.com/jjjermiah/nbia-toolkit/commit/26092e074ae77ff1f77dd963c16697a2a0b28329))
+
+### Unknown
+
+* Merge pull request #93 from jjjermiah/docs
+
+Docs ([`d649614`](https://github.com/jjjermiah/nbia-toolkit/commit/d6496148dd9b98563882f3c273da7c01f96fee84))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`7aaa06b`](https://github.com/jjjermiah/nbia-toolkit/commit/7aaa06b0922c1a170a47049419081e67a6ad7316))
+
+* dont use poetry for build ([`579b621`](https://github.com/jjjermiah/nbia-toolkit/commit/579b6210b3319ec4c16aff33803de9f01832cb7d))
+
+
+## v0.25.3 (2024-02-04)
+
+### Chore
+
+* chore(sem-ver): 0.25.3 ([`5e8af2d`](https://github.com/jjjermiah/nbia-toolkit/commit/5e8af2d66d27b517892b7165dc6417dadddc567f))
+
+### Documentation
+
+* docs: looks like it works? ([`3abd131`](https://github.com/jjjermiah/nbia-toolkit/commit/3abd1316da0302b2122d60e668ad1c03d6b8b138))
+
+### Fix
+
+* fix: bring it all back ([`cf9b3f5`](https://github.com/jjjermiah/nbia-toolkit/commit/cf9b3f5e734a2d9d6f72e26fc308fe126dc09322))
+
+* fix: any ([`2fd37bc`](https://github.com/jjjermiah/nbia-toolkit/commit/2fd37bc14511d0e1dce2b2ca4d11ae1be1b853e4))
+
+* fix: try sphinx 3.10 ([`afaf6b5`](https://github.com/jjjermiah/nbia-toolkit/commit/afaf6b5d006a6805842cd41af5a6025622ad6d5f))
+
+* fix: 3.10.4 ([`bd36124`](https://github.com/jjjermiah/nbia-toolkit/commit/bd3612499dd234317ea07201fe21ccd35cb8f770))
+
+* fix: 3.10.1 ([`88574f1`](https://github.com/jjjermiah/nbia-toolkit/commit/88574f14b15164ad67ff393dbb7028d4750929e8))
+
+* fix: change python ([`e1bc9b3`](https://github.com/jjjermiah/nbia-toolkit/commit/e1bc9b3a1c45103e025e282d6b7cfd6aaf83ddd0))
+
+* fix: turn all again ([`3394798`](https://github.com/jjjermiah/nbia-toolkit/commit/33947982d94aed3441ff46824acb4d7139f78f30))
+
+* fix: trying diff versions ([`a1e493a`](https://github.com/jjjermiah/nbia-toolkit/commit/a1e493a163c430afe3d1c5a319386868efd3cb64))
+
+* fix: turn off other gha ([`19cbf0e`](https://github.com/jjjermiah/nbia-toolkit/commit/19cbf0eef24db430f5407cf993d499cd3e216fed))
+
+### Unknown
+
+* try ([`22ee493`](https://github.com/jjjermiah/nbia-toolkit/commit/22ee4938071148185920b515c797818d5e3f9c4b))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit ([`8ad996c`](https://github.com/jjjermiah/nbia-toolkit/commit/8ad996c245d2b01766f0c12384db415179b88df6))
+
+* add sphinx-tabs to poetry ([`9718ab7`](https://github.com/jjjermiah/nbia-toolkit/commit/9718ab7f9f5e904f541fa341ec0fd98c23ceb663))
+
+
+## v0.25.2 (2024-02-04)
+
+### Build
+
+* build: test variable usage ([`d954905`](https://github.com/jjjermiah/nbia-toolkit/commit/d9549057526d9d8695bb5e89462f778526d83fe8))
+
+### Chore
+
+* chore(sem-ver): 0.25.2 ([`ba27a61`](https://github.com/jjjermiah/nbia-toolkit/commit/ba27a6175877c25bd1c21387a2a645511522f4a1))
+
+* chore: Update README: 0.25.1 ([`ab85e2e`](https://github.com/jjjermiah/nbia-toolkit/commit/ab85e2e37dc8861d9e2b46de6a06771e06367207))
+
+### Documentation
+
+* docs: Add new files and update index.md ([`861cb37`](https://github.com/jjjermiah/nbia-toolkit/commit/861cb3708f2099c057ce50df81a0a276f062f12b))
+
+### Fix
+
+* fix: added sphinx-tabs requirement for docs and changed changelog name ([`e321180`](https://github.com/jjjermiah/nbia-toolkit/commit/e32118076aa71daa56c62a72a08514b6f2fe1ba0))
+
+### Unknown
+
+* Merge pull request #92 from jjjermiah/read_the_docs_organization
+
+Read the docs organization ([`f4f5cac`](https://github.com/jjjermiah/nbia-toolkit/commit/f4f5cacbf5e1e93715ac925707cc5fc55a7ce78d))
+
+* Merge remote-tracking branch &#39;origin&#39; into read_the_docs_organization ([`e391dc4`](https://github.com/jjjermiah/nbia-toolkit/commit/e391dc4f90e2530ce1d73c3ab412b9a5b1a8551c))
+
+
+## v0.25.1 (2024-02-04)
+
+### Chore
+
+* chore(sem-ver): 0.25.1 ([`4c33957`](https://github.com/jjjermiah/nbia-toolkit/commit/4c33957264ba5491bda15380898b085e54676098))
+
+* chore: Update README: 0.25.0 ([`44c5032`](https://github.com/jjjermiah/nbia-toolkit/commit/44c5032649237275ab9c11a08ac18a1fd0302afa))
+
+### Documentation
+
+* docs: Update file paths and fix formatting in README and Tutorial ([`b69480f`](https://github.com/jjjermiah/nbia-toolkit/commit/b69480f64639517a92bca953b2d6abb37af89078))
+
+### Fix
+
+* fix: remove LiteralString so works with python3.10 ([`e04d367`](https://github.com/jjjermiah/nbia-toolkit/commit/e04d3672f20de685991132469a3298193428b375))
+
+### Unknown
+
+* Merge pull request #90 from jjjermiah/read_the_docs_organization
+
+Read the docs organization ([`aa5cf67`](https://github.com/jjjermiah/nbia-toolkit/commit/aa5cf67416c090cb52bc131f7f12c9b96b9f62de))
+
+* Merge remote-tracking branch &#39;origin&#39; into read_the_docs_organization ([`5d94bba`](https://github.com/jjjermiah/nbia-toolkit/commit/5d94bba085a839a2e0137c13e71988ea21fd64c6))
+
+
+## v0.25.0 (2024-02-04)
+
+### Chore
+
+* chore(sem-ver): 0.25.0 ([`475cb57`](https://github.com/jjjermiah/nbia-toolkit/commit/475cb575710d1f20973a7156cf247fd5ceee9388))
+
+* chore: Update README: 0.24.0 ([`a6b23ea`](https://github.com/jjjermiah/nbia-toolkit/commit/a6b23ea1e2d7ac5fda52a2fa989585de8fe09875))
+
+### Feature
+
+* feat: added base_url setter if user wants to use NLST.  added properties for logger and base_url. ([`5a992df`](https://github.com/jjjermiah/nbia-toolkit/commit/5a992df1d4495cb29e44158a61b68f14bbab013f))
+
+### Refactor
+
+* refactor: Refactor OAuth2 class to support configurable base URL, added some types ([`c1e8f3d`](https://github.com/jjjermiah/nbia-toolkit/commit/c1e8f3d1017e3b84bdc572232c8807cb1290779f))
+
+### Unknown
+
+* Merge pull request #89 from jjjermiah/52-feature-add-nslt-endpoint
+
+52 feature add nslt endpoint ([`682e50e`](https://github.com/jjjermiah/nbia-toolkit/commit/682e50ef22823aa72d4231d81aa3def3ef161408))
+
+
+## v0.24.0 (2024-02-04)
+
+### Chore
+
+* chore(sem-ver): 0.24.0 ([`589f2c4`](https://github.com/jjjermiah/nbia-toolkit/commit/589f2c4145bfb980a80d183d41de039a699b3002))
+
+* chore: Update README: 0.23.0 ([`0223550`](https://github.com/jjjermiah/nbia-toolkit/commit/02235504d30d063c37022119cadd25f10d5d9d1b))
+
+### Feature
+
+* feat: Add getSeriesMetadata method to NBIAClient class ([`31211a6`](https://github.com/jjjermiah/nbia-toolkit/commit/31211a65e0e4907d764b3d64d82e5735d2385fc9))
+
+### Unknown
+
+* Merge pull request #87 from jjjermiah/61-feature-getseriesmetadata
+
+feat: Add getSeriesMetadata method to NBIAClient class ([`c516f96`](https://github.com/jjjermiah/nbia-toolkit/commit/c516f96f69d81b5768ed48d44102240f0301ef99))
+
+
+## v0.23.0 (2024-02-04)
+
+### Build
+
+* build: Update pytest parallelism and add Codecov artifact upload ([`77dc291`](https://github.com/jjjermiah/nbia-toolkit/commit/77dc291a0b60c4958b52b924c0056dedea56971e))
+
+* build: Add labels and update maintainer information in Dockerfile ([`68e8831`](https://github.com/jjjermiah/nbia-toolkit/commit/68e883124dc7a30c197236e64d4bf5d1faa57f4c))
+
+### Chore
+
+* chore(sem-ver): 0.23.0 ([`b1d4c3b`](https://github.com/jjjermiah/nbia-toolkit/commit/b1d4c3b7cf89a26629ff219411b92e8a0c4fe673))
+
+### Feature
+
+* feat: add getStudies and getNewSeries CLI tools ([`99c5777`](https://github.com/jjjermiah/nbia-toolkit/commit/99c5777e58e6d94ff3199f7f8062523c97dc42a7))
+
+* feat: retrieve new series after a given date, +docs +tests ([`c6a506d`](https://github.com/jjjermiah/nbia-toolkit/commit/c6a506d473b01c63fc9fe88087fd7ecfc3b39d21))
+
+### Fix
+
+* fix: remove sem-ver commit message ([`ccd44bb`](https://github.com/jjjermiah/nbia-toolkit/commit/ccd44bb01e375968903b0b86edd8c2d666a71abf))
+
+* fix: Update .gitignore and build documentation ([`1cf31bb`](https://github.com/jjjermiah/nbia-toolkit/commit/1cf31bb0570d1f79086bf4c4edfdf94a16ebd98a))
+
+* fix: fix error from getCollections conflicting -prefix argument ([`4a7d242`](https://github.com/jjjermiah/nbia-toolkit/commit/4a7d242f5afd137a5384b31edb4bfad1faa65278))
+
+### Unknown
+
+* Merge pull request #84 from jjjermiah/49-feature-getupdatedseries
+
+49 feature getupdatedseries ([`440d9b4`](https://github.com/jjjermiah/nbia-toolkit/commit/440d9b4eee903391c22b647cb43c994e59e30123))
+
+* separate build documentation to prevent running it on every machine ([`473c5a7`](https://github.com/jjjermiah/nbia-toolkit/commit/473c5a72a623fd4241831ae203f522741eee0097))
+
+* Update README with latest version: 0.22.1 ([`67fb6e4`](https://github.com/jjjermiah/nbia-toolkit/commit/67fb6e472cdc6ed53265bd5755103111512a0931))
+
+
+## v0.22.1 (2024-02-04)
+
+### Chore
+
+* chore(release): 0.22.1 ([`8eae5fc`](https://github.com/jjjermiah/nbia-toolkit/commit/8eae5fc58bae11ec17650cf7c4e9cc90410a96ab))
+
+### Documentation
+
+* docs: Update README.md ([`2326b43`](https://github.com/jjjermiah/nbia-toolkit/commit/2326b4354d66c8b5b7a4379389f35c0edbf336e3))
+
+### Unknown
+
+* Merge pull request #83 from jjjermiah/updateREADME
+
+Update readme [skip ci] --no-verify ([`69fa813`](https://github.com/jjjermiah/nbia-toolkit/commit/69fa813f51a6c3b2e75bfbcf2bef263ae4be1fcb))
+
+* Update README.md ([`0d46ccf`](https://github.com/jjjermiah/nbia-toolkit/commit/0d46ccfee49b00278cbb7514847ce89ec9760c6e))
+
+* Update README.md ([`5ac465d`](https://github.com/jjjermiah/nbia-toolkit/commit/5ac465d1819468a88dec4be373f1c094b6f2e40c))
+
+* Update README with latest version: 0.22.0 ([`95ef0a9`](https://github.com/jjjermiah/nbia-toolkit/commit/95ef0a9cfa951a88c4f991a945ff0d1e64751f71))
+
+
+## v0.22.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.22.0 ([`623c467`](https://github.com/jjjermiah/nbia-toolkit/commit/623c46757641deb6d97a4059b072e041efe40340))
+
+### Feature
+
+* feat: add username and password parameters to CLI ([`83421a3`](https://github.com/jjjermiah/nbia-toolkit/commit/83421a31d09817298c82e3046129c237094e7e94))
+
+* feat: Add getNewPatients_cli command to pyproject.toml and nbia_cli.py ([`fc40dec`](https://github.com/jjjermiah/nbia-toolkit/commit/fc40decadc6d4b317c1687932e09836cadbd4810))
+
+### Unknown
+
+* Merge pull request #82 from jjjermiah/70-feat-implement-user-and-password-for-clie
+
+70 feat implement user and password for cli ([`40aca34`](https://github.com/jjjermiah/nbia-toolkit/commit/40aca34c7cec1ed31b896a8418d0f26cf6bf3e00))
+
+* Update README with latest version: 0.21.1 ([`5d0a69b`](https://github.com/jjjermiah/nbia-toolkit/commit/5d0a69b23e654598b0d297d1698bbedf2d78b73b))
+
+* Update README with latest version: 0.21.1 ([`64afa17`](https://github.com/jjjermiah/nbia-toolkit/commit/64afa17c8077a12b96338730f054d8b012ab36ed))
+
+
+## v0.21.1 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.21.1 ([`d6c673d`](https://github.com/jjjermiah/nbia-toolkit/commit/d6c673dae772b503f9be5772309d97980c344b63))
+
+### Fix
+
+* fix: force require CD ([`0039c67`](https://github.com/jjjermiah/nbia-toolkit/commit/0039c67b2c20293efd6e22236e344a1e1c4c04ba))
+
+### Unknown
+
+* add CD back ([`be48bb9`](https://github.com/jjjermiah/nbia-toolkit/commit/be48bb9e4944aba4df7fc96dae3f8fd36a99cabb))
+
+* Update README with latest version: 0.21.0 ([`15083ff`](https://github.com/jjjermiah/nbia-toolkit/commit/15083ff588cbc351fb903b0e88f63aba75442857))
+
+* Merge pull request #80 from jjjermiah/development
+
+test: ([`ee9720a`](https://github.com/jjjermiah/nbia-toolkit/commit/ee9720a9abf5579d33e75c5c3e28ea8c804ffd79))
+
+* test: ([`b28afe7`](https://github.com/jjjermiah/nbia-toolkit/commit/b28afe725ce36e95f7149611e080194506ba242c))
+
+
+## v0.21.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.21.0 ([`53459d9`](https://github.com/jjjermiah/nbia-toolkit/commit/53459d9cd3a3139881281fbb7cdb7a91490de1e0))
+
+### Feature
+
+* feat: try again ([`ef5a0d4`](https://github.com/jjjermiah/nbia-toolkit/commit/ef5a0d4d87f9771980943da0242916d63d61a734))
+
+### Unknown
+
+* Merge pull request #79 from jjjermiah/development
+
+Development ([`90ad78d`](https://github.com/jjjermiah/nbia-toolkit/commit/90ad78dcd38bf48f7ed08f0ab4f757903aa9754c))
+
+* Merge branch &#39;main&#39; of https://github.com/jjjermiah/NBIA-toolkit into development ([`ea39ee4`](https://github.com/jjjermiah/nbia-toolkit/commit/ea39ee4337742e2b87e5d54a74d6e3dfb99137a0))
+
+
 ## v0.20.0 (2024-02-03)
+
+### Chore
+
+* chore(release): 0.20.0 ([`0c69c5c`](https://github.com/jjjermiah/nbia-toolkit/commit/0c69c5cacde5135587d016fd013a6dbe952dd7a1))
 
 ### Feature
 
