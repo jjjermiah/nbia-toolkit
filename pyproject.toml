@@ -43,7 +43,6 @@ pre-commit = "^3.6.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-# https://python-semantic-release.readthedocs.io/en/latest/configuration.html
 [tool.semantic_release]
 version_variables = [
     "src/nbiatoolkit/nbia.py:__version__",
