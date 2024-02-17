@@ -26,6 +26,8 @@ tqdm = "^4.66.1"
 pyfiglet = "^1.0"
 beautifulsoup4 = "^4.12.3"
 cryptography = "^42.0.2"
+pandas = "^2.2.0"
+pyarrow = "^15.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
