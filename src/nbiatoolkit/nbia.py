@@ -420,7 +420,7 @@ class NBIAClient:
         self,
         SeriesInstanceUID: Union[str, list],
         downloadDir: str = "./NBIA-Download",
-        filePattern: str = "%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm",
+        filePattern: str = "%PatientName/%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
         overwrite: bool = False,
         nParallel: int = 1,
     ) -> bool:
