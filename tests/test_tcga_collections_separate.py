@@ -71,3 +71,15 @@ def test_tcga_collection(tcga_collections):
     assert isinstance(tcga_collections_df, pd.DataFrame)
     assert "Collection" in tcga_collections_df.columns
     assert len(tcga_collections_df) > 1
+
+
+def test_getCollectionPatientCount(nbia_client):
+    patient_count = nbia_client.getCollectionPatientCount(prefix="TCGA-KIRC")
+    assert isinstance(patient_count, list)
+    assert len(patient_count) > 0
+
+
+def test_getBodyPartCounts(nbia_client):
+    body_part_counts = nbia_client.getBodyPartCounts(Collection="TCGA-KIRC")
+    assert isinstance(body_part_counts, list)
+    assert len(body_part_counts) > 0
