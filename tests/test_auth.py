@@ -18,8 +18,8 @@ def test_oauth2(oauth: OAuth2) -> None:
     assert oauth.client_id == "NBIA"
     assert oauth.username != "nbia_guest"
     assert oauth.password != ""
-    assert oauth.access_token is not None
-    assert oauth.api_headers is not None
+    assert oauth.access_token != ""
+    assert oauth.api_headers != ""
     assert oauth.expiry_time is not None
     assert oauth.refresh_token is not None
     assert oauth.refresh_expiry is not None

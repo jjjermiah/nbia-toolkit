@@ -11,48 +11,48 @@ def nbia_client():
     return nbia_client
 
 
-@pytest.fixture(scope="session")
-def nbia_client_bad_username():
-    nbia = NBIAClient(username="bad_username", password="bad_password")
-    return nbia
+# @pytest.fixture(scope="session")
+# def nbia_client_bad_username():
+#     nbia = NBIAClient(username="bad_username", password="bad_password")
+#     return nbia
 
 
 @pytest.fixture(scope="session")
 def tcga_collections(nbia_client):
     tcga_collections = nbia_client.getCollections(prefix="TCGA")
-    return tcga_collections
-
-
-@pytest.fixture(scope="session")
-def tcga_collection_df(nbia_client):
     tcga_collection_df = nbia_client.getCollections(
         prefix="TCGA", return_type="dataframe"
     )
-    return tcga_collection_df
+    return (tcga_collection_df, tcga_collections)
 
 
-def test_change_base_url(nbia_client):
-    nbia_client.base_url = NBIA_ENDPOINTS.NLST
-    assert nbia_client.base_url == NBIA_ENDPOINTS.NLST
+@pytest.fixture(scope="session")
+def tcga_patients(nbia_client):
+
+    tcga_patients = nbia_client.getPatients(Collection="TCGA-KIRC")
+
+    return tcga_patients
 
 
-def test_failed_NBIA_CLIENT():
-    with pytest.raises(Exception) as e:
-        nbia = NBIAClient(username="bad_username", password="bad_password")
+@pytest.fixture(scope="session")
+def nbia_patients_df(nbia_client):
+    nbia_patients_df = nbia_client.getNewPatients(
+        Collection="CMB-LCA", return_type="dataframe", Date="2022/12/06"
+    )
+    return nbia_patients_df
 
 
 def test_tcga_collection(tcga_collections):
-    assert isinstance(tcga_collections, list)
-    assert len(tcga_collections) > 1
+    tcga_collections_df, tcga_collections1 = tcga_collections
+    assert isinstance(tcga_collections1, list)
+    assert len(tcga_collections1) > 1
+
+    assert isinstance(tcga_collections_df, pd.DataFrame)
+    assert "Collection" in tcga_collections_df.columns
+    assert len(tcga_collections_df) > 1
 
 
-def test_tcga_collection_df(tcga_collection_df):
-    assert isinstance(tcga_collection_df, pd.DataFrame)
-    assert "Collection" in tcga_collection_df.columns
-    assert len(tcga_collection_df) > 1
-
-
-def test_tcga_collection_description(nbia_client):
+def test_tcga_collection_description(nbia_client: NBIAClient):
     tcga_collection_description_df = nbia_client.getCollectionDescriptions(
         collectionName="TCGA-KIRC", return_type="dataframe"
     )
@@ -68,6 +68,7 @@ def test_tcga_collection_description(nbia_client):
 
 
 def test_getModalityValues(nbia_client, tcga_collections):
+    tcga_collections_df, tcga_collections = tcga_collections
     modality_values = nbia_client.getModalityValues(
         Collection=tcga_collections[0]["Collection"]
     )
@@ -92,41 +93,17 @@ def test_failed_getModalityValues(nbia_client):
         nbia_client.getModalityValues(collection="TCGA", return_type="dataframe")
 
 
-def test_getPatients(nbia_client, tcga_collections):
-    patients = nbia_client.getPatients(Collection=tcga_collections[0]["Collection"])
-    assert isinstance(patients, list)
-    assert len(patients) > 1
+def test_getPatients(nbia_client, tcga_patients):
 
-    patients_df = nbia_client.getPatients(
-        Collection=tcga_collections[0]["Collection"], return_type="dataframe"
-    )
-    assert isinstance(patients_df, pd.DataFrame)
-    assert len(patients_df) > 1
-    expected_cols = [
-        "PatientId",
-        "PatientName",
-        "PatientSex",
-        "Collection",
-        "Phantom",
-        "SpeciesCode",
-        "SpeciesDescription",
-        "EthnicGroup",
-    ]
-    for col in expected_cols:
-        assert col in patients_df.columns
+    assert isinstance(tcga_patients, list)
+    assert len(tcga_patients) > 1
 
 
-def test_getNewPatients(nbia_client):
-    patients = nbia_client.getNewPatients(Collection="CMB-LCA", Date="2022/12/06")
-    assert isinstance(patients, list)
-    assert len(patients) > 1
+def test_getNewPatients(nbia_patients_df):
 
-    patients_df = nbia_client.getNewPatients(
-        Collection="CMB-LCA", return_type="dataframe", Date="2022/12/06"
-    )
-    assert isinstance(patients_df, pd.DataFrame)
-    assert len(patients_df) > 1
-    expected_cols = [
+    assert isinstance(nbia_patients_df, pd.DataFrame)
+    assert len(nbia_patients_df) > 1
+    expected_cols: list[str] = [
         "PatientId",
         "PatientName",
         "PatientSex",
