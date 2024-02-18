@@ -22,4 +22,5 @@ __all__ = [
     "NBIA_ENDPOINTS",
     "version",
     "__version__",
+    "downloadSingleSeries",
 ]

@@ -3,6 +3,7 @@ import pytest
 from src.nbiatoolkit import NBIAClient
 from src.nbiatoolkit.auth import OAuth2
 from src.nbiatoolkit.utils import *
+from src.nbiatoolkit.logger import setup_logger
 import pandas as pd
 
 
@@ -30,6 +31,13 @@ def test_nbia_properties(nbia_client):
     assert nbia_client.base_url == NBIA_ENDPOINTS.NBIA
 
     assert nbia_client.logger is not None
+
+    nbia_client.logger = setup_logger(
+        name="NBIAClient", log_level="INFO", console_logging=True, log_file=None
+    )
+
+    assert nbia_client.return_type == "list"
+    nbia_client.return_type = "dataframe"
 
 
 def test_tcga_collection_description(nbia_client: NBIAClient):
