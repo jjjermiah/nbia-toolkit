@@ -1,4 +1,7 @@
+from calendar import c
 from inspect import getmodule
+from re import I
+import re
 from .auth import OAuth2
 from .logger.logger import setup_logger
 from logging import Logger
@@ -181,9 +184,9 @@ class NBIAClient:
 
         if prefix:
             response = [
-                d
-                for d in response
-                if d["Collection"].lower().startswith(prefix.lower())
+                response_dict
+                for response_dict in response
+                if response_dict["Collection"].lower().startswith(prefix.lower())
             ]
 
         return conv_response_list(response, returnType)
@@ -261,124 +264,87 @@ class NBIAClient:
         Date = convertDateFormat(input_date=Date, format="%Y/%m/%d")
 
         PARAMS: dict = self.parsePARAMS(locals())
+
         response: List[dict[Any, Any]]
+
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS
         )
         return conv_response_list(response, returnType)
 
-    # def getNewPatients(
-    #     self,
-    #     Collection: str,
-    #     Date: Union[str, datetime],
-    # ) -> Union[list[dict[str, str]], None]:
-    #     assert Collection is not None
-    #     assert Date is not None
-
-    #     # convert date to %Y/%m/%d format
-    #     Date = convertDateFormat(input_date=Date, format="%Y/%m/%d")
-
-    #     PARAMS = self.parsePARAMS(locals())
-
-    #     response = self.query_api(
-    #         endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS
-    #     )
-    #     assert isinstance(response, list), "Expected list, but received: %s" % type(
-    #         response
-    #     )
-
-    #     patientList = []
-    #     for patient in response:
-    #         assert isinstance(patient, dict), "Expected dict, but received: %s" % type(
-    #             patient
-    #         )
-    #         assert "PatientId" in patient, "PatientId not in patient dict"
-    #         assert isinstance(
-    #             patient["PatientId"], str
-    #         ), "PatientId must be a string, but received: %s" % type(
-    #             patient["PatientId"]
-    #         )
-
-    #         patientList.append(patient)
-
-    #     return patientList
-
     def getPatientsByCollectionAndModality(
-        self, Collection: str, Modality: str
-    ) -> Union[list[str], None]:
+        self,
+        Collection: str,
+        Modality: str,
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
         assert Collection is not None
         assert Modality is not None
 
-        PARAMS = self.parsePARAMS(locals())
+        returnType: ReturnType = self._get_return(return_type)
 
+        PARAMS: dict = self.parsePARAMS(locals())
+
+        response: List[dict[Any, Any]]
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY,
             params=PARAMS,
         )
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
 
-        patientList = [_["PatientId"] for _ in response]
-        return patientList
+        return conv_response_list(response, returnType)
 
     # returns a list of dictionaries with the collection name and patient count
     def getCollectionPatientCount(
-        self, prefix: str = ""
-    ) -> Union[list[dict[str, int]], None]:
+        self,
+        prefix: str = "",
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+
+        returnType: ReturnType = self._get_return(return_type)
+
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
+        if prefix:
+            response = [
+                response_dict
+                for response_dict in response
+                if response_dict["criteria"].lower().startswith(prefix.lower())
+            ]
 
-        patientCounts = []
-        for collection in response:
-            CollectionName = collection["criteria"]
-            if CollectionName.lower().startswith(prefix.lower()):
-                patientCounts.append(
-                    {
-                        "Collection": CollectionName,
-                        "PatientCount": int(collection["count"]),
-                    }
-                )
-        return patientCounts
+        return conv_response_list(response, returnType)
 
     def getBodyPartCounts(
-        self, Collection: str = "", Modality: str = ""
-    ) -> Union[list[dict[str, int]], None]:
+        self,
+        Collection: str = "",
+        Modality: str = "",
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+
+        returnType: ReturnType = self._get_return(return_type)
+
         PARAMS = self.parsePARAMS(locals())
 
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_BODY_PART_PATIENT_COUNT, params=PARAMS
         )
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
-
-        bodyparts = []
-        for bodypart in response:
-            bodyparts.append(
-                {
-                    "BodyPartExamined": bodypart["criteria"],
-                    "Count": int(bodypart["count"]),
-                }
-            )
-        return bodyparts
+        return conv_response_list(response, returnType)
 
     def getStudies(
-        self, Collection: str, PatientID: str = "", StudyInstanceUID: str = ""
-    ) -> Union[list[dict[str, str]], None]:
-        PARAMS = self.parsePARAMS(locals())
+        self,
+        Collection: str,
+        PatientID: str = "",
+        StudyInstanceUID: str = "",
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+
+        returnType: ReturnType = self._get_return(return_type)
+
+        PARAMS: dict = self.parsePARAMS(locals())
 
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_STUDIES, params=PARAMS)
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
-
-        return response
+        return conv_response_list(response, returnType)
 
     def getSeries(
         self,
@@ -390,21 +356,24 @@ class NBIAClient:
         BodyPartExamined: str = "",
         ManufacturerModelName: str = "",
         Manufacturer: str = "",
-    ) -> Union[list[dict[str, str]], None]:
-        PARAMS = self.parsePARAMS(locals())
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+        returnType: ReturnType = self._get_return(return_type)
+
+        PARAMS: dict = self.parsePARAMS(locals())
 
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_SERIES, params=PARAMS)
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
-
-        return response
+        return conv_response_list(response, returnType)
 
     def getSeriesMetadata(
         self,
         SeriesInstanceUID: Union[str, list[str]],
-    ) -> Union[list[dict], None]:
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+
+        returnType = self._get_return(return_type)
+
         assert isinstance(
             SeriesInstanceUID, (str, list)
         ), "SeriesInstanceUID must be a string or list of strings"
@@ -419,22 +388,20 @@ class NBIAClient:
                 endpoint=NBIA_ENDPOINTS.GET_SERIES_METADATA, params=PARAMS
             )
 
-            if not isinstance(response, list):
-                self._log.error("Expected list, but received: %s", type(response))
-                return None
-
             metadata.extend(response)
 
-        return metadata
+        return conv_response_list(metadata, returnType)
 
     def getNewSeries(
         self,
         Date: Union[str, datetime],
-    ) -> Union[list[dict], None]:
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
         assert Date is not None and isinstance(
             Date, (str, datetime)
         ), "Date must be a string or datetime object"
 
+        returnType: ReturnType = self._get_return(return_type)
         # for some reason this endpoint requires the date in %d/%m/%Y format
         fromDate = convertDateFormat(input_date=Date, format="%d/%m/%Y")
         PARAMS = self.parsePARAMS({"fromDate": fromDate})
@@ -443,29 +410,24 @@ class NBIAClient:
             endpoint=NBIA_ENDPOINTS.GET_UPDATED_SERIES, params=PARAMS
         )
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
-
-        return response
+        return conv_response_list(response, returnType)
 
     def getDICOMTags(
         self,
         SeriesInstanceUID: str,
-    ) -> Union[list[dict], None]:
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+
         assert SeriesInstanceUID is not None and isinstance(
             SeriesInstanceUID, str
         ), "SeriesInstanceUID must be a string"
 
+        returnType: ReturnType = self._get_return(return_type)
         PARAMS = self.parsePARAMS({"SeriesUID": SeriesInstanceUID})
 
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_DICOM_TAGS, params=PARAMS)
 
-        if not isinstance(response, list):
-            self._log.error("Expected list, but received: %s", type(response))
-            return None
-
-        return response
+        return conv_response_list(response, returnType)
 
     # def downloadSeries(
     #     self,
