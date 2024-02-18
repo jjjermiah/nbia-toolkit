@@ -1,4 +1,9 @@
-from src.nbiatoolkit.utils.parsers import clean_html, convertMillis, convertDateFormat
+from src.nbiatoolkit.utils.parsers import (
+    clean_html,
+    convertMillis,
+    convertDateFormat,
+    parse_response,
+)
 from datetime import datetime
 import pytest
 

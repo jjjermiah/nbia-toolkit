@@ -98,6 +98,7 @@ def parse_response(response: requests.Response) -> List[dict[Any, Any]]:
     assert (
         response.status_code == 200
     ), "The response status code must be 200 OK but is {}".format(response.status_code)
+    # TODO:: describe error 204
 
     if not "application/json" in content_type:
         if response.content == b"":

@@ -59,6 +59,14 @@ def getSeriesMetadata(nbia_client):
     return series_metadata
 
 
+def test_getSeriesMetadata_failed(nbia_client):
+    with pytest.raises(Exception) as e:
+        series = "1.3.6.1.4.1..1.9203.4004.652695091345533290618011349477"
+        series_metadata = nbia_client.getSeriesMetadata(
+            SeriesInstanceUID=series, return_type="dataframe"
+        )
+
+
 @pytest.fixture(scope="session")
 def getNewSeries_metadata(nbia_client):
     Date = "01/01/2024"
@@ -88,6 +96,12 @@ def test_failed_getNewPatients(nbia_client):
         nbia_client.getNewPatients(
             collection="TCGA", return_type="dataframe", Date="2022/12/06"
         )
+
+
+def test_failed_getDICOMTags(nbia_client):
+    with pytest.raises(Exception) as e:
+        # collection isntead of Collection
+        nbia_client.getDICOMTags(series="ShouldFail", return_type="dataframe")
 
 
 def test_getNewPatients(nbia_patients_df):
