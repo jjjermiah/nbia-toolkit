@@ -1,6 +1,8 @@
 import pytest
+from nbiatoolkit import nbia
 
 from src.nbiatoolkit import NBIAClient
+from src.nbiatoolkit.auth import OAuth2
 from src.nbiatoolkit.utils import *
 import pandas as pd
 
@@ -40,6 +42,28 @@ def nbia_patients_df(nbia_client):
         Collection="CMB-LCA", return_type="dataframe", Date="2022/12/06"
     )
     return nbia_patients_df
+
+
+@pytest.fixture(scope="session")
+def nbia_collections_by_colMoldality(nbia_client):
+    nbia_collections_by_colMoldality = nbia_client.getPatientsByCollectionAndModality(
+        Collection="TCGA-KIRC", Modality="MR"
+    )
+    return nbia_collections_by_colMoldality
+
+
+def test_nbia_properties(nbia_client):
+    assert isinstance(nbia_client.OAuth_client, OAuth2)
+    assert isinstance(nbia_client.headers, dict)
+    assert "Authorization" in nbia_client.headers.keys()
+    assert "Content-Type" in nbia_client.headers.keys()
+    assert nbia_client.headers["Content-Type"] == "application/json"
+
+    assert nbia_client.base_url == NBIA_ENDPOINTS.NBIA
+    nbia_client.base_url = NBIA_ENDPOINTS.NLST
+    assert nbia_client.base_url == NBIA_ENDPOINTS.NLST
+
+    assert nbia_client.logger is not None
 
 
 def test_tcga_collection(tcga_collections):
@@ -124,3 +148,8 @@ def test_failed_getNewPatients(nbia_client):
         nbia_client.getNewPatients(
             collection="TCGA", return_type="dataframe", Date="2022/12/06"
         )
+
+
+def test_nbia_collections_by_colMoldality(nbia_collections_by_colMoldality):
+    assert isinstance(nbia_collections_by_colMoldality, list)
+    assert len(nbia_collections_by_colMoldality) > 1
