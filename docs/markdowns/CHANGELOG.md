@@ -2,7 +2,30 @@
 
 
 
+## v0.31.0 (2024-02-18)
+
+### Build
+
+* build: docker build ([`fc6fd28`](https://github.com/jjjermiah/nbia-toolkit/commit/fc6fd28ad815b904648dbcd7ddc8bba4cc15e4eb))
+
+### Chore
+
+* chore: Update README: 0.30.1 ([`ec7c9d3`](https://github.com/jjjermiah/nbia-toolkit/commit/ec7c9d38eeb602353c83c54664b0e60baef55d22))
+
+### Feature
+
+* feat: Update version to 0.31.1 and upgrade pip ([`12c5018`](https://github.com/jjjermiah/nbia-toolkit/commit/12c501883b91a2ef26b12866c75a6047c53e2103))
+
+### Fix
+
+* fix: ci ([`2f52670`](https://github.com/jjjermiah/nbia-toolkit/commit/2f526705a2814f26fb73f38f80cdf76e8838c28f))
+
+
 ## v0.30.1 (2024-02-18)
+
+### Chore
+
+* chore(sem-ver): 0.30.1 ([`b4ef0c7`](https://github.com/jjjermiah/nbia-toolkit/commit/b4ef0c7b096fb1953cd683381fa490a5fdf6cba3))
 
 ### Fix
 
