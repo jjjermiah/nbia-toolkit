@@ -1,5 +1,6 @@
 import io
 from .nbia import NBIAClient, __version__
+from .dicomsort import DICOMSorter
 
 import argparse
 import sys
@@ -500,7 +501,7 @@ def downloadSingleSeries_cli() -> None:
     args = p.parse_args()
 
     return getResults_cli(
-        func=NBIAClient(args.username, args.password)._downloadSingleSeries,
+        func=NBIAClient(args.username, args.password).downloadSeries,
         SeriesInstanceUID=args.seriesUID,
         downloadDir=args.downloadDir,
         filePattern=args.filePattern,
@@ -589,5 +590,5 @@ def DICOMSorter_cli():
     )
 
     sorter.sortDICOMFiles(
-        option="copy", overwrite=args.overwrite, nParallel=int(args.nParallel)
+        shutil_option="copy", overwrite=args.overwrite, n_parallel=int(args.nParallel)
     )
