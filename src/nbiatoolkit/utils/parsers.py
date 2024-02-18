@@ -126,15 +126,3 @@ def parse_response(response: requests.Response) -> List[dict[Any, Any]]:
             )
 
     return response_list
-
-
-if __name__ == "__main__":
-    from bs4 import BeautifulSoup
-    from datetime import datetime
-    from typing import Union
-    import requests
-
-    response = requests.get("https://jsonplaceholder.typicode.com/todos/1")
-    print(
-        parse_response(response)
-    )  # Output: {'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': False}
