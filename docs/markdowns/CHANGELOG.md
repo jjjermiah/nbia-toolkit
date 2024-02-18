@@ -2,9 +2,26 @@
 
 
 
+## v0.30.1 (2024-02-18)
+
+### Fix
+
+* fix: Fix import statements in nbia.py and nbia_cli.py ([`14816f1`](https://github.com/jjjermiah/nbia-toolkit/commit/14816f162ba309de82daacb2c0a765d6fb753c99))
+
+### Unknown
+
+* Merge pull request #111 from jjjermiah/development
+
+fix cli ([`b044404`](https://github.com/jjjermiah/nbia-toolkit/commit/b04440409480749f45522f57274baf4cd0da6205))
+
+* Merge remote-tracking branch &#39;origin&#39; into development ([`7cf41c4`](https://github.com/jjjermiah/nbia-toolkit/commit/7cf41c4d41fedf3cd5d37e9e5ef952a80bbe9e36))
+
+
 ## v0.30.0 (2024-02-18)
 
 ### Chore
+
+* chore(sem-ver): 0.30.0 ([`aae2d61`](https://github.com/jjjermiah/nbia-toolkit/commit/aae2d6197b1f6e7ded7413814788a4bd109584f1))
 
 * chore: Update README: 0.29.2 ([`c7d69ec`](https://github.com/jjjermiah/nbia-toolkit/commit/c7d69ec58df0faf15b8645a74d6332848c2356f5))
 

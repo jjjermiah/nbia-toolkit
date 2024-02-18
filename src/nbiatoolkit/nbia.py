@@ -33,7 +33,7 @@ import os
 from datetime import datetime
 
 # set __version__ variable
-__version__ = "0.30.0"
+__version__ = "0.30.1"
 
 
 # function that takes a list of dictionaries and returns either a list or a dataframe
