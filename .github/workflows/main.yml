@@ -67,7 +67,6 @@ jobs:
 
   Build-Documentation:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/docs'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -362,33 +361,3 @@ jobs:
               # No changes
               echo "No changes found. Nothing to commit or push."
           fi
-
-
-
-  #         # git add README.md
-
-  #         # git commit -m "Update README with latest version"
-  #         # git push
-
-
-# #!/bin/bash
-
-# # Check for changes
-# if [[ $(git status --porcelain) ]]; then
-#     # Changes are present
-#     echo "Changes found. Committing and pushing..."
-
-#     # Add all changes
-#     git add .
-
-#     # Commit with a timestamp
-#     git commit -m "Auto commit: $(date)"
-
-#     # Push changes to the remote repository
-#     git push origin <your-branch-name>
-
-#     echo "Changes committed and pushed successfully."
-# else
-#     # No changes
-#     echo "No changes found. Nothing to commit or push."
-# fi

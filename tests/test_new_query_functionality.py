@@ -14,6 +14,12 @@ def nbia_client():
 
 
 @pytest.fixture(scope="session")
+def nbia_client2():
+    nbia_client = NBIAClient(log_level="DEBUG")
+    return nbia_client
+
+
+@pytest.fixture(scope="session")
 def tcga_patients(nbia_client):
 
     tcga_patients = nbia_client.getPatients(Collection="TCGA-KIRC")
@@ -21,7 +27,8 @@ def tcga_patients(nbia_client):
     return tcga_patients
 
 
-def test_nbia_properties(nbia_client):
+def test_nbia_properties(nbia_client2):
+    nbia_client = nbia_client2
     assert isinstance(nbia_client.OAuth_client, OAuth2)
     assert isinstance(nbia_client.headers, dict)
     assert "Authorization" in nbia_client.headers.keys()
