@@ -49,16 +49,16 @@ For quick access to the NBIA, the toolkit also provides a command line interface
 
 ``` bash NBIAToolkit-Output
 > NBIAToolkit --version
-    _   ______  _______  ______            ____   _ __
+    _   ______  _______  ______            ____   _ __ 
    / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
   /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
- / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
-/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
+ / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_  
+/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/  
+                                                       
 
+Version: 0.30.1
 
-Version: 0.29.2
-
-Available CLI tools:
+Available CLI tools: 
 
 getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
                [-o OUTPUTFILE] [--version]
