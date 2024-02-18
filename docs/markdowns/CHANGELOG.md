@@ -2,6 +2,19 @@
 
 
 
+## v0.32.0 (2024-02-18)
+
+### Chore
+
+* chore: Update README: 0.31.0 ([`799667e`](https://github.com/jjjermiah/nbia-toolkit/commit/799667ed8eaad93dafe751ab170a2f4f96a4dc36))
+
+### Feature
+
+* feat: Refactor workflows and update test case ([`e111fb2`](https://github.com/jjjermiah/nbia-toolkit/commit/e111fb28e35084891f5551f264e0ab707441fd88))
+
+* feat: refactor return_type test ([`f2058e8`](https://github.com/jjjermiah/nbia-toolkit/commit/f2058e8f259ed5e2250f20ca08b556883449f399))
+
+
 ## v0.31.0 (2024-02-18)
 
 ### Build
@@ -9,6 +22,8 @@
 * build: docker build ([`fc6fd28`](https://github.com/jjjermiah/nbia-toolkit/commit/fc6fd28ad815b904648dbcd7ddc8bba4cc15e4eb))
 
 ### Chore
+
+* chore(sem-ver): 0.31.0 ([`f8b2253`](https://github.com/jjjermiah/nbia-toolkit/commit/f8b2253d948a9bdc4f42a94e38b7751ba37d4b5d))
 
 * chore: Update README: 0.30.1 ([`ec7c9d3`](https://github.com/jjjermiah/nbia-toolkit/commit/ec7c9d38eeb602353c83c54664b0e60baef55d22))
 
