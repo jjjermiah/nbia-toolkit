@@ -27,6 +27,20 @@ def tcga_collections(nbia_client):
     return (tcga_collection_df, tcga_collections)
 
 
+@pytest.fixture(scope="session")
+def nbia_context_manager():
+    with NBIAClient(log_level="WARNING") as nbia_client:
+        yield nbia_client
+
+
+def test_nbia_properties(nbia_context_manager):
+    assert isinstance(nbia_context_manager.OAuth_client, OAuth2)
+    assert isinstance(nbia_context_manager.headers, dict)
+    assert "Authorization" in nbia_context_manager.headers.keys()
+    assert "Content-Type" in nbia_context_manager.headers.keys()
+    assert nbia_context_manager.headers["Content-Type"] == "application/json"
+
+
 def test_break(nbia_client_tobreak):
     assert nbia_client_tobreak.base_url == NBIA_ENDPOINTS.NBIA
     nbia_client_tobreak.base_url = NBIA_ENDPOINTS.NLST

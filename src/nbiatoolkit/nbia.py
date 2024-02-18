@@ -542,18 +542,3 @@ class NBIAClient:
             if (value != "") and (key != "self") and (key != "return_type"):
                 PARAMS[key] = value
         return PARAMS
-
-
-# main
-if __name__ == "__main__":
-    from pprint import pprint
-    import os
-
-    client = NBIAClient(log_level="info")
-
-    print(client.getStudies(Collection="TCGA-GBM"))
-    # all = client.getCollections()
-    # pprint(all)
-
-    # sub = client.getCollections(prefix="aCrin")
-    # pprint(sub)
