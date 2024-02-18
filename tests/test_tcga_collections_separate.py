@@ -28,9 +28,9 @@ def tcga_collections(nbia_client):
 
 
 def test_break(nbia_client_tobreak):
-    assert nbia_client.base_url == NBIA_ENDPOINTS.NBIA
-    nbia_client.base_url = NBIA_ENDPOINTS.NLST
-    assert nbia_client.base_url == NBIA_ENDPOINTS.NLST
+    assert nbia_client_tobreak.base_url == NBIA_ENDPOINTS.NBIA
+    nbia_client_tobreak.base_url = NBIA_ENDPOINTS.NLST
+    assert nbia_client_tobreak.base_url == NBIA_ENDPOINTS.NLST
 
 
 def test_getModalityValues(nbia_client, tcga_collections):
