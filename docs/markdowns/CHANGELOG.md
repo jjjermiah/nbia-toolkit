@@ -2,9 +2,84 @@
 
 
 
+## v0.30.0 (2024-02-18)
+
+### Chore
+
+* chore: Update README: 0.29.2 ([`c7d69ec`](https://github.com/jjjermiah/nbia-toolkit/commit/c7d69ec58df0faf15b8645a74d6332848c2356f5))
+
+### Ci
+
+* ci: Update branch filter in CI/CD workflow ([`a276105`](https://github.com/jjjermiah/nbia-toolkit/commit/a2761052ef8f0b9d3f527fb28d61379e8d4b625c))
+
+### Feature
+
+* feat: implement download ([`9ac6b8d`](https://github.com/jjjermiah/nbia-toolkit/commit/9ac6b8d8de4a7b02a476ea1893296ff35c661266))
+
+* feat: added dataframe to all, missing download ([`9b637f3`](https://github.com/jjjermiah/nbia-toolkit/commit/9b637f36e04575d5728c75a812baf6b6717da372))
+
+### Fix
+
+* fix: ci verbose output ([`6874a3d`](https://github.com/jjjermiah/nbia-toolkit/commit/6874a3da725d3a4bb92ce1860bff8f7fb5ce3a53))
+
+* fix: tests Add error handling for response code 204 and fix typo in test_getDICOMTags ([`c8968da`](https://github.com/jjjermiah/nbia-toolkit/commit/c8968da0555bc03cef586f9fcb3a596bfc9324ab))
+
+* fix: Fix base URL assignment in test_break function ([`fab5dcc`](https://github.com/jjjermiah/nbia-toolkit/commit/fab5dccb83e4fd08597ba75d2f60bbc4e405de62))
+
+### Style
+
+* style: clean some stuff ([`876edf5`](https://github.com/jjjermiah/nbia-toolkit/commit/876edf5750c669b23eb0726e1055e99db82768c4))
+
+* style: Remove unnecessary code and imports ([`8db7a7f`](https://github.com/jjjermiah/nbia-toolkit/commit/8db7a7f0069b377abdd48f06a7816aec4e1129cd))
+
+* style: black ([`4c5ba94`](https://github.com/jjjermiah/nbia-toolkit/commit/4c5ba94b269e5b7b627f68ef66e773eabb8b7489))
+
+* style: remove line ([`e012b2b`](https://github.com/jjjermiah/nbia-toolkit/commit/e012b2bb403c6f7832de7ea241f433af58993a83))
+
+* style: trailing line spaces ([`0847cd9`](https://github.com/jjjermiah/nbia-toolkit/commit/0847cd91f44301ed31ae694a6011538b698de4ca))
+
+### Unknown
+
+* Merge pull request #110 from jjjermiah/development
+
+add return_types and new abstraction for requests to be made ([`f943a05`](https://github.com/jjjermiah/nbia-toolkit/commit/f943a05ce55bfe8ecd41ac53ff8b667b583c2574))
+
+* tests: add ([`17df239`](https://github.com/jjjermiah/nbia-toolkit/commit/17df239e2e775fb763d258b47fde21a64825aab9))
+
+* tests: Add test cases for new functions ([`9fc3c36`](https://github.com/jjjermiah/nbia-toolkit/commit/9fc3c36b89883e90a58be84cedbc15b7a9e2e5ce))
+
+* tests: add getSeries test ([`51f19e8`](https://github.com/jjjermiah/nbia-toolkit/commit/51f19e8a53388189b9e0863d5a2cbc522cf85bdd))
+
+* tests: add context manager test ([`c14bd6f`](https://github.com/jjjermiah/nbia-toolkit/commit/c14bd6f2c1ac183d1958658cf67b595e4e0bee2c))
+
+* tests: fix breaking and turn that into new test ([`4bf9d3b`](https://github.com/jjjermiah/nbia-toolkit/commit/4bf9d3b0bf5cc6cb99ed42a12549a80b02223d44))
+
+* Add log_level parameter to NBIAClient constructor ([`9d1144d`](https://github.com/jjjermiah/nbia-toolkit/commit/9d1144d20e5849b0fc97698e378e002ef7e2fb44))
+
+* tests: add a few tests ([`4cfd83f`](https://github.com/jjjermiah/nbia-toolkit/commit/4cfd83fde2b585eadf3d7d6518c221328c788b55))
+
+* Add test for NBIA series functions ([`67777ef`](https://github.com/jjjermiah/nbia-toolkit/commit/67777efdfc91f91caa39acd7153e778535e4d9b8))
+
+* tests: add a few tests ([`4073918`](https://github.com/jjjermiah/nbia-toolkit/commit/4073918eef0661b7edf77824a25b195a234951a5))
+
+* tests: Refactor test_auth.py and test_new_query_functionality.py ([`d206256`](https://github.com/jjjermiah/nbia-toolkit/commit/d20625677d62893da9fa5b528a37e7ad9ab99de6))
+
+* tests: new tests ([`2e7afc6`](https://github.com/jjjermiah/nbia-toolkit/commit/2e7afc601d2b3f900121fe488de5b53b0041440f))
+
+* merge: Merge branch &#39;development&#39; of https://github.com/jjjermiah/NBIA-toolkit into development ([`8c9470b`](https://github.com/jjjermiah/nbia-toolkit/commit/8c9470bcc61a2d7542a610b4cfa6eb33c7d4a67f))
+
+* Merge pull request #109 from jjjermiah/pre-commit
+
+work on development ([`e71eac1`](https://github.com/jjjermiah/nbia-toolkit/commit/e71eac1e02801f0131f8a33c89bd1a25c39ce2ca))
+
+* feature: Add pandas and pyarrow dependencies, and update utils/parsers.py and new return_type ([`10ffe0d`](https://github.com/jjjermiah/nbia-toolkit/commit/10ffe0d42226dd92491a54297bc6f1787759d26d))
+
+
 ## v0.29.2 (2024-02-12)
 
 ### Chore
+
+* chore(sem-ver): 0.29.2 ([`9ad625d`](https://github.com/jjjermiah/nbia-toolkit/commit/9ad625dfe313ef0021bd747c8244eae198b63e9c))
 
 * chore: Update README: 0.29.1 ([`385d972`](https://github.com/jjjermiah/nbia-toolkit/commit/385d97273275c9294231233a3dc1bde0b4273ab5))
 
@@ -448,6 +523,8 @@ Update readme [skip ci] --no-verify ([`69fa813`](https://github.com/jjjermiah/nb
 ### Fix
 
 * fix: force require CD ([`0039c67`](https://github.com/jjjermiah/nbia-toolkit/commit/0039c67b2c20293efd6e22236e344a1e1c4c04ba))
+
+* fix: add CD back ([`8c2367f`](https://github.com/jjjermiah/nbia-toolkit/commit/8c2367f609c62796cce497e78058c6081476bc65))
 
 ### Unknown
 
