@@ -8,7 +8,7 @@
 
 
 # import the modules
-from .nbia import NBIAClient, __version__
+from .nbia import NBIAClient, __version__, downloadSingleSeries
 from .nbia_cli import version
 from .auth import OAuth2
 from .logger.logger import setup_logger

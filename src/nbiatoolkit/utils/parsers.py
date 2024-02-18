@@ -6,6 +6,7 @@ import pandas as pd
 import requests
 from enum import Enum
 
+
 # so that users can decide between a List or a pd.DataFrame
 class ReturnType(Enum):
     LIST = "list"

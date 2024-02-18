@@ -1,6 +1,5 @@
 import io
 from .nbia import NBIAClient, __version__
-from .dicomsort import DICOMSorter
 
 import argparse
 import sys

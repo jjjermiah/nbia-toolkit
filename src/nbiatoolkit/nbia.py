@@ -2,6 +2,14 @@ from calendar import c
 from inspect import getmodule
 from re import I
 import re
+import aiohttp
+import asyncio
+import os
+import zipfile
+from tempfile import TemporaryDirectory
+from src.nbiatoolkit.dicomsort.dicomsort import DICOMSorter
+
+import multiprocessing
 from .auth import OAuth2
 from .logger.logger import setup_logger
 from logging import Logger
@@ -14,7 +22,6 @@ from .utils import (
     parse_response,
     ReturnType,
 )
-from .dicomsort import DICOMSorter
 import pandas as pd
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
@@ -33,7 +40,6 @@ __version__ = "0.29.2"
 def conv_response_list(
     response_json: List[dict[Any, Any]], return_type: ReturnType = ReturnType.LIST
 ) -> List[dict[Any, Any]] | pd.DataFrame:
-
     assert isinstance(response_json, list), "The response JSON must be a list"
 
     if return_type == ReturnType.LIST:
@@ -176,7 +182,6 @@ class NBIAClient:
     def getCollections(
         self, prefix: str = "", return_type: Optional[Union[ReturnType, str]] = None
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType: ReturnType = self._get_return(return_type)
 
         response: List[dict[Any, Any]]
@@ -194,7 +199,6 @@ class NBIAClient:
     def getCollectionDescriptions(
         self, collectionName: str, return_type: Optional[Union[ReturnType, str]] = None
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType: ReturnType = self._get_return(return_type)
         PARAMS: dict = self.parsePARAMS(params=locals())
 
@@ -224,7 +228,6 @@ class NBIAClient:
         BodyPartExamined: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(params=locals())
@@ -241,7 +244,6 @@ class NBIAClient:
         Collection: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(locals())
@@ -300,7 +302,6 @@ class NBIAClient:
         prefix: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType: ReturnType = self._get_return(return_type)
 
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
@@ -320,7 +321,6 @@ class NBIAClient:
         Modality: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS = self.parsePARAMS(locals())
@@ -338,7 +338,6 @@ class NBIAClient:
         StudyInstanceUID: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(locals())
@@ -372,7 +371,6 @@ class NBIAClient:
         SeriesInstanceUID: Union[str, list[str]],
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         returnType = self._get_return(return_type)
 
         assert isinstance(
@@ -418,7 +416,6 @@ class NBIAClient:
         SeriesInstanceUID: str,
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
-
         assert SeriesInstanceUID is not None and isinstance(
             SeriesInstanceUID, str
         ), "SeriesInstanceUID must be a string"
@@ -430,109 +427,47 @@ class NBIAClient:
 
         return conv_response_list(response, returnType)
 
-    # def downloadSeries(
-    #     self,
-    #     SeriesInstanceUID: Union[str, list],
-    #     downloadDir: str = "./NBIA-Download",
-    #     filePattern: str = "%PatientName/%StudyDescription-%StudyDate/%SeriesNumber-%SeriesDescription-%SeriesInstanceUID/%InstanceNumber.dcm",
-    #     overwrite: bool = False,
-    #     nParallel: int = 1,
-    # ) -> bool:
-    #     assert isinstance(
-    #         SeriesInstanceUID, (str, list)
-    #     ), "SeriesInstanceUID must be a string or list"
-    #     assert isinstance(downloadDir, str), "downloadDir must be a string"
-    #     assert isinstance(filePattern, str), "filePattern must be a string"
-    #     assert isinstance(overwrite, bool), "overwrite must be a boolean"
+    def downloadSeries(
+        self,
+        SeriesInstanceUID: Union[str, list],
+        downloadDir: str = "./NBIA-Download",
+        filePattern: str = "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
+        overwrite: bool = False,
+        nParallel: int = 1,
+    ) -> bool:
+        if isinstance(SeriesInstanceUID, str):
+            SeriesInstanceUID = [SeriesInstanceUID]
 
-    #     import concurrent.futures as cf
-    #     from tqdm import tqdm
+        # Create a multiprocessing pool
+        pool = multiprocessing.Pool(processes=nParallel)
 
-    #     if isinstance(SeriesInstanceUID, str):
-    #         SeriesInstanceUID = [SeriesInstanceUID]
+        # Download each series using multiprocessing
+        results = []
+        for series in SeriesInstanceUID:
+            result = pool.apply_async(
+                downloadSingleSeries,
+                (
+                    series,
+                    downloadDir,
+                    filePattern,
+                    overwrite,
+                    self._api_headers,
+                    self._base_url,
+                    self._log,
+                ),
+            )
+            results.append(result)
 
-    #     with cf.ThreadPoolExecutor(max_workers=nParallel) as executor:
-    #         futures = []
+        # Wait for all processes to complete
+        pool.close()
+        pool.join()
 
-    #         try:
-    #             os.makedirs(downloadDir)
-    #         except FileExistsError:
-    #             pass
+        # Check if any process failed
+        for result in results:
+            if not result.successful():
+                return False
 
-    #         for seriesUID in SeriesInstanceUID:
-    #             future = executor.submit(
-    #                 self._downloadSingleSeries,
-    #                 SeriesInstanceUID=seriesUID,
-    #                 downloadDir=downloadDir,
-    #                 filePattern=filePattern,
-    #                 overwrite=overwrite,
-    #             )
-    #             futures.append(future)
-
-    #         # Use tqdm to create a progress bar
-    #         with tqdm(
-    #             total=len(futures), desc=f"Downloading {len(futures)} series"
-    #         ) as pbar:
-    #             for future in cf.as_completed(futures):
-    #                 pbar.update(1)
-
-    #         return True
-
-    # # _downloadSingleSeries is a helper function that downloads a single series
-    # # to simplify the code in downloadSeries and also allow for parallel
-    # # downloads in the future
-    # def _downloadSingleSeries(
-    #     self,
-    #     SeriesInstanceUID: str,
-    #     downloadDir: str,
-    #     filePattern: str,
-    #     overwrite: bool,
-    # ) -> bool:
-    #     # create temporary directory
-    #     from tempfile import TemporaryDirectory
-
-    #     params = dict()
-    #     params["SeriesInstanceUID"] = SeriesInstanceUID
-
-    #     self._log.debug("Downloading series: %s", SeriesInstanceUID)
-    #     response = self.query_api(
-    #         endpoint=NBIA_ENDPOINTS.DOWNLOAD_SERIES, params=params
-    #     )
-
-    #     if not isinstance(response, bytes):
-    #         self._log.error(f"Expected binary data, but received: {type(response)}")
-    #         return False
-
-    #     file = zipfile.ZipFile(io.BytesIO(response))
-
-    #     with TemporaryDirectory() as tempDir:
-    #         file.extractall(path=tempDir)
-
-    #         try:
-    #             validateMD5(seriesDir=tempDir)
-    #         except Exception as e:
-    #             self._log.error("Error validating MD5 hash: %s", e)
-    #             return False
-
-    #         # Create an instance of DICOMSorter with the desired target pattern
-    #         sorter = DICOMSorter(
-    #             sourceDir=tempDir,
-    #             destinationDir=downloadDir,
-    #             targetPattern=filePattern,
-    #             truncateUID=True,
-    #             sanitizeFilename=True,
-    #         )
-    #         # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
-    #         if not sorter.sortDICOMFiles(option="move", overwrite=overwrite):
-    #             self._log.error(
-    #                 "Error sorting DICOM files for series %s\n \
-    #                     failed files located at %s",
-    #                 SeriesInstanceUID,
-    #                 tempDir,
-    #             )
-    #             return False
-
-    #     return True
+        return True
 
     # parsePARAMS is a helper function that takes a locals() dict and returns
     # a dict with only the non-empty values
@@ -543,3 +478,56 @@ class NBIAClient:
             if (value != "") and (key != "self") and (key != "return_type"):
                 PARAMS[key] = value
         return PARAMS
+
+
+# Use asyncio to make the request
+
+
+def downloadSingleSeries(
+    SeriesInstanceUID: str,
+    downloadDir: str,
+    filePattern: str,
+    overwrite: bool,
+    api_headers: dict[str, str],
+    base_url: NBIA_ENDPOINTS,
+    log: Logger,
+):
+
+    # create query_url
+    query_url: str = base_url.value + NBIA_ENDPOINTS.DOWNLOAD_SERIES.value
+
+    params = dict()
+    params["SeriesInstanceUID"] = SeriesInstanceUID
+
+    # create a temporary directory
+
+    with TemporaryDirectory() as tempDir:
+        log.debug(f"Downloading series: {SeriesInstanceUID}")
+        response = requests.get(url=query_url, headers=api_headers, params=params)
+
+        file = zipfile.ZipFile(io.BytesIO(response.content))
+        file.extractall(path=tempDir)
+
+        try:
+            validateMD5(seriesDir=tempDir)
+        except Exception as e:
+            log.error(f"Error validating MD5 hash: {e}")
+            return False
+
+        # Create an instance of DICOMSorter with the desired target pattern
+        sorter = DICOMSorter(
+            sourceDir=tempDir,
+            destinationDir=downloadDir,
+            targetPattern=filePattern,
+            truncateUID=True,
+            sanitizeFilename=True,
+        )
+        # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
+        if not sorter.sortDICOMFiles(
+            shutil_option="move", overwrite=overwrite, progressbar=False, n_parallel=1
+        ):
+            log.error(
+                f"Error sorting DICOM files for series {SeriesInstanceUID}\n \
+                    failed files located at {tempDir}"
+            )
+            return False

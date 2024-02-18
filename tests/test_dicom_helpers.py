@@ -1,7 +1,7 @@
 from src.nbiatoolkit.dicomsort.helper_functions import (
     parseDICOMKeysFromFormat,
     sanitizeFileName,
-    truncateUID,
+    _truncateUID,
 )
 import pytest
 
@@ -89,7 +89,7 @@ def test_sanitizeFileName_assertions():
 
 
 ###############################################################################
-# truncateUID
+# _truncateUID
 
 
 @pytest.fixture(scope="session")
@@ -98,25 +98,25 @@ def uid():
     return uid
 
 
-def test_truncateUID_with_valid_inputs(uid):
+def test__truncateUID_with_valid_inputs(uid):
     lastDigits = 5
     expected_output = "29635"
-    assert truncateUID(uid, lastDigits) == expected_output
+    assert _truncateUID(uid, lastDigits) == expected_output
 
 
-def test_truncateUID_with_lastDigits_greater_than_length_of_UID(uid):
+def test__truncateUID_with_lastDigits_greater_than_length_of_UID(uid):
     lastDigits = 100
     expected_output = uid
-    assert truncateUID(uid, lastDigits) == expected_output
+    assert _truncateUID(uid, lastDigits) == expected_output
 
 
-def test_truncateUID_with_invalid_input_types(uid):
+def test__truncateUID_with_invalid_input_types(uid):
     lastDigits = "5"
     with pytest.raises(AssertionError):
-        truncateUID(uid, lastDigits)
+        _truncateUID(uid, lastDigits)
 
 
-def test_truncateUID_with_None_input(uid):
+def test__truncateUID_with_None_input(uid):
     lastDigits = None
     with pytest.raises(AssertionError):
-        truncateUID(uid, lastDigits)
+        _truncateUID(uid, lastDigits)
