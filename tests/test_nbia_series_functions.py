@@ -50,6 +50,28 @@ def nbia_series(nbia_client):
     return series_df
 
 
+@pytest.fixture(scope="session")
+def getSeriesMetadata(nbia_client):
+    series = "1.3.6.1.4.1.14519.5.2.1.9203.4004.652695091345533290618011349477"
+    series_metadata = nbia_client.getSeriesMetadata(
+        SeriesInstanceUID=series, return_type="dataframe"
+    )
+    return series_metadata
+
+
+@pytest.fixture(scope="session")
+def getNewSeries_metadata(nbia_client):
+    Date = "01/01/2024"
+    new = nbia_client.getNewSeries(Date=Date, return_type="dataframe")
+    return new
+
+
+@pytest.fixture(scope="session")
+def getDICOMTags(nbia_client):
+    series = "1.3.6.1.4.1.14519.5.2.1.9203.4004.652695091345533290618011349477"
+    return nbia_client.getDICOMTags(SeriesInstanceUID=series, return_type="dataframe")
+
+
 def test_tcga_studies(tcga_studies):
 
     assert isinstance(tcga_studies, list)
@@ -102,3 +124,18 @@ def test_getSeries(nbia_series):
         "SeriesNumber",
     ]
     assert all(col in nbia_series.columns for col in expected_cols)
+
+
+def test_getSeriesMetadata(getSeriesMetadata):
+    assert isinstance(getSeriesMetadata, pd.DataFrame)
+    assert len(getSeriesMetadata) == 1
+
+
+def test_getNewSeries(getNewSeries_metadata):
+    assert isinstance(getNewSeries_metadata, pd.DataFrame)
+    assert len(getNewSeries_metadata) > 1
+
+
+def test_getDICOMTags(getDICOMTags):
+    assert isinstance(getDICOMTags, pd.DataFrame)
+    assert len(getDICOMTags) > 1
