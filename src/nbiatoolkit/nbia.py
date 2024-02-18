@@ -202,6 +202,7 @@ class NBIAClient:
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_COLLECTION_DESCRIPTIONS, params=PARAMS
         )
+
         assert (
             len(response) == 1
         ), "The response from the API is empty. Please check the collection name."
