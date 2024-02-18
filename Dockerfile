@@ -21,6 +21,7 @@ COPY . /nbiatoolkit
 WORKDIR /nbiatoolkit
 
 # install nbiatoolkit
+RUN pip install --upgrade pip
 RUN pip install .
 
 RUN NBIAToolkit --help
