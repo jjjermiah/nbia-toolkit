@@ -7,7 +7,7 @@ import asyncio
 import os
 import zipfile
 from tempfile import TemporaryDirectory
-from src.nbiatoolkit.dicomsort.dicomsort import DICOMSorter
+from .dicomsort import DICOMSorter
 
 import multiprocessing
 from .auth import OAuth2
