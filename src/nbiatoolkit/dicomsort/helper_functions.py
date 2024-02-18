@@ -49,7 +49,7 @@ def sanitizeFileName(fileName: str) -> str:
     return sanitized_name
 
 
-def truncateUID(uid: str, lastDigits: int = 5) -> str:
+def _truncateUID(uid: str, lastDigits: int = 5) -> str:
     """
     Truncate the UID to the last n characters (includes periods & underscores).
     If the UID is shorter than n characters, the entire UID is returned.

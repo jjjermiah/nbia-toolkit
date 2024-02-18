@@ -5,9 +5,7 @@ from .utils import NBIA_ENDPOINTS
 from cryptography.fernet import Fernet
 
 
-def encrypt_credentials(
-    key: bytes, username: str, password: str
-) -> Tuple[str, str]:
+def encrypt_credentials(key: bytes, username: str, password: str) -> Tuple[str, str]:
     """
     Encrypts the given username and password using the provided key.
 
@@ -115,7 +113,7 @@ class OAuth2:
         username: str = "nbia_guest",
         password: str = "",
         client_id: str = "NBIA",
-        base_url: Union[str, NBIA_ENDPOINTS] = NBIA_ENDPOINTS.BASE_URL,
+        base_url: Union[str, NBIA_ENDPOINTS] = NBIA_ENDPOINTS.NBIA,
     ) -> None:
         """
         Initialize the OAuth2 class.
@@ -129,7 +127,7 @@ class OAuth2:
             The password for authentication. Default is an empty string.
         client_id : str, optional
             The client ID for authentication. Default is "NBIA".
-        base_url : str or NBIA_ENDPOINTS, optional. Default is NBIA_ENDPOINTS.BASE_URL
+        base_url : str or NBIA_ENDPOINTS, optional. Default is NBIA_ENDPOINTS.NBIA
 
         """
 
@@ -141,7 +139,9 @@ class OAuth2:
         self.username, self.password = encrypt_credentials(
             key=self.fernet_key, username=username, password=password
         )
-        self.username, self.password = encrypt_credentials(key=self._fernet_key, username=username, password=password)
+        self.username, self.password = encrypt_credentials(
+            key=self._fernet_key, username=username, password=password
+        )
 
         if isinstance(base_url, NBIA_ENDPOINTS):
             self.base_url = base_url.value
@@ -153,7 +153,6 @@ class OAuth2:
         self.refresh_expiry = None
         self.refresh_token = ""  # Fix: Assign an empty string instead of None
         self.scope = None
-
 
     @property
     def fernet_key(self) -> bytes:
