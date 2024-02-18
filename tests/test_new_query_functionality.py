@@ -1,6 +1,4 @@
 import pytest
-from nbiatoolkit import nbia
-
 from src.nbiatoolkit import NBIAClient
 from src.nbiatoolkit.auth import OAuth2
 from src.nbiatoolkit.utils import *
@@ -11,12 +9,6 @@ import pandas as pd
 def nbia_client():
     nbia_client = NBIAClient()
     return nbia_client
-
-
-# @pytest.fixture(scope="session")
-# def nbia_client_bad_username():
-#     nbia = NBIAClient(username="bad_username", password="bad_password")
-#     return nbia
 
 
 @pytest.fixture(scope="session")
@@ -37,7 +29,7 @@ def tcga_patients(nbia_client):
 
 
 @pytest.fixture(scope="session")
-def nbia_patients_df(nbia_client):
+def nbia_patients_df(nbia_client: NBIAClient, tcga_patients):
     nbia_patients_df = nbia_client.getNewPatients(
         Collection="CMB-LCA", return_type="dataframe", Date="2022/12/06"
     )
@@ -45,7 +37,7 @@ def nbia_patients_df(nbia_client):
 
 
 @pytest.fixture(scope="session")
-def nbia_collections_by_colMoldality(nbia_client):
+def nbia_collections_by_colMoldality(nbia_client: NBIAClient, nbia_patients_df):
     nbia_collections_by_colMoldality = nbia_client.getPatientsByCollectionAndModality(
         Collection="TCGA-KIRC", Modality="MR"
     )

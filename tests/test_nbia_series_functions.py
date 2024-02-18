@@ -19,3 +19,17 @@ def tcga_series(nbia_client):
         Collection="TCGA-KIRC", PatientID="TCGA-BP-4989"
     )
     return tcga_series
+
+
+@pytest.fixture(scope="session")
+def tcga_studies(nbia_client):
+    tcga_studies = nbia_client.getStudies(
+        Collection="TCGA-KIRC", PatientID="TCGA-BP-4989"
+    )
+    return tcga_studies
+
+
+def test_tcga_studies(tcga_studies):
+
+    assert isinstance(tcga_studies, list)
+    assert len(tcga_studies) > 0
