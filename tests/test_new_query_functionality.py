@@ -1,3 +1,4 @@
+from math import log
 import pytest
 from src.nbiatoolkit import NBIAClient
 from src.nbiatoolkit.auth import OAuth2
@@ -7,7 +8,7 @@ import pandas as pd
 
 @pytest.fixture(scope="session")
 def nbia_client():
-    nbia_client = NBIAClient()
+    nbia_client = NBIAClient(log_level="DEBUG")
     return nbia_client
 
 
