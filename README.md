@@ -3,18 +3,24 @@
 [![PyTests](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml/badge.svg)](https://github.com/jjjermiah/nbia-toolkit/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/nbia-toolkit/badge/?version=latest)](https://nbia-toolkit.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/jjjermiah/nbia-toolkit/graph/badge.svg?token=JKREY71D0R)](https://codecov.io/gh/jjjermiah/nbia-toolkit)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![Python version](https://img.shields.io/pypi/pyversions/nbiatoolkit.svg)](https://img.shields.io/pypi/pyversions/nbiatoolkit.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/jjjermiah/nbia-toolkit/badge)](https://www.codefactor.io/repository/github/jjjermiah/nbia-toolkit)
 
+
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/jjjermiah/nbia-toolkit)
 [![PyPI version](https://badge.fury.io/py/nbiatoolkit.svg)](https://badge.fury.io/py/nbiatoolkit)
 [![Downloads](https://static.pepy.tech/badge/nbiatoolkit)](https://pepy.tech/project/nbiatoolkit)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/nbiatoolkit.svg?label=pypi%20downloads)](https://pypi.org/project/nbiatoolkit/)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jjjermiah/nbia-toolkit)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jjjermiah/nbiatoolkit)](https://hub.docker.com/r/jjjermiah/nbiatoolkit)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
 
 
 
 ![GitHub milestone details](https://img.shields.io/github/milestones/progress-percent/jjjermiah/nbia-toolkit/1?style=flat-square&label=1.0.0%20Stable%20Release%20Milestone&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)![GitHub milestone details](https://img.shields.io/github/milestones/progress/jjjermiah/nbia-toolkit/1?style=flat-square&label=%20&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)
+[![GitHub issues](https://img.shields.io/github/issues/jjjermiah/nbia-toolkit)](https://github.com/jjjermiah/nbia-toolkit/issues)
+![GitHub last commit](https://img.shields.io/github/last-commit/jjjermiah/nbia-toolkit)
 
 
 
@@ -44,21 +50,45 @@ It is made available via PyPI and can be installed using pip:
 pip install nbiatoolkit
 ```
 
+## Python Usage
+Using a context manager, you can easily access the NBIA database and query for metadata on collections, patients, studies, and series.
+
+``` python
+from nbiatoolkit import NBIAClient
+
+with NBIAClient() as client:
+    # Get a list of collections
+    collections = client.getCollections()
+    print(collections)
+
+    # Get a list of patients in a collection
+    patients = client.getPatients(Collection="TCGA-KIRC")
+    print(patients)
+
+    # Get a list of studies for a patient
+    studies = client.getStudies(PatientID="TCGA-BP-4989")
+    print(studies)
+
+    # Get a list of series for a study
+    series = client.getSeries(StudyInstanceUID=studies[0]["StudyInstanceUID"])
+    print(series[0:5])
+```
+
 ## CLI Usage
 For quick access to the NBIA, the toolkit also provides a command line interface (CLI)
 
 ``` bash NBIAToolkit-Output
 > NBIAToolkit --version
-    _   ______  _______  ______            ____   _ __ 
+    _   ______  _______  ______            ____   _ __
    / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
   /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
- / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_  
-/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/  
-                                                       
+ / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
+/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
+
 
 Version: 0.32.0
 
-Available CLI tools: 
+Available CLI tools:
 
 getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
                [-o OUTPUTFILE] [--version]
