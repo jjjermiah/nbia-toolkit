@@ -1,10 +1,6 @@
 from calendar import c
 from inspect import getmodule
 from re import I
-import re
-import aiohttp
-import asyncio
-import os
 import zipfile
 from tempfile import TemporaryDirectory
 from .dicomsort import DICOMSorter
@@ -29,7 +25,6 @@ from typing import Union, Optional, Any, Dict, List
 import io
 import zipfile
 
-import os
 from datetime import datetime
 
 # set __version__ variable
@@ -38,16 +33,65 @@ __version__ = "0.32.0"
 
 # function that takes a list of dictionaries and returns either a list or a dataframe
 def conv_response_list(
-    response_json: List[dict[Any, Any]], return_type: ReturnType = ReturnType.LIST
+    response_json: List[dict[Any, Any]],
+    return_type: ReturnType,
 ) -> List[dict[Any, Any]] | pd.DataFrame:
     assert isinstance(response_json, list), "The response JSON must be a list"
 
     if return_type == ReturnType.LIST:
         return response_json
     elif return_type == ReturnType.DATAFRAME:
-        import pandas as pd
-
         return pd.DataFrame(data=response_json)
+
+
+def downloadSingleSeries(
+    SeriesInstanceUID: str,
+    downloadDir: str,
+    filePattern: str,
+    overwrite: bool,
+    api_headers: dict[str, str],
+    base_url: NBIA_ENDPOINTS,
+    log: Logger,
+):
+
+    # create query_url
+    query_url: str = base_url.value + NBIA_ENDPOINTS.DOWNLOAD_SERIES.value
+
+    params = dict()
+    params["SeriesInstanceUID"] = SeriesInstanceUID
+
+    # create a temporary directory
+
+    with TemporaryDirectory() as tempDir:
+        log.debug(f"Downloading series: {SeriesInstanceUID}")
+        response = requests.get(url=query_url, headers=api_headers, params=params)
+
+        file = zipfile.ZipFile(io.BytesIO(response.content))
+        file.extractall(path=tempDir)
+
+        try:
+            validateMD5(seriesDir=tempDir)
+        except Exception as e:
+            log.error(f"Error validating MD5 hash: {e}")
+            return False
+
+        # Create an instance of DICOMSorter with the desired target pattern
+        sorter = DICOMSorter(
+            sourceDir=tempDir,
+            destinationDir=downloadDir,
+            targetPattern=filePattern,
+            truncateUID=True,
+            sanitizeFilename=True,
+        )
+        # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
+        if not sorter.sortDICOMFiles(
+            shutil_option="move", overwrite=overwrite, progressbar=False, n_parallel=1
+        ):
+            log.error(
+                f"Error sorting DICOM files for series {SeriesInstanceUID}\n \
+                    failed files located at {tempDir}"
+            )
+            return False
 
 
 class NBIAClient:
@@ -152,14 +196,6 @@ class NBIAClient:
             parsed_response: List[dict[Any, Any]] | bytes = parse_response(
                 response=response
             )
-
-        except JSONDecodeError as j:
-            self._log.error("Error parsing response as JSON: %s", j)
-            if response is not None:
-                self._log.debug("Response: %s", response.text)
-                if not response.text.strip():
-                    self._log.error("Response text is empty.")
-            raise j
         except requests.exceptions.HTTPError as http_err:
             self._log.error("HTTP error occurred: %s", http_err)
             if response is None:
@@ -478,56 +514,3 @@ class NBIAClient:
             if (value != "") and (key != "self") and (key != "return_type"):
                 PARAMS[key] = value
         return PARAMS
-
-
-# Use asyncio to make the request
-
-
-def downloadSingleSeries(
-    SeriesInstanceUID: str,
-    downloadDir: str,
-    filePattern: str,
-    overwrite: bool,
-    api_headers: dict[str, str],
-    base_url: NBIA_ENDPOINTS,
-    log: Logger,
-):
-
-    # create query_url
-    query_url: str = base_url.value + NBIA_ENDPOINTS.DOWNLOAD_SERIES.value
-
-    params = dict()
-    params["SeriesInstanceUID"] = SeriesInstanceUID
-
-    # create a temporary directory
-
-    with TemporaryDirectory() as tempDir:
-        log.debug(f"Downloading series: {SeriesInstanceUID}")
-        response = requests.get(url=query_url, headers=api_headers, params=params)
-
-        file = zipfile.ZipFile(io.BytesIO(response.content))
-        file.extractall(path=tempDir)
-
-        try:
-            validateMD5(seriesDir=tempDir)
-        except Exception as e:
-            log.error(f"Error validating MD5 hash: {e}")
-            return False
-
-        # Create an instance of DICOMSorter with the desired target pattern
-        sorter = DICOMSorter(
-            sourceDir=tempDir,
-            destinationDir=downloadDir,
-            targetPattern=filePattern,
-            truncateUID=True,
-            sanitizeFilename=True,
-        )
-        # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
-        if not sorter.sortDICOMFiles(
-            shutil_option="move", overwrite=overwrite, progressbar=False, n_parallel=1
-        ):
-            log.error(
-                f"Error sorting DICOM files for series {SeriesInstanceUID}\n \
-                    failed files located at {tempDir}"
-            )
-            return False
