@@ -2,9 +2,64 @@
 
 
 
+## v0.32.0 (2024-02-18)
+
+### Chore
+
+* chore: Update README: 0.31.0 ([`799667e`](https://github.com/jjjermiah/nbia-toolkit/commit/799667ed8eaad93dafe751ab170a2f4f96a4dc36))
+
+### Feature
+
+* feat: Refactor workflows and update test case ([`e111fb2`](https://github.com/jjjermiah/nbia-toolkit/commit/e111fb28e35084891f5551f264e0ab707441fd88))
+
+* feat: refactor return_type test ([`f2058e8`](https://github.com/jjjermiah/nbia-toolkit/commit/f2058e8f259ed5e2250f20ca08b556883449f399))
+
+
+## v0.31.0 (2024-02-18)
+
+### Build
+
+* build: docker build ([`fc6fd28`](https://github.com/jjjermiah/nbia-toolkit/commit/fc6fd28ad815b904648dbcd7ddc8bba4cc15e4eb))
+
+### Chore
+
+* chore(sem-ver): 0.31.0 ([`f8b2253`](https://github.com/jjjermiah/nbia-toolkit/commit/f8b2253d948a9bdc4f42a94e38b7751ba37d4b5d))
+
+* chore: Update README: 0.30.1 ([`ec7c9d3`](https://github.com/jjjermiah/nbia-toolkit/commit/ec7c9d38eeb602353c83c54664b0e60baef55d22))
+
+### Feature
+
+* feat: Update version to 0.31.1 and upgrade pip ([`12c5018`](https://github.com/jjjermiah/nbia-toolkit/commit/12c501883b91a2ef26b12866c75a6047c53e2103))
+
+### Fix
+
+* fix: ci ([`2f52670`](https://github.com/jjjermiah/nbia-toolkit/commit/2f526705a2814f26fb73f38f80cdf76e8838c28f))
+
+
+## v0.30.1 (2024-02-18)
+
+### Chore
+
+* chore(sem-ver): 0.30.1 ([`b4ef0c7`](https://github.com/jjjermiah/nbia-toolkit/commit/b4ef0c7b096fb1953cd683381fa490a5fdf6cba3))
+
+### Fix
+
+* fix: Fix import statements in nbia.py and nbia_cli.py ([`14816f1`](https://github.com/jjjermiah/nbia-toolkit/commit/14816f162ba309de82daacb2c0a765d6fb753c99))
+
+### Unknown
+
+* Merge pull request #111 from jjjermiah/development
+
+fix cli ([`b044404`](https://github.com/jjjermiah/nbia-toolkit/commit/b04440409480749f45522f57274baf4cd0da6205))
+
+* Merge remote-tracking branch &#39;origin&#39; into development ([`7cf41c4`](https://github.com/jjjermiah/nbia-toolkit/commit/7cf41c4d41fedf3cd5d37e9e5ef952a80bbe9e36))
+
+
 ## v0.30.0 (2024-02-18)
 
 ### Chore
+
+* chore(sem-ver): 0.30.0 ([`aae2d61`](https://github.com/jjjermiah/nbia-toolkit/commit/aae2d6197b1f6e7ded7413814788a4bd109584f1))
 
 * chore: Update README: 0.29.2 ([`c7d69ec`](https://github.com/jjjermiah/nbia-toolkit/commit/c7d69ec58df0faf15b8645a74d6332848c2356f5))
 

@@ -14,9 +14,15 @@ LABEL license="MIT"
 LABEL usage="docker run -it --rm <image_name> NBIAToolkit --help"
 LABEL org.opencontainers.image.source="github.com/jjjermiah/nbiatoolkit"
 
-# install the dependencies
+# copy current directory to /nbiatoolkit
+COPY . /nbiatoolkit
+
+# set working directory
+WORKDIR /nbiatoolkit
+
+# install nbiatoolkit
 RUN pip install --upgrade pip
-RUN python -m pip install nbiatoolkit
+RUN pip install .
 
 RUN NBIAToolkit --help
 
