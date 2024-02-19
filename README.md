@@ -79,16 +79,16 @@ For quick access to the NBIA, the toolkit also provides a command line interface
 
 ``` bash NBIAToolkit-Output
 > NBIAToolkit --version
-    _   ______  _______  ______            ____   _ __
-   / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
-  /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
- / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
-/_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
 
+        _   ______  _______  ______            ____   _ __
+       / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
+      /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
+     / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
+    /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
+    
+Version: 0.32.1
 
-Version: 0.32.0
-
-Available CLI tools:
+Available CLI tools: 
 
 getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
                [-o OUTPUTFILE] [--version]
@@ -115,15 +115,6 @@ getSeries [-h] [-u USERNAME] [-pw PASSWORD] [-c COLLECTION]
 
 getNewSeries [-h] [-u USERNAME] [-pw PASSWORD] -d DATE [-o OUTPUTFILE]
              [--version]
-
-downloadSingleSeries [-h] [-u USERNAME] [-pw PASSWORD] --seriesUID
-                     SERIESUID --downloadDir DOWNLOADDIR
-                     [--filePattern FILEPATTERN] [--overwrite]
-
-dicomsort [-h] [-u USERNAME] [-pw PASSWORD]
-          [--targetPattern TARGETPATTERN] [--truncateUID]
-          [--sanitizeFilename] [--overwrite] [--nParallel NPARALLEL]
-          sourceDir destinationDir
 
 ```
 
