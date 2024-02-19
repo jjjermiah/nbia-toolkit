@@ -2,9 +2,34 @@
 
 
 
+## v0.32.1 (2024-02-19)
+
+### Chore
+
+* chore: Update README: 0.32.0 ([`f053d10`](https://github.com/jjjermiah/nbia-toolkit/commit/f053d10fcc2764b4a9c08d51c3139b271f28057c))
+
+### Refactor
+
+* refactor: Remove downloadSingleSeries command and replace Figlet with hard-coded ASCII art ([`b9fd89a`](https://github.com/jjjermiah/nbia-toolkit/commit/b9fd89ac106cf130d92d7611fef2aa6370ef2010))
+
+* refactor: improve dockerfile by removing caches and comment blocks ([`b8ed8b0`](https://github.com/jjjermiah/nbia-toolkit/commit/b8ed8b00c6876949bf293c2150779fa2b7b3c124))
+
+### Unknown
+
+* Merge pull request #117 from jjjermiah/development
+
+merge: small fixes  #114 #113 #96 ([`679fa31`](https://github.com/jjjermiah/nbia-toolkit/commit/679fa31ef5d21fc2599adb798f375bf96d895e69))
+
+* Merge pull request #116 from jjjermiah/main
+
+merge w main ([`4f79f98`](https://github.com/jjjermiah/nbia-toolkit/commit/4f79f9873e4daf8633a8295db25a6d07babcf0a6))
+
+
 ## v0.32.0 (2024-02-18)
 
 ### Chore
+
+* chore(sem-ver): 0.32.0 ([`ce8c8ce`](https://github.com/jjjermiah/nbia-toolkit/commit/ce8c8ce9dd02a8d967a7f5c11d4f4a70edeb3eb1))
 
 * chore: Update README: 0.31.0 ([`799667e`](https://github.com/jjjermiah/nbia-toolkit/commit/799667ed8eaad93dafe751ab170a2f4f96a4dc36))
 
