@@ -144,11 +144,18 @@ class NBIAClient:
         username: str = "nbia_guest",
         password: str = "",
         log_level: str = "INFO",
+        logger: Optional[Logger] = None,
         return_type: Union[ReturnType, str] = ReturnType.LIST,
     ) -> None:
-        # Setup logger
-        self._log: Logger = setup_logger(
-            name="NBIAClient", log_level=log_level, console_logging=True, log_file=None
+        self._log: Logger = (
+            setup_logger(
+                name="NBIAClient",
+                log_level=log_level,
+                console_logging=True,
+                log_file=None,
+            )
+            if logger is None
+            else logger
         )
 
         # Setup OAuth2 client

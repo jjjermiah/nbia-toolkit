@@ -159,3 +159,5 @@ The default log level is 'INFO' and the available log levels are `DEBUG`, `INFO`
 
          Logging is not yet available in the command line interface.
          Feel free to open an issue on the GitHub repository if you would like to see this feature added.
+
+For more configuration options for logging see :ref:`Configuring Logger`.
