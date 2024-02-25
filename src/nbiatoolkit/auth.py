@@ -1,7 +1,7 @@
 import requests
 import time
 from typing import Union, Tuple
-from .utils import NBIA_ENDPOINTS
+from .utils import NBIA_ENDPOINTS, NBIA_BASE_URLS
 from cryptography.fernet import Fernet
 
 
@@ -113,7 +113,7 @@ class OAuth2:
         username: str = "nbia_guest",
         password: str = "",
         client_id: str = "NBIA",
-        base_url: Union[str, NBIA_ENDPOINTS] = NBIA_ENDPOINTS.NBIA,
+        base_url: str | NBIA_BASE_URLS = NBIA_BASE_URLS.NBIA,
     ) -> None:
         """
         Initialize the OAuth2 class.
@@ -127,7 +127,7 @@ class OAuth2:
             The password for authentication. Default is an empty string.
         client_id : str, optional
             The client ID for authentication. Default is "NBIA".
-        base_url : str or NBIA_ENDPOINTS, optional. Default is NBIA_ENDPOINTS.NBIA
+        base_url : str or NBIA_BASE_URLS, optional. Default is NBIA_BASE_URLS.NBIA
 
         """
 
@@ -143,7 +143,7 @@ class OAuth2:
             key=self._fernet_key, username=username, password=password
         )
 
-        if isinstance(base_url, NBIA_ENDPOINTS):
+        if isinstance(base_url, NBIA_BASE_URLS):
             self.base_url = base_url.value
         else:
             self.base_url = base_url
@@ -292,7 +292,7 @@ class OAuth2:
         if not self.access_token:
             return None
 
-        query_url = NBIA_ENDPOINTS.LOGOUT_URL.value
+        query_url = NBIA_BASE_URLS.LOGOUT_URL.value
         response = requests.get(query_url, headers=self.api_headers)
         response.raise_for_status()
 

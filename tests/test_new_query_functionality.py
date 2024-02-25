@@ -35,7 +35,7 @@ def test_nbia_properties(nbia_client2):
     assert "Content-Type" in nbia_client.headers.keys()
     assert nbia_client.headers["Content-Type"] == "application/json"
 
-    assert nbia_client.base_url == NBIA_ENDPOINTS.NBIA
+    assert nbia_client.base_url == NBIA_BASE_URLS.NBIA
 
     assert nbia_client.logger is not None
 

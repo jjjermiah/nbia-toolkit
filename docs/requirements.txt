@@ -2,3 +2,6 @@ myst-nb
 sphinx-autoapi
 sphinx-rtd-theme
 sphinx-tabs
+sphinx_exec_code==0.12
+piccolo_theme
+sphinx-rtd-dark-mode
