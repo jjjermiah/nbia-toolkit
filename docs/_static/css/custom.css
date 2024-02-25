@@ -1,0 +1,20 @@
+.sphinx-tabs-panel {
+    background: none;
+    border: none;
+    color:aliceblue;
+}
+
+.sphinx-tabs-tab{
+    color: #1D5C87;
+    /* font color */
+    background: none;
+
+}
+
+
+
+.sphinx-tabs-tab[aria-selected="false"]{
+    color: white;
+    /* font color */
+    background: none;
+}

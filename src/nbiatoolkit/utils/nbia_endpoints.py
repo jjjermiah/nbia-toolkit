@@ -1,14 +1,27 @@
 from enum import Enum
 
 
-class NBIA_ENDPOINTS(Enum):
+class NBIA_BASE_URLS(Enum):
     """
-    This enum class defines the NBIA endpoints used in the NBIA toolkit.
+    This enum class defines the NBIA base URLs used in the NBIA toolkit.
     """
 
     NBIA = "https://services.cancerimagingarchive.net/nbia-api/services/"
     NLST = "https://nlst.cancerimagingarchive.net/nbia-api/services/"
     LOGOUT_URL = "https://services.cancerimagingarchive.net/nbia-api/logout"
+
+    # Helper functions
+    def __str__(self):
+        return self.value
+
+    def _format(self):
+        return self.value.split("/")[-1]
+
+
+class NBIA_ENDPOINTS(Enum):
+    """
+    This enum class defines the NBIA endpoints used in the NBIA toolkit.
+    """
 
     GET_COLLECTIONS = "v2/getCollectionValues"
     GET_COLLECTION_PATIENT_COUNT = "getCollectionValuesAndCounts"
