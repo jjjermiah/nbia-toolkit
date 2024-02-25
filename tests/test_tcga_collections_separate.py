@@ -42,9 +42,9 @@ def test_nbia_properties(nbia_context_manager):
 
 
 def test_break(nbia_client_tobreak):
-    assert nbia_client_tobreak.base_url == NBIA_ENDPOINTS.NBIA
-    nbia_client_tobreak.base_url = NBIA_ENDPOINTS.NLST
-    assert nbia_client_tobreak.base_url == NBIA_ENDPOINTS.NLST
+    assert nbia_client_tobreak.base_url == NBIA_BASE_URLS.NBIA
+    nbia_client_tobreak.base_url = NBIA_BASE_URLS.NLST
+    assert nbia_client_tobreak.base_url == NBIA_BASE_URLS.NLST
 
 
 def test_getModalityValues(nbia_client, tcga_collections):

@@ -11,6 +11,7 @@ from .logger.logger import setup_logger
 from logging import Logger
 from .utils import (
     NBIA_ENDPOINTS,
+    NBIA_BASE_URLS,
     validateMD5,
     clean_html,
     convertMillis,
@@ -64,7 +65,7 @@ def downloadSingleSeries(
     filePattern: str,
     overwrite: bool,
     api_headers: dict[str, str],
-    base_url: NBIA_ENDPOINTS,
+    base_url: NBIA_BASE_URLS,
     log: Logger,
 ):
     """
@@ -123,12 +124,16 @@ def downloadSingleSeries(
 
 
 class NBIAClient:
-    """
-    The NBIAClient class is a wrapper around the NBIA REST API. It provides
-    methods to query the API and download series.
+    """A client for interacting with the NBIA API.
 
-    The default authentication uses the guest account. If you have a username
-    and password, you can pass them to the constructor.
+    The NBIAClient class provides a high-level interface for querying the NBIA API and downloading DICOM series.
+
+    Attributes:
+        OAuth_client (OAuth2): The OAuth2 client used for authentication.
+        headers (dict[str, str]): The API headers.
+        base_url (NBIA_ENDPOINTS): The base URL for API requests.
+        logger (Logger): The logger for logging client events.
+        return_type (str): The current return type for API responses.
     """
 
     def __init__(
@@ -152,7 +157,7 @@ class NBIAClient:
             "Content-Type": "application/json",
         }
 
-        self._base_url: NBIA_ENDPOINTS = NBIA_ENDPOINTS.NBIA
+        self._base_url: NBIA_BASE_URLS = NBIA_BASE_URLS.NBIA
         self._return_type: ReturnType = (
             return_type
             if isinstance(return_type, ReturnType)
@@ -175,11 +180,11 @@ class NBIAClient:
 
     # create a setter for the base_url in case user want to use NLST
     @property
-    def base_url(self) -> NBIA_ENDPOINTS:
+    def base_url(self) -> NBIA_BASE_URLS:
         return self._base_url
 
     @base_url.setter
-    def base_url(self, nbia_url: NBIA_ENDPOINTS) -> None:
+    def base_url(self, nbia_url: NBIA_BASE_URLS) -> None:
         self._base_url = nbia_url
 
     @property

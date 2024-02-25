@@ -1,4 +1,4 @@
-from .nbia_endpoints import NBIA_ENDPOINTS
+from .nbia_endpoints import NBIA_ENDPOINTS, NBIA_BASE_URLS
 from .md5 import validateMD5
 from .parsers import (
     convertMillis,
@@ -10,6 +10,7 @@ from .parsers import (
 
 __all__ = [
     "NBIA_ENDPOINTS",
+    "NBIA_BASE_URLS",
     "validateMD5",
     "convertMillis",
     "clean_html",
