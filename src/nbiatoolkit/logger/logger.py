@@ -15,6 +15,8 @@ def setup_logger(
 ) -> logging.Logger:
     """
     Set up a logger object that can be used to log messages to a file and/or console with daily log file rotation.
+    If passing a `log_file`, the log file will be created in the current working directory unless a `log_dir` is provided.
+    The `log_file` is created with a `TimedRotatingFileHandler` to rotate the log file daily.
 
     Args:
         name (str): The name of the logger.
@@ -34,6 +36,9 @@ def setup_logger(
         raise ValueError(f"Invalid log level: {log_level}")
 
     # Create logger
+    if logging.getLogger(name).hasHandlers():
+        logging.getLogger(name).handlers.clear()
+
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
@@ -65,8 +70,3 @@ def setup_logger(
         logger.addHandler(console_handler)
 
     return logger
-
-
-# Example usage
-# from nbiatoolkit.utils.logger import setup_logger
-# logger = setup_logger(name='my_logger', log_level='DEBUG', console_logging=True, log_file='my_log.log', log_dir='logs')
