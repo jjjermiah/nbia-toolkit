@@ -1,6 +1,18 @@
+from requests.exceptions import JSONDecodeError as JSONDecodeError
 from bs4 import BeautifulSoup
-from datetime import datetime
-from typing import Union
+from datetime import datetime, timezone
+from typing import Union, Any, Dict, List, Literal, Optional, Tuple
+import pandas as pd
+import requests
+from enum import Enum
+
+
+# so that users can decide between a List or a pd.DataFrame
+class ReturnType(Enum):
+    LIST = "list"
+    DATAFRAME = "dataframe"
+
+    # change .value so that DATAFRAME returns "pd.DataFrame"
 
 
 def clean_html(html_string: str) -> str:
@@ -21,9 +33,6 @@ def clean_html(html_string: str) -> str:
     return text_content
 
 
-from datetime import datetime
-
-
 def convertMillis(millis: int) -> str:
     """
     Convert milliseconds to a formatted date string.
@@ -38,7 +47,7 @@ def convertMillis(millis: int) -> str:
         AssertionError: If the input is not an integer.
     """
     assert isinstance(millis, int), "The input must be an integer"
-    return datetime.fromtimestamp(millis / 1000.0).strftime("%Y-%m-%d")
+    return datetime.fromtimestamp(millis / 1000.0, tz=timezone.utc).strftime("%Y-%m-%d")
 
 
 def convertDateFormat(
@@ -78,3 +87,43 @@ def convertDateFormat(
             pass  # If parsing fails, continue with the next format
     # If none of the formats match, raise an exception or return a default value
     raise ValueError("Invalid date format: {}".format(input_date))
+
+
+def parse_response(response: requests.Response) -> List[dict[Any, Any]]:
+    """
+    Response will be either JSON or bytes
+
+    """
+    content_type: str = response.headers.get("content-type", "")
+
+    assert (
+        response.status_code == 200
+    ), "The response status code must be 200 OK but is {}".format(response.status_code)
+    # TODO:: describe error 204
+
+    if not "application/json" in content_type:
+        if response.content == b"":
+            raise ValueError(
+                "The response content is empty. "
+                "Check your request parameters and try again."
+            )
+        else:
+            raise ValueError(
+                "The response content type must be 'application/json' but is {}".format(
+                    content_type
+                )
+            )
+
+    try:
+        response_list = response.json()
+    except JSONDecodeError:
+        raise JSONDecodeError("Failed to decode JSON response")
+    else:
+        if not isinstance(response_list, list):
+            raise TypeError(
+                "The JSON response must be a dictionary but is a {}".format(
+                    type(response_list)
+                )
+            )
+
+    return response_list

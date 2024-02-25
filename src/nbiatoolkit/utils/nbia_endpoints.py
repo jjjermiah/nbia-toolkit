@@ -6,8 +6,8 @@ class NBIA_ENDPOINTS(Enum):
     This enum class defines the NBIA endpoints used in the NBIA toolkit.
     """
 
-    BASE_URL = "https://services.cancerimagingarchive.net/nbia-api/services/"
-    NLST_URL = "https://nlst.cancerimagingarchive.net/nbia-api/services/"
+    NBIA = "https://services.cancerimagingarchive.net/nbia-api/services/"
+    NLST = "https://nlst.cancerimagingarchive.net/nbia-api/services/"
     LOGOUT_URL = "https://services.cancerimagingarchive.net/nbia-api/logout"
 
     GET_COLLECTIONS = "v2/getCollectionValues"
@@ -28,8 +28,6 @@ class NBIA_ENDPOINTS(Enum):
     GET_SERIES_METADATA = "v1/getSeriesMetaData"
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
     GET_DICOM_TAGS = "getDicomTags"
-
-
 
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesMetaData"
     # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesSize"

@@ -5,15 +5,15 @@
 #     "setup_logger",
 #     "NBIA_ENDPOINTS",
 #     "validateMD5"
+
 # ]
 
 from .dicomsort import DICOMSorter
-from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, truncateUID
+from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, _truncateUID
 
 __all__ = [
-    "DICOMSorter",
     "parseDICOMKeysFromFormat",
     "sanitizeFileName",
-    "truncateUID",
-    "DICOMSorter_cli",
+    "_truncateUID",
+    "DICOMSorter",
 ]

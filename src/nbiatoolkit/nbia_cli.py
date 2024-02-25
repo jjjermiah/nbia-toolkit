@@ -5,7 +5,6 @@ from .dicomsort import DICOMSorter
 import argparse
 import sys
 import threading
-from pyfiglet import Figlet
 import sys
 import subprocess
 
@@ -18,8 +17,14 @@ output: io.TextIOWrapper | None = None
 
 
 def version():
-    f = Figlet(font="slant")
-    print(f.renderText("NBIAToolkit"))
+    f = """
+        _   ______  _______  ______            ____   _ __
+       / | / / __ )/  _/   |/_  __/___  ____  / / /__(_) /_
+      /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
+     / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
+    /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
+    """
+    print(f)
     print("Version: {}".format(__version__))
 
     # print all available command line tools:
@@ -34,8 +39,8 @@ def version():
         "getStudies",
         "getSeries",
         "getNewSeries",
-        "downloadSingleSeries",
-        "dicomsort",
+        # "downloadSingleSeries",
+        # "dicomsort",
     ]
     for command in commands:
         result = subprocess.run([command, "-h"], capture_output=True, text=True)
@@ -501,7 +506,7 @@ def downloadSingleSeries_cli() -> None:
     args = p.parse_args()
 
     return getResults_cli(
-        func=NBIAClient(args.username, args.password)._downloadSingleSeries,
+        func=NBIAClient(args.username, args.password).downloadSeries,
         SeriesInstanceUID=args.seriesUID,
         downloadDir=args.downloadDir,
         filePattern=args.filePattern,
@@ -590,5 +595,5 @@ def DICOMSorter_cli():
     )
 
     sorter.sortDICOMFiles(
-        option="copy", overwrite=args.overwrite, nParallel=int(args.nParallel)
+        shutil_option="copy", overwrite=args.overwrite, n_parallel=int(args.nParallel)
     )
