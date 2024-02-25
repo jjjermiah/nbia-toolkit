@@ -34,6 +34,9 @@ def setup_logger(
         raise ValueError(f"Invalid log level: {log_level}")
 
     # Create logger
+    if logging.getLogger(name).hasHandlers():
+        logging.getLogger(name).handlers.clear()
+
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
