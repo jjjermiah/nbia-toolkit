@@ -2,9 +2,67 @@
 
 
 
+## v0.33.0 (2024-02-25)
+
+### Chore
+
+* chore: Update README: 0.32.1 ([`d9ef88b`](https://github.com/jjjermiah/nbia-toolkit/commit/d9ef88b0ba93f1bcc3d72575189f0beb795a5964))
+
+### Documentation
+
+* docs: Merge branch &#39;development&#39; into docs and add more collections documentation ([`edaaa11`](https://github.com/jjjermiah/nbia-toolkit/commit/edaaa11b5410f954b4d97709942e1f876854d970))
+
+* docs: add for collection methods ([`b4da201`](https://github.com/jjjermiah/nbia-toolkit/commit/b4da2019ffe8d0e1d6060bada400b558838aeb99))
+
+* docs: update ([`4a7e891`](https://github.com/jjjermiah/nbia-toolkit/commit/4a7e8919a46100fee7680b0c657508daab101851))
+
+* docs: add some more detail on initialize client ([`1c75711`](https://github.com/jjjermiah/nbia-toolkit/commit/1c75711b9a223146b6153f5dccb752942ad6e525))
+
+* docs: fix a few cells ([`214151e`](https://github.com/jjjermiah/nbia-toolkit/commit/214151e36ff5b0bc31c6a103e14a4b1e3b9bfb4a))
+
+### Feature
+
+* feat: Add logger configuration options ([`80785ac`](https://github.com/jjjermiah/nbia-toolkit/commit/80785ac2616ded5badeab2ce6e2910a899acecc8))
+
+### Fix
+
+* fix: bug causing duplicate instantiations ([`44d56b5`](https://github.com/jjjermiah/nbia-toolkit/commit/44d56b5c70f4633adf864079b559907aa959e93c))
+
+* fix: Update NBIA toolkit dependencies and fix base URL references. ([`f0f8824`](https://github.com/jjjermiah/nbia-toolkit/commit/f0f882458ad44200f4531a881b57f50afdc46dc3))
+
+* fix: return type in patientCount and Refactor response parsing in NBIAClient class ([`b119d93`](https://github.com/jjjermiah/nbia-toolkit/commit/b119d9321d9f20a46ab169fa8ac57348ed292c17))
+
+### Refactor
+
+* refactor: Merge remote-tracking branch &#39;origin&#39; into docs ([`5c3fa28`](https://github.com/jjjermiah/nbia-toolkit/commit/5c3fa28b9a75a2188bcc463c3901bccd8af78f00))
+
+### Unknown
+
+* Merge pull request #123 from jjjermiah/development
+
+docs: Start building better documentation.
+feat: Enhance logging functionality ([`5bb80c3`](https://github.com/jjjermiah/nbia-toolkit/commit/5bb80c3056fab8804ea789aa37702d9fd6741797))
+
+* Merge pull request #122 from jjjermiah/88-logger-functionality
+
+88 logger functionality ([`ac21134`](https://github.com/jjjermiah/nbia-toolkit/commit/ac21134b7e4d92c4e87e5f5c9ad5b26b5302ad6e))
+
+* Merge pull request #121 from jjjermiah/docs
+
+Docs ([`9b936fd`](https://github.com/jjjermiah/nbia-toolkit/commit/9b936fdc693c9b6a746af957dd0c76b2a37509c6))
+
+* Merge pull request #120 from jjjermiah/119-fix-patientcount-return
+
+fix: return type in patientCount and Refactor response parsing ([`f0a7e11`](https://github.com/jjjermiah/nbia-toolkit/commit/f0a7e11549d49a2446c733f5d1a852b3d156f762))
+
+* Merge branch &#39;development&#39; into docs ([`398b88c`](https://github.com/jjjermiah/nbia-toolkit/commit/398b88cb9cdbce339c10752cee5c0e93ff6d8720))
+
+
 ## v0.32.1 (2024-02-19)
 
 ### Chore
+
+* chore(sem-ver): 0.32.1 ([`7105864`](https://github.com/jjjermiah/nbia-toolkit/commit/71058648edf0b7c796233a73f878dbfebb884b46))
 
 * chore: Update README: 0.32.0 ([`f053d10`](https://github.com/jjjermiah/nbia-toolkit/commit/f053d10fcc2764b4a9c08d51c3139b271f28057c))
 
@@ -106,6 +164,8 @@ fix cli ([`b044404`](https://github.com/jjjermiah/nbia-toolkit/commit/b044404094
 
 * fix: Fix base URL assignment in test_break function ([`fab5dcc`](https://github.com/jjjermiah/nbia-toolkit/commit/fab5dccb83e4fd08597ba75d2f60bbc4e405de62))
 
+* fix: shortened default pattern ([`04892b4`](https://github.com/jjjermiah/nbia-toolkit/commit/04892b4f577ea82cf703b72c19a0544063563644))
+
 ### Style
 
 * style: clean some stuff ([`876edf5`](https://github.com/jjjermiah/nbia-toolkit/commit/876edf5750c669b23eb0726e1055e99db82768c4))
@@ -154,6 +214,10 @@ work on development ([`e71eac1`](https://github.com/jjjermiah/nbia-toolkit/commi
 
 * feature: Add pandas and pyarrow dependencies, and update utils/parsers.py and new return_type ([`10ffe0d`](https://github.com/jjjermiah/nbia-toolkit/commit/10ffe0d42226dd92491a54297bc6f1787759d26d))
 
+* Merge remote-tracking branch &#39;origin&#39; into docs ([`1c1f9b6`](https://github.com/jjjermiah/nbia-toolkit/commit/1c1f9b6c07264a8ccef0dd9cbba6e51ecf28f8f2))
+
+* Merge branch &#39;docs&#39; of https://github.com/jjjermiah/NBIA-toolkit into docs ([`e58fd7b`](https://github.com/jjjermiah/nbia-toolkit/commit/e58fd7b6bc3363d69410de6495abba5465a33068))
+
 
 ## v0.29.2 (2024-02-12)
 
@@ -176,6 +240,8 @@ docs: merge with main ([`86621f1`](https://github.com/jjjermiah/nbia-toolkit/com
 * Merge pull request #106 from jjjermiah/main
 
 merge_fix ([`57b64ae`](https://github.com/jjjermiah/nbia-toolkit/commit/57b64aef7e0eb3ced98bc0f29c06c760b5499aff))
+
+* Merge remote-tracking branch &#39;origin&#39; into docs ([`ee04533`](https://github.com/jjjermiah/nbia-toolkit/commit/ee04533b1916311414f7c0483692ae2c47c817b9))
 
 
 ## v0.29.1 (2024-02-12)
