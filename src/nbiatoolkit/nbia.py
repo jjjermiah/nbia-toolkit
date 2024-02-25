@@ -308,34 +308,52 @@ class NBIAClient:
         ), "The response from the API is empty. Please check the collection name."
 
         response[0] = {
-            "collectionName": response[0]["collectionName"],
-            "description": clean_html(response[0]["description"]),
-            "descriptionURI": response[0]["descriptionURI"],
-            "lastUpdated": convertMillis(
+            "Collection": response[0]["collectionName"],
+            "Description": clean_html(response[0]["description"]),
+            "DescriptionURI": response[0]["descriptionURI"],
+            "LastUpdated": convertMillis(
                 millis=int(response[0]["collectionDescTimestamp"])
             ),
         }
 
         return conv_response_list(response, returnType)
 
-    # returns a list of dictionaries with the collection name and patient count
     def getCollectionPatientCount(
         self,
         prefix: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """Retrieves the patient count for collections.
+
+        Args:
+            prefix (str, optional):
+                Prefix to filter the collections by. Defaults to "".
+            return_type (Optional[Union[ReturnType, str]], optional):
+                Return type of the response. Defaults to None which uses the default return type.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame:
+                List of collections and their patient counts or DataFrame containing the collections and their patient counts.
+        """
+
         returnType: ReturnType = self._get_return(return_type)
 
+        response: List[dict[Any, Any]]
         response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
 
-        if prefix:
-            response = [
-                response_dict
-                for response_dict in response
-                if response_dict["criteria"].lower().startswith(prefix.lower())
-            ]
+        parsed_response: List[dict[Any, Any]] = []
 
-        return conv_response_list(response, returnType)
+        for collection in response:
+            Collection = collection["criteria"]
+            if Collection.lower().startswith(prefix.lower()):
+                parsed_response.append(
+                    {
+                        "Collection": Collection,
+                        "PatientCount": collection["count"],
+                    }
+                )
+
+        return conv_response_list(parsed_response, returnType)
 
     def getModalityValues(
         self,
@@ -421,6 +439,7 @@ class NBIAClient:
 
         PARAMS = self.parsePARAMS(locals())
 
+        response: List[dict[Any, Any]]
         response = self.query_api(
             endpoint=NBIA_ENDPOINTS.GET_BODY_PART_PATIENT_COUNT, params=PARAMS
         )
@@ -438,6 +457,7 @@ class NBIAClient:
 
         PARAMS: dict = self.parsePARAMS(locals())
 
+        response: List[dict[Any, Any]]
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_STUDIES, params=PARAMS)
 
         return conv_response_list(response, returnType)
@@ -458,6 +478,7 @@ class NBIAClient:
 
         PARAMS: dict = self.parsePARAMS(locals())
 
+        response: List[dict[Any, Any]]
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_SERIES, params=PARAMS)
 
         return conv_response_list(response, returnType)
@@ -519,6 +540,7 @@ class NBIAClient:
         returnType: ReturnType = self._get_return(return_type)
         PARAMS = self.parsePARAMS({"SeriesUID": SeriesInstanceUID})
 
+        response: List[dict[Any, Any]]
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_DICOM_TAGS, params=PARAMS)
 
         return conv_response_list(response, returnType)

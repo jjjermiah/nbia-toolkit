@@ -21,14 +21,55 @@ Passing a `prefix` parameter will return a list of collections that match the pr
 
       .. exec_code::
 
-        from nbiatoolkit import NBIAClient
+         from nbiatoolkit import NBIAClient
 
-        client = NBIAClient(return_type = "dataframe")
-        collections_df = client.getCollections(prefix='TCGA')
+         client = NBIAClient(return_type = "dataframe")
+         collections_df = client.getCollections(prefix='TCGA')
 
-        print(f"The number of available collections is {len(collections_df)}")
+         print(f"The number of available collections is {len(collections_df)}")
 
-        print(collections_df)
+         print(collections_df)
 
 
 .. automethod:: nbiatoolkit.NBIAClient.getCollectionDescriptions
+
+.. tabs::
+
+   .. tab:: Python
+
+      .. exec_code::
+
+         # --- hide: start ---
+         from nbiatoolkit import NBIAClient
+         from pprint import pprint as print
+         # --- hide: stop ---
+
+         with NBIAClient() as client:
+            desc = client.getCollectionDescriptions(collectionName = "TCGA-BLCA")[0]
+
+         print(desc['Description'])
+         print(desc['DescriptionURI'])
+         print(desc['LastUpdated'])
+
+
+
+.. automethod:: nbiatoolkit.NBIAClient.getCollectionPatientCount
+
+
+.. tabs::
+
+   .. tab:: Python
+
+      .. exec_code::
+
+         # --- hide: start ---
+         from nbiatoolkit import NBIAClient
+         # --- hide: stop ---
+
+         with NBIAClient() as client:
+            counts_df = client.getCollectionPatientCount(
+               prefix = "TCGA",
+               return_type="dataframe"
+            )
+
+         print(counts_df)
