@@ -1,9 +1,8 @@
 # Installation
 
-> [!WARNING]
-> `nbiatoolkit` is currently under development and is not guaranteed to be stable.
-> Please refer to the [1.0.0 Stable Release Milestone](https://github.com/jjjermiah/nbia-toolkit/milestone/1) for the roadmap
-> to the first stable release.
+`nbiatoolkit` is currently under development and is not guaranteed to be stable.
+Please refer to the [1.0.0 Stable Release Milestone](https://github.com/jjjermiah/nbia-toolkit/milestone/1) for the roadmap
+to the first stable release.
 
 ## PyPi
 

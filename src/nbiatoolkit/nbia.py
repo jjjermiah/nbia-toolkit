@@ -36,6 +36,20 @@ def conv_response_list(
     response_json: List[dict[Any, Any]],
     return_type: ReturnType,
 ) -> List[dict[Any, Any]] | pd.DataFrame:
+    """
+    Convert a response JSON to a list or a pandas DataFrame based on the specified return type.
+
+    Args:
+        response_json (List[dict[Any, Any]]): The response JSON to be converted.
+        return_type (ReturnType): The desired return type (LIST or DATAFRAME).
+
+    Returns:
+        List[dict[Any, Any]] | pd.DataFrame: The converted response in the specified return type.
+
+    Raises:
+        AssertionError: If the response JSON is not a list.
+
+    """
     assert isinstance(response_json, list), "The response JSON must be a list"
 
     if return_type == ReturnType.LIST:
@@ -53,7 +67,21 @@ def downloadSingleSeries(
     base_url: NBIA_ENDPOINTS,
     log: Logger,
 ):
+    """
+    Downloads a single series from the NBIA server.
 
+    Args:
+        SeriesInstanceUID (str): The unique identifier of the series.
+        downloadDir (str): The directory where the series will be downloaded.
+        filePattern (str): The desired pattern for the downloaded files.
+        overwrite (bool): Flag indicating whether to overwrite existing files.
+        api_headers (dict[str, str]): The headers to be included in the API request.
+        base_url (NBIA_ENDPOINTS): The base URL of the NBIA server.
+        log (Logger): The logger object for logging messages.
+
+    Returns:
+        bool: True if the series is downloaded and sorted successfully, False otherwise.
+    """
     # create query_url
     query_url: str = base_url.value + NBIA_ENDPOINTS.DOWNLOAD_SERIES.value
 

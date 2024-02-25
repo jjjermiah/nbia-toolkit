@@ -1,6 +1,10 @@
-Initialize Client
+Setup
 -----------------
-By default, nbiatoolkit uses the guest account to access all collections in the API that are publicly available.
+
+Initialize Client
+^^^^^^^^^^^^^^^^^
+
+By default, the `NBIAClient` uses the guest account to access all collections in the API that are publicly available.
 If you have a user account that has been granted specific access to a collection, you can use your credentials to
 initialize the client when performing a query.
 
@@ -71,11 +75,36 @@ This is especially useful when using the client in a script with a predefined sc
 
       The context manager is not available in the command line interface.
 
+Return Types of Methods
+^^^^^^^^^^^^^^^^^^^^^^^
+By default, most functions that query the API for metadata will return a list of dictionaries.
+Available return types are made available through the `ReturnType` Enum which can be passed in as a parameter,
+or its string representation. The available options as of writing are "list", and "dataframe".
 
-Logging
-^^^^^^^
-The client can be initialized with a log level to control the verbosity of the logs. This is primarily intended for debugging and development purposes.
-The default log level is 'INFO' and the available log levels are 'DEBUG', 'INFO', 'WARNING', 'ERROR'.
+If you would like to return the data as a pandas DataFrame, you can pass the
+`return_type` argument to the respective class method:
+
+.. tabs::
+
+   .. tab:: Python
+
+      .. code-block:: python
+
+         from nbiatoolkit import NBIAClient
+         from nbiatoolkit.utils import ReturnType
+
+         client = NBIAClient()
+         client.getCollections(prefix='TCGA', return_type='dataframe')
+         # equivalent to
+         client.getCollections(prefix='TCGA', return_type=ReturnType.DATAFRAME)
+
+   .. tab:: Command Line
+
+      Return types are not yet available in the command line interface.
+      Feel free to open an issue on the GitHub repository if you would like to see this feature added.
+
+
+Alternatively, you can set the return type for all methods by passing the `return_type` argument to the NBIAClient class.
 
 .. tabs::
 
@@ -85,9 +114,32 @@ The default log level is 'INFO' and the available log levels are 'DEBUG', 'INFO'
 
          from nbiatoolkit import NBIAClient
 
-         client = NBIAClient(log_level='DEBUG)
+         client = NBIAClient(return_type='dataframe')
          client.getCollections(prefix='TCGA')
 
    .. tab:: Command Line
 
-         Logging is not yet available in the command line interface. Feel free to open an issue on the GitHub repository if you would like to see this feature added.
+      Return types are not yet available in the command line interface.
+      Feel free to open an issue on the GitHub repository if you would like to see this feature added.
+
+
+Logging
+^^^^^^^
+The client can be initialized with a log level to control the verbosity of the logs. This is primarily intended for debugging and development purposes.
+The default log level is 'INFO' and the available log levels are `DEBUG`, `INFO`, `WARNING`, `ERROR`.
+
+.. tabs::
+
+   .. tab:: Python
+
+      .. code-block:: python
+
+         from nbiatoolkit import NBIAClient
+
+         client = NBIAClient(log_level='DEBUG')
+         client.getCollections(prefix='TCGA')
+
+   .. tab:: Command Line
+
+         Logging is not yet available in the command line interface.
+         Feel free to open an issue on the GitHub repository if you would like to see this feature added.
