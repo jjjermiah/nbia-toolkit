@@ -37,20 +37,16 @@ def conv_response_list(
     response_json: List[dict[Any, Any]],
     return_type: ReturnType,
 ) -> List[dict[Any, Any]] | pd.DataFrame:
+    """_summary_
+
+    :param response_json: _description_
+    :type response_json: List[dict[Any, Any]]
+    :param return_type: _description_
+    :type return_type: ReturnType
+    :return: _description_
+    :rtype: List[dict[Any, Any]] | pd.DataFrame
     """
-    Convert a response JSON to a list or a pandas DataFrame based on the specified return type.
 
-    Args:
-        response_json (List[dict[Any, Any]]): The response JSON to be converted.
-        return_type (ReturnType): The desired return type (LIST or DATAFRAME).
-
-    Returns:
-        List[dict[Any, Any]] | pd.DataFrame: The converted response in the specified return type.
-
-    Raises:
-        AssertionError: If the response JSON is not a list.
-
-    """
     assert isinstance(response_json, list), "The response JSON must be a list"
 
     if return_type == ReturnType.LIST:
@@ -127,6 +123,13 @@ class NBIAClient:
     """A client for interacting with the NBIA API.
 
     The NBIAClient class provides a high-level interface for querying the NBIA API and downloading DICOM series.
+
+    Args:
+        username (str, optional): The username for authentication. Defaults to "nbia_guest".
+        password (str, optional): The password for authentication. Defaults to an empty string.
+        log_level (str, optional): The log level for the logger. Defaults to "INFO".
+        return_type (Union[ReturnType, str], optional): The return type for API responses.
+            Defaults to ReturnType.LIST
 
     Attributes:
         OAuth_client (OAuth2): The OAuth2 client used for authentication.
@@ -251,6 +254,17 @@ class NBIAClient:
     def getCollections(
         self, prefix: str = "", return_type: Optional[Union[ReturnType, str]] = None
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves the collections from the NBIA server.
+
+        Args:
+            prefix (str, optional): Prefix to filter the collections by. Defaults to "".
+            return_type (Optional[Union[ReturnType, str]], optional):
+                Return type of the response. Defaults to None which uses the default return type.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: List of collections or DataFrame containing the collections.
+        """
         returnType: ReturnType = self._get_return(return_type)
 
         response: List[dict[Any, Any]]
@@ -268,6 +282,19 @@ class NBIAClient:
     def getCollectionDescriptions(
         self, collectionName: str, return_type: Optional[Union[ReturnType, str]] = None
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves the description of a collection from the NBIA server.
+
+        Args:
+            collectionName (str): The name of the collection.
+            return_type (Optional[Union[ReturnType, str]], optional):
+                Return type of the response. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame:
+                List of collection descriptions or DataFrame containing the collection descriptions.
+        """
+
         returnType: ReturnType = self._get_return(return_type)
         PARAMS: dict = self.parsePARAMS(params=locals())
 
@@ -288,6 +315,25 @@ class NBIAClient:
                 millis=int(response[0]["collectionDescTimestamp"])
             ),
         }
+
+        return conv_response_list(response, returnType)
+
+    # returns a list of dictionaries with the collection name and patient count
+    def getCollectionPatientCount(
+        self,
+        prefix: str = "",
+        return_type: Optional[Union[ReturnType, str]] = None,
+    ) -> List[dict[Any, Any]] | pd.DataFrame:
+        returnType: ReturnType = self._get_return(return_type)
+
+        response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
+
+        if prefix:
+            response = [
+                response_dict
+                for response_dict in response
+                if response_dict["criteria"].lower().startswith(prefix.lower())
+            ]
 
         return conv_response_list(response, returnType)
 
@@ -362,25 +408,6 @@ class NBIAClient:
             endpoint=NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY,
             params=PARAMS,
         )
-
-        return conv_response_list(response, returnType)
-
-    # returns a list of dictionaries with the collection name and patient count
-    def getCollectionPatientCount(
-        self,
-        prefix: str = "",
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        returnType: ReturnType = self._get_return(return_type)
-
-        response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
-
-        if prefix:
-            response = [
-                response_dict
-                for response_dict in response
-                if response_dict["criteria"].lower().startswith(prefix.lower())
-            ]
 
         return conv_response_list(response, returnType)
 
