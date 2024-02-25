@@ -7,10 +7,12 @@
 
 markdowns/NBIA.md
 markdowns/Installation.md
-InitializeClient.rst
-Tutorial.ipynb
+tutorial_files/1_InitializeClient.rst
+tutorial_files/2_ExploreCollections.rst
 markdowns/CHANGELOG.md
 markdowns/CONTRIBUTING.md
 markdowns/CONDUCT.md
 autoapi/index
 ```
+
+<!-- Tutorial.ipynb -->

@@ -8,6 +8,8 @@ By default, the `NBIAClient` uses the guest account to access all collections in
 If you have a user account that has been granted specific access to a collection, you can use your credentials to
 initialize the client when performing a query.
 
+
+
 .. tabs::
 
    .. tab:: Python
@@ -19,12 +21,14 @@ initialize the client when performing a query.
 
          .. tab:: Guest Account
 
-            .. code-block:: python
+            .. exec_code::
 
                from nbiatoolkit import NBIAClient
 
                client = NBIAClient()
-               client.getCollections(prefix='TCGA')
+               collections = client.getCollections(prefix='TCGA')
+
+               print(collections[0:5])
 
          .. tab:: Your Account
 
@@ -33,7 +37,8 @@ initialize the client when performing a query.
                from nbiatoolkit import NBIAClient
 
                client = NBIAClient(username = "<USERNAME>", password = "<PASSWORD>")
-               client.getCollections(prefix='TCGA')
+               collections = client.getCollections(prefix='TCGA')
+
 
    .. tab:: Command Line
 
@@ -64,12 +69,14 @@ This is especially useful when using the client in a script with a predefined sc
 
    .. tab:: Python
 
-      .. code-block:: python
+      .. exec_code::
 
          from nbiatoolkit import NBIAClient
 
          with NBIAClient() as client:
-            client.getCollections(prefix='TCGA')
+            collections = client.getCollections(prefix='TCGA')
+
+         print(collections[0:5])
 
    .. tab:: Command Line
 
@@ -88,15 +95,21 @@ If you would like to return the data as a pandas DataFrame, you can pass the
 
    .. tab:: Python
 
-      .. code-block:: python
+      .. exec_code::
 
          from nbiatoolkit import NBIAClient
          from nbiatoolkit.utils import ReturnType
 
          client = NBIAClient()
-         client.getCollections(prefix='TCGA', return_type='dataframe')
+         collections_df = client.getCollections(
+            prefix='TCGA', return_type='dataframe'
+         )
          # equivalent to
-         client.getCollections(prefix='TCGA', return_type=ReturnType.DATAFRAME)
+         collections_df = client.getCollections(
+            prefix='TCGA', return_type=ReturnType.DATAFRAME
+         )
+
+         print(collections_df.head())
 
    .. tab:: Command Line
 
@@ -110,12 +123,14 @@ Alternatively, you can set the return type for all methods by passing the `retur
 
    .. tab:: Python
 
-      .. code-block:: python
+      .. exec_code::
 
          from nbiatoolkit import NBIAClient
 
          client = NBIAClient(return_type='dataframe')
-         client.getCollections(prefix='TCGA')
+         collections_df = client.getCollections(prefix='TCGA')
+
+         print(collections_df.head())
 
    .. tab:: Command Line
 

@@ -4,6 +4,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import html
 import os
 import sys
 
@@ -22,9 +23,11 @@ author = "Jermiah Joseph"
 extensions = [
     "myst_nb",
     "autoapi.extension",
+    "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_tabs.tabs",
+    "sphinx_exec_code",
 ]
 autoapi_dirs = ["../src/nbiatoolkit"]
 
@@ -33,11 +36,26 @@ autoapi_dirs = ["../src/nbiatoolkit"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "_html_notebooks"]
 
+
+exec_code_working_dir = ".."
+exec_code_source_folders = ["../src"]
+
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
+# html_theme = "piccolo_theme"
 html_theme = "sphinx_rtd_theme"
 
+# # user starts in dark mode
+# default_dark_mode = True
+
 html_static_path = ["_static"]
+
+# html_css_files = [
+#     "css/custom.css",
+# ]
+# def setup(app):
+#     app.add_css_file("css/custom.css")
