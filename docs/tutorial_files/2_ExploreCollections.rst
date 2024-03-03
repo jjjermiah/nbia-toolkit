@@ -116,7 +116,7 @@ The :code:`Counts` parameter can be set to :code:`True` to return the number of 
 
                with NBIAClient(return_type="dataframe") as client:
                   modalities = client.getModalityValues(
-                     collection = "TCGA-BLCA",
+                     Collection = "TCGA-BLCA",
                   )
 
                print(modalities)
@@ -131,8 +131,8 @@ The :code:`Counts` parameter can be set to :code:`True` to return the number of 
 
                with NBIAClient(return_type="dataframe") as client:
                   modalities = client.getModalityValues(
-                     collection = "TCGA-BLCA",
-                     counts = True
+                     Collection = "TCGA-BLCA",
+                     Counts = True
                   )
 
                print(modalities)
