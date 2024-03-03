@@ -68,7 +68,8 @@ def _initialize_parser(description: str) -> argparse.ArgumentParser:
         "--username",
         action="store",
         type=str,
-        default="nbia_guest",  # help="Username for the NBIA API (default: nbia_guest)"
+        # help="Username for the NBIA API (default: nbia_guest)"
+        default="nbia_guest",
     )
 
     credentials.add_argument(
@@ -444,7 +445,8 @@ def getNewSeries_cli() -> None:
     global query
     query = f"newSeries"
     p = _initialize_parser(
-        description=f"NBIAToolkit: {query}. Get new series from a collection since a given date."
+        description=f"NBIAToolkit: {query}. \
+            Get new series from a collection since a given date."
     )
 
     p.add_argument(
