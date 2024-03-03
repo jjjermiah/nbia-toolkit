@@ -6,6 +6,7 @@
 # from typing import Optional
 
 # from tqdm import tqdm
+from tqdm import tqdm
 import pydicom
 from pydicom.errors import InvalidDicomError
 import os
@@ -112,9 +113,6 @@ def sortSingleDICOMFile(
         raise ValueError(f"Invalid option: {shutil_option}")
 
     return True
-
-
-from tqdm import tqdm
 
 
 class DICOMSorter:
