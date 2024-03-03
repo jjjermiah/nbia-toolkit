@@ -4,15 +4,6 @@ from datetime import datetime, timezone
 from typing import Union, Any, Dict, List, Literal, Optional, Tuple
 import pandas as pd
 import requests
-from enum import Enum
-
-
-# so that users can decide between a List or a pd.DataFrame
-class ReturnType(Enum):
-    LIST = "list"
-    DATAFRAME = "dataframe"
-
-    # change .value so that DATAFRAME returns "pd.DataFrame"
 
 
 def clean_html(html_string: str) -> str:

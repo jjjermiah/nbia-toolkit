@@ -1,6 +1,7 @@
 from calendar import c
 from inspect import getmodule
 from re import I
+import re
 import zipfile
 from tempfile import TemporaryDirectory
 from .dicomsort import DICOMSorter
@@ -18,6 +19,7 @@ from .utils import (
     convertDateFormat,
     parse_response,
     ReturnType,
+    conv_response_list,
 )
 import pandas as pd
 import requests
@@ -30,29 +32,6 @@ from datetime import datetime
 
 # set __version__ variable
 __version__ = "0.33.0"
-
-
-# function that takes a list of dictionaries and returns either a list or a dataframe
-def conv_response_list(
-    response_json: List[dict[Any, Any]],
-    return_type: ReturnType,
-) -> List[dict[Any, Any]] | pd.DataFrame:
-    """_summary_
-
-    :param response_json: _description_
-    :type response_json: List[dict[Any, Any]]
-    :param return_type: _description_
-    :type return_type: ReturnType
-    :return: _description_
-    :rtype: List[dict[Any, Any]] | pd.DataFrame
-    """
-
-    assert isinstance(response_json, list), "The response JSON must be a list"
-
-    if return_type == ReturnType.LIST:
-        return response_json
-    elif return_type == ReturnType.DATAFRAME:
-        return pd.DataFrame(data=response_json)
 
 
 def downloadSingleSeries(
@@ -366,16 +345,42 @@ class NBIAClient:
         self,
         Collection: str = "",
         BodyPartExamined: str = "",
+        Counts: bool = False,
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """Retrieves possible modality values from the NBIA database.
+
+        Args:
+            Collection (str, optional): Collection name to filter by. Defaults to "".
+            BodyPartExamined (str, optional): BodyPart name to filter by. Defaults to "".
+            Counts (bool, optional): Flag to indicate whether to return patient counts. Defaults to False.
+            return_type (Optional[Union[ReturnType, str]], optional):
+                Return type of the response. Defaults to None which uses the default return type.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame:
+                List of modality values or DataFrame containing the modality values.
+        """
+
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(params=locals())
 
-        response: List[dict[Any, Any]]
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_MODALITY_VALUES, params=PARAMS
+        endpoint = (
+            NBIA_ENDPOINTS.GET_MODALITY_PATIENT_COUNT
+            if Counts
+            else NBIA_ENDPOINTS.GET_MODALITY_VALUES
         )
+
+        response: List[dict[Any, Any]]
+        response = self.query_api(endpoint=endpoint, params=PARAMS)
+
+        if Counts:
+            for modality in response:
+                modality["Modality"] = modality["criteria"]
+                modality["PatientCount"] = modality["count"]
+                del modality["criteria"]
+                del modality["count"]
 
         return conv_response_list(response, returnType)
 
