@@ -263,7 +263,7 @@ jobs:
   Update-README:
     needs: Continuous-Deployment
     runs-on: ubuntu-latest
-    if: steps.release.outputs.released == 'true'
+    if: jobs.Continuous-Deployment.outputs.released == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
