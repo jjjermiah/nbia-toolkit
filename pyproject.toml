@@ -52,7 +52,7 @@ version_variables = [
 version_toml = [
     "pyproject.toml:tool.poetry.version",
 ]
-branch = "main"
+branch = ["main", "development"]
 dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
