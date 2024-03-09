@@ -4,7 +4,7 @@ name: CI-CD
 on:
   push:
     # push to any branch *
-    branches: [ "*"]
+    branches: [ "*" ]
   pull_request:
     branches: [ main , development]
 
@@ -263,7 +263,7 @@ jobs:
   Update-README:
     needs: Continuous-Deployment
     runs-on: ubuntu-latest
-    if: steps.release.outputs.released == 'true'  # only run if the branch is main and a new release has been made
+    if: steps.release.outputs.released == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
