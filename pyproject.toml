@@ -52,7 +52,6 @@ version_variables = [
 version_toml = [
     "pyproject.toml:tool.poetry.version",
 ]
-branch = ["main", "development"]
 dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
@@ -63,6 +62,9 @@ patch_without_tag = true
 [tool.semantic_release.changelog]
 changelog_file = "docs/markdowns/CHANGELOG.md"
 exclude_commit_types = ["docs", "style", "refactor", "test", "chore"]
+
+[tool.semantic_release.branches.main]
+match = "(main|master|development)"
 
 
 [tool.semantic_release.commit_parser_options]
