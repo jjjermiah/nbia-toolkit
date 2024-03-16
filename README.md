@@ -93,10 +93,10 @@ For quick access to the NBIA, the toolkit also provides a command line interface
       /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
      / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
     /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
+    
+Version: 1.0.1
 
-Version: 1.0.0
-
-Available CLI tools:
+Available CLI tools: 
 
 getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
                [-o OUTPUTFILE] [--version]
