@@ -105,6 +105,11 @@ jobs:
     # Set up operating system
     runs-on: ubuntu-latest
 
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+
     # Define job steps
     steps:
     - name: Set up Python 3.12
@@ -243,7 +248,7 @@ jobs:
         run: |
           # test image with latest tag
           docker run --rm \
-            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ steps.release.outputs.tag }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ needs.Continuous-Deployment.outputs.tag }} \
             NBIAToolkit
 
 
