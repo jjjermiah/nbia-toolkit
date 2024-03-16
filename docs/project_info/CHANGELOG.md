@@ -2,6 +2,37 @@
 
 
 
+## v0.35.0 (2024-03-16)
+
+### Build
+
+* build: update main branch name in semver ([`4e96310`](https://github.com/jjjermiah/nbia-toolkit/commit/4e963106d99b725b7e04be5999b6ade09ba3b0cd))
+
+### Documentation
+
+* docs: updateReadme ([`3b28958`](https://github.com/jjjermiah/nbia-toolkit/commit/3b28958f7501b14621ba480d05d1bb8d014b1def))
+
+* docs: Add download API documentation ([`83a4ed3`](https://github.com/jjjermiah/nbia-toolkit/commit/83a4ed36c6215d8ef08d5b5c327e31bb496d25a1))
+
+### Feature
+
+* feat: progressBar option ([`2c04044`](https://github.com/jjjermiah/nbia-toolkit/commit/2c040440a7b5130c3dd1e2b43e875adfd7ba1bc9))
+
+### Fix
+
+* fix: update parameters ([`cd62728`](https://github.com/jjjermiah/nbia-toolkit/commit/cd6272834bdd7a3e45aad6377366605626687e87))
+
+### Unknown
+
+* Merge pull request #125 from jjjermiah/development
+
+Development ([`07edf93`](https://github.com/jjjermiah/nbia-toolkit/commit/07edf9387d949e993d66e008ba0a9d5d12881145))
+
+* fixes Fix &#39;unresolved comment &amp;#39;# TODO:: describe error 204&amp;#39;&#39; issue in src\nbiatoolkit\utils\parsers.py #112 ([`2740cb9`](https://github.com/jjjermiah/nbia-toolkit/commit/2740cb946471530773e8136f4d972c120d05120c))
+
+* Merge branch &#39;development&#39; of https://github.com/jjjermiah/NBIA-toolkit into development ([`875fd16`](https://github.com/jjjermiah/nbia-toolkit/commit/875fd1620c34f3aec00d6ceadf845c4179f91f19))
+
+
 ## v0.34.0 (2024-03-16)
 
 ### Build
@@ -9,6 +40,8 @@
 * build: try using release output version ([`2d7508a`](https://github.com/jjjermiah/nbia-toolkit/commit/2d7508a1fd1eb910460b62ffa992feda4792576f))
 
 ### Chore
+
+* chore(sem-ver): 0.34.0 ([`bd0ebcc`](https://github.com/jjjermiah/nbia-toolkit/commit/bd0ebccf3a30b5003e55b3e25ca2707fd54ee200))
 
 * chore: Update README: 0.33.0 ([`24b90c3`](https://github.com/jjjermiah/nbia-toolkit/commit/24b90c3dcb3ed8f11434414acd045dce5739fc3b))
 
