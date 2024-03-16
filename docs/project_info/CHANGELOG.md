@@ -1,10 +1,55 @@
-# Changelog
+# CHANGELOG
 
+
+
+## v0.34.0 (2024-03-16)
+
+### Build
+
+* build: try using release output version ([`2d7508a`](https://github.com/jjjermiah/nbia-toolkit/commit/2d7508a1fd1eb910460b62ffa992feda4792576f))
+
+### Chore
+
+* chore: Update README: 0.33.0 ([`24b90c3`](https://github.com/jjjermiah/nbia-toolkit/commit/24b90c3dcb3ed8f11434414acd045dce5739fc3b))
+
+* chore: Update README: 0.33.0 ([`adcfde5`](https://github.com/jjjermiah/nbia-toolkit/commit/adcfde53faefee8fb1938d42848112fb2f2f4579))
+
+### Documentation
+
+* docs: improve documentation structure ([`1404c10`](https://github.com/jjjermiah/nbia-toolkit/commit/1404c1086e45e0adcc89acacb15ab0568ce2d406))
+
+### Feature
+
+* feat: add counts to getModality and update docs for modality methods ([`54874a3`](https://github.com/jjjermiah/nbia-toolkit/commit/54874a316956245ecd4971e33bc043d9b00b23f7))
+
+### Fix
+
+* fix: update changelog path ([`768124a`](https://github.com/jjjermiah/nbia-toolkit/commit/768124a9e06681e2de3dbb96d07ca2b654a78b03))
+
+* fix: semver temp ([`5ff0550`](https://github.com/jjjermiah/nbia-toolkit/commit/5ff0550d848159cdbe7553940f5400ad29cca408))
+
+* fix: semver temp ([`d378670`](https://github.com/jjjermiah/nbia-toolkit/commit/d378670f999b1e62056453392a05ae838a8449bb))
+
+* fix: remove if context ([`6221885`](https://github.com/jjjermiah/nbia-toolkit/commit/6221885cbad716b0153667ea9186ef71bc3e4e02))
+
+* fix: context variable ([`e7b630e`](https://github.com/jjjermiah/nbia-toolkit/commit/e7b630e37a66aac9413a58bf08623e692e933a42))
+
+* fix: branch name formatting in CI/CD workflow ([`e38de75`](https://github.com/jjjermiah/nbia-toolkit/commit/e38de75a5c61c50efe409e7570f59ee2381df490))
+
+### Refactor
+
+* refactor: Fix formatting issues and import statements ([`b5f5cb4`](https://github.com/jjjermiah/nbia-toolkit/commit/b5f5cb4526ae5ae04b3f25f3de8cf50486812b00))
+
+* refactor: Refactor code formatting ([`f8b8ab8`](https://github.com/jjjermiah/nbia-toolkit/commit/f8b8ab82495d82748968f0f469494503499a6c3a))
+
+* refactor: Add conv_response_list utility function ([`1aa0ad1`](https://github.com/jjjermiah/nbia-toolkit/commit/1aa0ad104ead472bd23f28c8c45280d4462dbac3))
 
 
 ## v0.33.0 (2024-02-25)
 
 ### Chore
+
+* chore(sem-ver): 0.33.0 ([`d0304cf`](https://github.com/jjjermiah/nbia-toolkit/commit/d0304cf7620f0dcce2d0749050fc3fdafd7433ce))
 
 * chore: Update README: 0.32.1 ([`d9ef88b`](https://github.com/jjjermiah/nbia-toolkit/commit/d9ef88b0ba93f1bcc3d72575189f0beb795a5964))
 
