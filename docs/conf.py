@@ -15,6 +15,11 @@ project = "nbiatoolkit"
 copyright = "2023, Jermiah Joseph"
 author = "Jermiah Joseph"
 
+import nbiatoolkit
+
+# The full version, including alpha/beta/rc tags
+release: str = nbiatoolkit.__version__
+
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -28,6 +33,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx_tabs.tabs",
     "sphinx_exec_code",
+    "sphinx.ext.autosectionlabel",
 ]
 autoapi_dirs = ["../src/nbiatoolkit"]
 
