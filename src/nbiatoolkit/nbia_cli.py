@@ -193,22 +193,9 @@ def cli_wrapper(func, **kwargs) -> List[str] | None:
         The result of the function call.
 
     """
-    global done_event
-    global query
-
-    # # Start the loading animation in a separate thread
-    # loading_thread = threading.Thread(target=loading_animation)
-
-    # # daemon threads are killed when the main thread exits
-    # loading_thread.daemon = True
-    # loading_thread.start()
 
     # Perform the database query in the main thread
     result = func(**kwargs)
-
-    # # Stop the loading animation
-    # done_event.set()
-    # loading_thread.join()
 
     return result
 
