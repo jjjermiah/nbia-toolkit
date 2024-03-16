@@ -24,6 +24,13 @@
     querying_api/ExploringStudies.rst
     querying_api/ExploringSeries.rst
 
+.. toctree::
+    :caption: Downloading API
+    :name: downloading-api
+    :hidden:
+    :maxdepth: 2
+
+    download_api/DownloadSeries.rst
 
 .. toctree::
     :caption: Project Info
