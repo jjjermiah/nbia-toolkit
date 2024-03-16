@@ -37,7 +37,7 @@
   - ***Validate doownloads with MD5 checksums*** for downloaded images
   - **Auto-sort** DICOM files using a user-defined pattern of DICOM tags with specialized ***DICOMSorter class***
 
-
+![SequenceDiagram](https://www.mermaidchart.com/raw/ce7f489f-bf58-4827-aedb-e379ed7bffd3?theme=dark&version=v0.1&format=svg)
 
 ## Installation
 
@@ -85,10 +85,10 @@ For quick access to the NBIA, the toolkit also provides a command line interface
       /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
      / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
     /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
-    
+
 Version: 0.33.0
 
-Available CLI tools: 
+Available CLI tools:
 
 getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
                [-o OUTPUTFILE] [--version]

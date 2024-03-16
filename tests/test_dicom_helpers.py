@@ -83,9 +83,9 @@ def test_sanitizeFileName_empty_string():
 
 def test_sanitizeFileName_assertions():
     with pytest.raises(AssertionError):
-        sanitizeFileName(None)
+        sanitizeFileName(None)  # type: ignore
     with pytest.raises(AssertionError):
-        sanitizeFileName(123)
+        sanitizeFileName(123)  # type: ignore
 
 
 ###############################################################################
@@ -113,10 +113,10 @@ def test__truncateUID_with_lastDigits_greater_than_length_of_UID(uid):
 def test__truncateUID_with_invalid_input_types(uid):
     lastDigits = "5"
     with pytest.raises(AssertionError):
-        _truncateUID(uid, lastDigits)
+        _truncateUID(uid, lastDigits)  # type: ignore
 
 
 def test__truncateUID_with_None_input(uid):
     lastDigits = None
     with pytest.raises(AssertionError):
-        _truncateUID(uid, lastDigits)
+        _truncateUID(uid, lastDigits)  # type: ignore

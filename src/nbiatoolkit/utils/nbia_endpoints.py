@@ -28,6 +28,7 @@ class NBIA_ENDPOINTS(Enum):
     GET_COLLECTION_DESCRIPTIONS = "getCollectionDescriptions"
 
     GET_MODALITY_VALUES = "v2/getModalityValues"
+    GET_MODALITY_PATIENT_COUNT = "getModalityValuesAndCounts"
 
     GET_PATIENTS = "v2/getPatient"
     GET_NEW_PATIENTS_IN_COLLECTION = "v2/NewPatientsInCollection"
@@ -42,15 +43,16 @@ class NBIA_ENDPOINTS(Enum):
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
     GET_DICOM_TAGS = "getDicomTags"
 
-    # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesMetaData"
-    # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getSeriesSize"
-
-    # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/v2/getUpdatedSeries"
-
-    # curl -H "Authorization:Bearer YOUR_ACCESS_TOKEN" -k "https://services.cancerimagingarchive.net/nbia-api/services/getSeriesMetadata2" -d "list=1.3.6.1.4.1.14519.5.2.1.6834.5010.322628904903035357840500590726"
-    # Helper functions
     def __str__(self):
         return self.value
 
     def _format(self):
         return self.value.split("/")[-1]
+
+
+# so that users can decide between a List or a pd.DataFrame
+class ReturnType(Enum):
+    LIST = "list"
+    DATAFRAME = "dataframe"
+
+    # change .value so that DATAFRAME returns "pd.DataFrame"

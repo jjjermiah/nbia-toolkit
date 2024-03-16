@@ -1,7 +1,3 @@
-API Query Methods
-----------------------
-
-
 Collection Methods
 ^^^^^^^^^^^^^^^^^^
 The simplest way to get a list of collections is to use the
@@ -21,7 +17,10 @@ Passing a `prefix` parameter will return a list of collections that match the pr
 
       .. exec_code::
 
+         # --- hide: start ---
          from nbiatoolkit import NBIAClient
+         from pprint import pprint as print
+         # --- hide: stop ---
 
          client = NBIAClient(return_type = "dataframe")
          collections_df = client.getCollections(prefix='TCGA')

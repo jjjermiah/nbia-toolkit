@@ -3,6 +3,7 @@ from .nbia import NBIAClient, __version__
 from .dicomsort import DICOMSorter
 
 import argparse
+from argparse import ArgumentParser
 import sys
 import threading
 import sys
@@ -68,7 +69,8 @@ def _initialize_parser(description: str) -> argparse.ArgumentParser:
         "--username",
         action="store",
         type=str,
-        default="nbia_guest",  # help="Username for the NBIA API (default: nbia_guest)"
+        # help="Username for the NBIA API (default: nbia_guest)"
+        default="nbia_guest",
     )
 
     credentials.add_argument(
@@ -214,7 +216,7 @@ def cli_wrapper(func, **kwargs) -> List[str] | None:
 def getPatients_cli() -> None:
     global query
     query = "patients"
-    p = _initialize_parser(description=f"NBIAToolkit: {query} ")
+    p: ArgumentParser = _initialize_parser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
         "-c",
@@ -235,7 +237,7 @@ def getPatients_cli() -> None:
 def getCollections_cli() -> None:
     global query
     query = "collections"
-    p = _initialize_parser(description=f"NBIAToolkit: {query} ")
+    p: ArgumentParser = _initialize_parser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
         "-p",
@@ -313,7 +315,7 @@ def getBodyPartCounts_cli() -> None:
 def getStudies_cli() -> None:
     global query
     query = f"getStudies"
-    p = _initialize_parser(
+    p: ArgumentParser = _initialize_parser(
         description=f"NBIAToolkit: {query}. Get studies from a collection."
     )
 
@@ -356,7 +358,7 @@ def getSeries_cli() -> None:
     global output
     query = f"series"
 
-    p = _initialize_parser(description=f"NBIAToolkit: {query} ")
+    p: ArgumentParser = _initialize_parser(description=f"NBIAToolkit: {query} ")
 
     p.add_argument(
         "-c",
@@ -443,8 +445,9 @@ def getSeries_cli() -> None:
 def getNewSeries_cli() -> None:
     global query
     query = f"newSeries"
-    p = _initialize_parser(
-        description=f"NBIAToolkit: {query}. Get new series from a collection since a given date."
+    p: ArgumentParser = _initialize_parser(
+        description=f"NBIAToolkit: {query}. \
+            Get new series from a collection since a given date."
     )
 
     p.add_argument(
@@ -468,7 +471,9 @@ def downloadSingleSeries_cli() -> None:
     query = f"series"
     # use the NBIAClient._downloadSingleSeries function to download a single series
 
-    p = _initialize_parser(description="NBIAToolkit: download a single series")
+    p: ArgumentParser = _initialize_parser(
+        description="NBIAToolkit: download a single series"
+    )
 
     p.add_argument(
         "--seriesUID",
@@ -522,7 +527,7 @@ def downloadSingleSeries_cli() -> None:
 
 
 def DICOMSorter_cli():
-    parser = _initialize_parser(
+    parser: ArgumentParser = _initialize_parser(
         description="NBIAToolkit: Sort DICOM files into destination directory according to target pattern."
     )
 

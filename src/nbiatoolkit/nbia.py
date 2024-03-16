@@ -1,6 +1,7 @@
 from calendar import c
 from inspect import getmodule
 from re import I
+import re
 import zipfile
 from tempfile import TemporaryDirectory
 from .dicomsort import DICOMSorter
@@ -18,6 +19,7 @@ from .utils import (
     convertDateFormat,
     parse_response,
     ReturnType,
+    conv_response_list,
 )
 import pandas as pd
 import requests
@@ -29,30 +31,7 @@ import zipfile
 from datetime import datetime
 
 # set __version__ variable
-__version__ = "0.33.0"
-
-
-# function that takes a list of dictionaries and returns either a list or a dataframe
-def conv_response_list(
-    response_json: List[dict[Any, Any]],
-    return_type: ReturnType,
-) -> List[dict[Any, Any]] | pd.DataFrame:
-    """_summary_
-
-    :param response_json: _description_
-    :type response_json: List[dict[Any, Any]]
-    :param return_type: _description_
-    :type return_type: ReturnType
-    :return: _description_
-    :rtype: List[dict[Any, Any]] | pd.DataFrame
-    """
-
-    assert isinstance(response_json, list), "The response JSON must be a list"
-
-    if return_type == ReturnType.LIST:
-        return response_json
-    elif return_type == ReturnType.DATAFRAME:
-        return pd.DataFrame(data=response_json)
+__version__ = "0.34.0"
 
 
 def downloadSingleSeries(
@@ -63,6 +42,7 @@ def downloadSingleSeries(
     api_headers: dict[str, str],
     base_url: NBIA_BASE_URLS,
     log: Logger,
+    Progressbar: bool = False,
 ):
     """
     Downloads a single series from the NBIA server.
@@ -75,6 +55,7 @@ def downloadSingleSeries(
         api_headers (dict[str, str]): The headers to be included in the API request.
         base_url (NBIA_ENDPOINTS): The base URL of the NBIA server.
         log (Logger): The logger object for logging messages.
+        Progressbar (bool, optional): Flag indicating whether to display a progress bar. Defaults to False.
 
     Returns:
         bool: True if the series is downloaded and sorted successfully, False otherwise.
@@ -110,7 +91,10 @@ def downloadSingleSeries(
         )
         # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
         if not sorter.sortDICOMFiles(
-            shutil_option="move", overwrite=overwrite, progressbar=False, n_parallel=1
+            shutil_option="move",
+            overwrite=overwrite,
+            progressbar=Progressbar,
+            n_parallel=1,
         ):
             log.error(
                 f"Error sorting DICOM files for series {SeriesInstanceUID}\n \
@@ -366,16 +350,42 @@ class NBIAClient:
         self,
         Collection: str = "",
         BodyPartExamined: str = "",
+        Counts: bool = False,
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """Retrieves possible modality values from the NBIA database.
+
+        Args:
+            Collection (str, optional): Collection name to filter by. Defaults to "".
+            BodyPartExamined (str, optional): BodyPart name to filter by. Defaults to "".
+            Counts (bool, optional): Flag to indicate whether to return patient counts. Defaults to False.
+            return_type (Optional[Union[ReturnType, str]], optional):
+                Return type of the response. Defaults to None which uses the default return type.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame:
+                List of modality values or DataFrame containing the modality values.
+        """
+
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(params=locals())
 
-        response: List[dict[Any, Any]]
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_MODALITY_VALUES, params=PARAMS
+        endpoint = (
+            NBIA_ENDPOINTS.GET_MODALITY_PATIENT_COUNT
+            if Counts
+            else NBIA_ENDPOINTS.GET_MODALITY_VALUES
         )
+
+        response: List[dict[Any, Any]]
+        response = self.query_api(endpoint=endpoint, params=PARAMS)
+
+        if Counts:
+            for modality in response:
+                modality["Modality"] = modality["criteria"]
+                modality["PatientCount"] = modality["count"]
+                del modality["criteria"]
+                del modality["count"]
 
         return conv_response_list(response, returnType)
 
@@ -384,6 +394,17 @@ class NBIAClient:
         Collection: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves a list of patients from the NBIA API.
+
+        Args:
+            Collection (str, optional): The name of the collection to filter the patients. Defaults to "".
+            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: A list of patient dictionaries or a pandas DataFrame, depending on the return type.
+
+        """
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(locals())
@@ -399,6 +420,21 @@ class NBIAClient:
         Date: Union[str, datetime],
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves new patients from the NBIA API based on the specified collection and date.
+
+        Args:
+            Collection (str): The name of the collection to retrieve new patients from.
+            Date (Union[str, datetime]): The date to filter the new patients. Can be a string in the format "YYYY/MM/DD" or a datetime object.
+            return_type (Optional[Union[ReturnType, str]]): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: A list of dictionaries or a pandas DataFrame containing the new patients.
+
+        Raises:
+            AssertionError: If the Date argument is None.
+
+        """
         returnType: ReturnType = self._get_return(return_type)
 
         assert Date is not None
@@ -421,6 +457,20 @@ class NBIAClient:
         Modality: str,
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves patients by collection and modality.
+
+        Args:
+            Collection (str): The collection name.
+            Modality (str): The modality name.
+            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: The list of patients or a pandas DataFrame, depending on the return type.
+
+        Raises:
+            AssertionError: If Collection or Modality is None.
+        """
         assert Collection is not None
         assert Modality is not None
 
@@ -460,6 +510,18 @@ class NBIAClient:
         StudyInstanceUID: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves studies from the NBIA API based on the specified parameters.
+
+        Args:
+            Collection (str): The name of the collection to retrieve studies from.
+            PatientID (str, optional): The patient ID to filter the studies by. Defaults to "".
+            StudyInstanceUID (str, optional): The study instance UID to filter the studies by. Defaults to "".
+            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: A list of dictionaries or a pandas DataFrame containing the retrieved studies.
+        """
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(locals())
@@ -559,6 +621,7 @@ class NBIAClient:
         filePattern: str = "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
         overwrite: bool = False,
         nParallel: int = 1,
+        Progressbar: bool = False,
     ) -> bool:
         if isinstance(SeriesInstanceUID, str):
             SeriesInstanceUID = [SeriesInstanceUID]
@@ -570,8 +633,8 @@ class NBIAClient:
         results = []
         for series in SeriesInstanceUID:
             result = pool.apply_async(
-                downloadSingleSeries,
-                (
+                func=downloadSingleSeries,
+                args=(
                     series,
                     downloadDir,
                     filePattern,
@@ -579,6 +642,7 @@ class NBIAClient:
                     self._api_headers,
                     self._base_url,
                     self._log,
+                    Progressbar,
                 ),
             )
             results.append(result)

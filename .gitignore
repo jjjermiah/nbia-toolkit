@@ -157,3 +157,5 @@ src/nbiatoolkit/.DS_Store
 .vscode
 download.ipynb
 driver*.py
+logs
+logdir

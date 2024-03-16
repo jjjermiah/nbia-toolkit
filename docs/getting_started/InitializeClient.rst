@@ -118,7 +118,8 @@ If you would like to return the data as a pandas DataFrame, you can pass the
       Feel free to open an issue on the GitHub repository if you would like to see this feature added.
 
 
-Alternatively, you can set the return type for all methods by passing the `return_type` argument to the NBIAClient class.
+Alternatively, you can set the return type for all methods by passing the `return_type` argument when
+initializing the NBIAClient class.
 
 .. tabs::
 
@@ -141,7 +142,8 @@ Alternatively, you can set the return type for all methods by passing the `retur
 
 Logging
 ^^^^^^^
-The client can be initialized with a log level to control the verbosity of the logs. This is primarily intended for debugging and development purposes.
+The client can be initialized with a log level to control the verbosity of the logs. This is primarily
+intended for debugging and development purposes.
 The default log level is 'INFO' and the available log levels are `DEBUG`, `INFO`, `WARNING`, `ERROR`.
 
 .. tabs::
