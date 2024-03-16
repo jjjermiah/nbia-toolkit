@@ -23,7 +23,7 @@ The following examples demonstrate using the :meth:`getSeries`.
 .. tabs::
    .. tab:: Python
       .. tabs::
-         .. tab:: Filter by Collection
+        .. tab:: Filter by Collection
             .. exec_code::
 
                 # --- hide: start ---
@@ -31,11 +31,11 @@ The following examples demonstrate using the :meth:`getSeries`.
                 # --- hide: stop ---
 
                 with NBIAClient(return_type="dataframe") as client:
-                    series = client.Series(
+                    series = client.getSeries(
                         Collection = "TCGA-BLCA"
                     )
 
-               print(series.iloc[0])
+                print(series.iloc[0])
 
         .. tab:: Filter by Collection and PatientID
             .. exec_code::

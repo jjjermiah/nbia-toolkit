@@ -42,6 +42,7 @@ def downloadSingleSeries(
     api_headers: dict[str, str],
     base_url: NBIA_BASE_URLS,
     log: Logger,
+    Progressbar: bool = False,
 ):
     """
     Downloads a single series from the NBIA server.
@@ -54,6 +55,7 @@ def downloadSingleSeries(
         api_headers (dict[str, str]): The headers to be included in the API request.
         base_url (NBIA_ENDPOINTS): The base URL of the NBIA server.
         log (Logger): The logger object for logging messages.
+        Progressbar (bool, optional): Flag indicating whether to display a progress bar. Defaults to False.
 
     Returns:
         bool: True if the series is downloaded and sorted successfully, False otherwise.
@@ -89,7 +91,10 @@ def downloadSingleSeries(
         )
         # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
         if not sorter.sortDICOMFiles(
-            shutil_option="move", overwrite=overwrite, progressbar=False, n_parallel=1
+            shutil_option="move",
+            overwrite=overwrite,
+            progressbar=Progressbar,
+            n_parallel=1,
         ):
             log.error(
                 f"Error sorting DICOM files for series {SeriesInstanceUID}\n \
@@ -616,6 +621,7 @@ class NBIAClient:
         filePattern: str = "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
         overwrite: bool = False,
         nParallel: int = 1,
+        Progressbar: bool = False,
     ) -> bool:
         if isinstance(SeriesInstanceUID, str):
             SeriesInstanceUID = [SeriesInstanceUID]
@@ -627,8 +633,8 @@ class NBIAClient:
         results = []
         for series in SeriesInstanceUID:
             result = pool.apply_async(
-                downloadSingleSeries,
-                (
+                func=downloadSingleSeries,
+                args=(
                     series,
                     downloadDir,
                     filePattern,
@@ -636,6 +642,7 @@ class NBIAClient:
                     self._api_headers,
                     self._base_url,
                     self._log,
+                    Progressbar,
                 ),
             )
             results.append(result)
