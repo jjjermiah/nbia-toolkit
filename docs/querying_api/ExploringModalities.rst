@@ -1,7 +1,5 @@
-
-
 Modality Methods
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 The :meth:`getModalityValues` method can provide insight to the available modality types in the NBIA database.
 
 The method has the following signature:

@@ -20,6 +20,10 @@
 
     querying_api/ExploringCollections.rst
     querying_api/ExploringModalities.rst
+    querying_api/ExploringPatients.rst
+    querying_api/ExploringStudies.rst
+    querying_api/ExploringSeries.rst
+
 
 .. toctree::
     :caption: Project Info

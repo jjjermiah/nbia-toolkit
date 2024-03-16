@@ -389,6 +389,17 @@ class NBIAClient:
         Collection: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves a list of patients from the NBIA API.
+
+        Args:
+            Collection (str, optional): The name of the collection to filter the patients. Defaults to "".
+            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: A list of patient dictionaries or a pandas DataFrame, depending on the return type.
+
+        """
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(locals())
@@ -404,6 +415,21 @@ class NBIAClient:
         Date: Union[str, datetime],
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves new patients from the NBIA API based on the specified collection and date.
+
+        Args:
+            Collection (str): The name of the collection to retrieve new patients from.
+            Date (Union[str, datetime]): The date to filter the new patients. Can be a string in the format "YYYY/MM/DD" or a datetime object.
+            return_type (Optional[Union[ReturnType, str]]): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: A list of dictionaries or a pandas DataFrame containing the new patients.
+
+        Raises:
+            AssertionError: If the Date argument is None.
+
+        """
         returnType: ReturnType = self._get_return(return_type)
 
         assert Date is not None
@@ -426,6 +452,20 @@ class NBIAClient:
         Modality: str,
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves patients by collection and modality.
+
+        Args:
+            Collection (str): The collection name.
+            Modality (str): The modality name.
+            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: The list of patients or a pandas DataFrame, depending on the return type.
+
+        Raises:
+            AssertionError: If Collection or Modality is None.
+        """
         assert Collection is not None
         assert Modality is not None
 
@@ -465,6 +505,18 @@ class NBIAClient:
         StudyInstanceUID: str = "",
         return_type: Optional[Union[ReturnType, str]] = None,
     ) -> List[dict[Any, Any]] | pd.DataFrame:
+        """
+        Retrieves studies from the NBIA API based on the specified parameters.
+
+        Args:
+            Collection (str): The name of the collection to retrieve studies from.
+            PatientID (str, optional): The patient ID to filter the studies by. Defaults to "".
+            StudyInstanceUID (str, optional): The study instance UID to filter the studies by. Defaults to "".
+            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
+
+        Returns:
+            List[dict[Any, Any]] | pd.DataFrame: A list of dictionaries or a pandas DataFrame containing the retrieved studies.
+        """
         returnType: ReturnType = self._get_return(return_type)
 
         PARAMS: dict = self.parsePARAMS(locals())
