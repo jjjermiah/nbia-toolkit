@@ -43,7 +43,7 @@
   - ***Validate doownloads with MD5 checksums*** for downloaded images
   - **Auto-sort** DICOM files using a user-defined pattern of DICOM tags with specialized ***DICOMSorter class***
 
-![SequenceDiagram](https://www.mermaidchart.com/raw/ce7f489f-bf58-4827-aedb-e379ed7bffd3?theme=dark&version=v0.1&format=svg)
+See [Developer Notes](devnotes/README.md) for more details on the features and the development process.
 
 ## Installation
 
