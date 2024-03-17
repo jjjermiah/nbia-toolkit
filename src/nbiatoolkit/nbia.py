@@ -146,11 +146,6 @@ class NBIAClient:
         self._log.debug("Setting up OAuth2 client... with username %s", username)
         self._oauth2_client = OAuth2(username=username, password=password)
 
-        self._api_headers: dict[str, str] = {
-            "Authorization": f"Bearer {self._oauth2_client.access_token}",
-            "Content-Type": "application/json",
-        }
-
         self._base_url: NBIA_BASE_URLS = NBIA_BASE_URLS.NBIA
         self._return_type: ReturnType = (
             return_type
@@ -170,7 +165,13 @@ class NBIAClient:
 
     @property
     def headers(self):
-        return self._api_headers
+
+        API_HEADERS: dict[str, str] = {
+            "Authorization": f"Bearer {self.OAuth_client.access_token}",
+            "Content-Type": "application/json",
+        }
+
+        return API_HEADERS
 
     # create a setter for the base_url in case user want to use NLST
     @property
@@ -639,7 +640,7 @@ class NBIAClient:
                     downloadDir,
                     filePattern,
                     overwrite,
-                    self._api_headers,
+                    self.headers,
                     self._base_url,
                     self._log,
                     Progressbar,
