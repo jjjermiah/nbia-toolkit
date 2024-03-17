@@ -2,7 +2,7 @@ name: CI-CD
 
 # only run on pushes to main or pull requests
 on:
-  push:
+  # push:
   #   # push to any branch *
   #   branches: [ main ]
   # pull_request:
