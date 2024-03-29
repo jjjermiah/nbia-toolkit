@@ -27,6 +27,9 @@ def test_convert_int_to_element():
     result = convert_int_to_element(65535)
     assert result == "(0000,FFFF)", f"Expected (0000,FFFF), but got {result}"
 
+    with pytest.raises(ValueError) as e:
+        convert_element_to_int("(1,1,1)")
+
     print("All test cases passed!")
 
 
@@ -146,3 +149,8 @@ def test_getSeriesModality(RTSTRUCT_Tags):
 
     with pytest.raises(IndexError) as e:
         getSeriesModality(RTSTRUCT_Tags)
+
+
+def test_failsubsetSeriesTags(RTSTRUCT_Series):
+    with pytest.raises(KeyError) as e:
+        subsetSeriesTags(RTSTRUCT_Series, "(0008,0060)")

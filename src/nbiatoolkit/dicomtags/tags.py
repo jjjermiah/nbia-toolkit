@@ -220,13 +220,3 @@ def getReferencedSeriesUIDS(series_tags_df: pd.DataFrame) -> List[str]:
     UIDS: list[str] = value["data"].to_list()
 
     return UIDS
-
-
-if __name__ == "__main__":
-    from nbiatoolkit import NBIAClient
-
-    test = convert_element_to_int("(0028,0010)")
-
-    print(test)
-
-    print(convert_int_to_element(test))
