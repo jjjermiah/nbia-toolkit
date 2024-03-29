@@ -1,8 +1,7 @@
 from pydicom.datadict import dictionary_VR
 from pydicom.datadict import tag_for_keyword
-from pydicom._dicom_dict import DicomDictionary
 import pandas as pd
-from typing import Any, Union, List
+from typing import List
 
 
 def convert_element_to_int(element_str: str) -> int:
