@@ -1,0 +1,40 @@
+digraph "packages_nbiatoolkit" {
+rankdir=BT
+charset="utf-8"
+"nbiatoolkit" [color="#77AADD", label=<nbiatoolkit>, shape="box", style="filled"];
+"nbiatoolkit.auth" [color="#77AADD", label=<nbiatoolkit.auth>, shape="box", style="filled"];
+"nbiatoolkit.dicomsort" [color="#99DDFF", label=<nbiatoolkit.dicomsort>, shape="box", style="filled"];
+"nbiatoolkit.dicomsort.dicomsort" [color="#99DDFF", label=<nbiatoolkit.dicomsort.dicomsort>, shape="box", style="filled"];
+"nbiatoolkit.dicomsort.helper_functions" [color="#99DDFF", label=<nbiatoolkit.dicomsort.helper_functions>, shape="box", style="filled"];
+"nbiatoolkit.logger" [color="#44BB99", label=<nbiatoolkit.logger>, shape="box", style="filled"];
+"nbiatoolkit.logger.logger" [color="#44BB99", label=<nbiatoolkit.logger.logger>, shape="box", style="filled"];
+"nbiatoolkit.nbia" [color="#77AADD", label=<nbiatoolkit.nbia>, shape="box", style="filled"];
+"nbiatoolkit.nbia_cli" [color="#77AADD", label=<nbiatoolkit.nbia_cli>, shape="box", style="filled"];
+"nbiatoolkit.utils" [color="#BBCC33", label=<nbiatoolkit.utils>, shape="box", style="filled"];
+"nbiatoolkit.utils.conv_response_list" [color="#BBCC33", label=<nbiatoolkit.utils.conv_response_list>, shape="box", style="filled"];
+"nbiatoolkit.utils.md5" [color="#BBCC33", label=<nbiatoolkit.utils.md5>, shape="box", style="filled"];
+"nbiatoolkit.utils.nbia_endpoints" [color="#BBCC33", label=<nbiatoolkit.utils.nbia_endpoints>, shape="box", style="filled"];
+"nbiatoolkit.utils.parsers" [color="#BBCC33", label=<nbiatoolkit.utils.parsers>, shape="box", style="filled"];
+"nbiatoolkit" -> "nbiatoolkit.auth" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit" -> "nbiatoolkit.logger.logger" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit" -> "nbiatoolkit.nbia" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit" -> "nbiatoolkit.nbia_cli" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit" -> "nbiatoolkit.utils.nbia_endpoints" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.auth" -> "nbiatoolkit.utils" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.dicomsort" -> "nbiatoolkit.dicomsort" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.dicomsort" -> "nbiatoolkit.dicomsort.helper_functions" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.dicomsort.dicomsort" -> "nbiatoolkit.dicomsort.helper_functions" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.logger" -> "nbiatoolkit.logger" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.nbia" -> "nbiatoolkit.auth" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.nbia" -> "nbiatoolkit.dicomsort" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.nbia" -> "nbiatoolkit.logger.logger" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.nbia" -> "nbiatoolkit.utils" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.nbia" -> "nbiatoolkit.utils.conv_response_list" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.nbia_cli" -> "nbiatoolkit.dicomsort" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.nbia_cli" -> "nbiatoolkit.nbia" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.utils" -> "nbiatoolkit.utils.conv_response_list" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.utils" -> "nbiatoolkit.utils.md5" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.utils" -> "nbiatoolkit.utils.nbia_endpoints" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.utils" -> "nbiatoolkit.utils.parsers" [arrowhead="open", arrowtail="none"];
+"nbiatoolkit.utils.conv_response_list" -> "nbiatoolkit.utils.nbia_endpoints" [arrowhead="open", arrowtail="none"];
+}

@@ -16,11 +16,11 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/jjjermiah/nbia-toolkit)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jjjermiah/nbiatoolkit)](https://hub.docker.com/r/jjjermiah/nbiatoolkit)
 
-![GitHub milestone details](https://img.shields.io/github/milestones/progress-percent/jjjermiah/nbia-toolkit/1?style=flat-square&label=1.0.0%20Stable%20Release%20Milestone&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)![GitHub milestone details](https://img.shields.io/github/milestones/progress/jjjermiah/nbia-toolkit/1?style=flat-square&label=%20&link=https%3A%2F%2Fgithub.com%2Fjjjermiah%2Fnbia-toolkit%2Fmilestone%2F1)
 [![GitHub issues](https://img.shields.io/github/issues/jjjermiah/nbia-toolkit)](https://github.com/jjjermiah/nbia-toolkit/issues)
 ![GitHub last commit](https://img.shields.io/github/last-commit/jjjermiah/nbia-toolkit)
 
 ## Table of Contents
+
 - [Features](#features)
 - [Installation](#installation)
 - [Python Usage](#python-usage)
@@ -43,7 +43,7 @@
   - ***Validate doownloads with MD5 checksums*** for downloaded images
   - **Auto-sort** DICOM files using a user-defined pattern of DICOM tags with specialized ***DICOMSorter class***
 
-![SequenceDiagram](https://www.mermaidchart.com/raw/ce7f489f-bf58-4827-aedb-e379ed7bffd3?theme=dark&version=v0.1&format=svg)
+See [Developer Notes](devnotes/README.md) for more details on the features and the development process.
 
 ## Installation
 
@@ -93,10 +93,10 @@ For quick access to the NBIA, the toolkit also provides a command line interface
       /  |/ / __  |/ // /| | / / / __ \/ __ \/ / //_/ / __/
      / /|  / /_/ // // ___ |/ / / /_/ / /_/ / / ,< / / /_
     /_/ |_/_____/___/_/  |_/_/  \____/\____/_/_/|_/_/\__/
-    
+
 Version: 1.0.1
 
-Available CLI tools: 
+Available CLI tools:
 
 getCollections [-h] [-u USERNAME] [-pw PASSWORD] [-p PREFIX]
                [-o OUTPUTFILE] [--version]
