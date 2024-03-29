@@ -46,7 +46,7 @@ jobs:
           name: coverage-report
           path: coverage-report
 
-  Codecov:
+  Code-Coverage:
     needs: Unit-Tests
     runs-on: ubuntu-latest
     steps:
