@@ -11,14 +11,12 @@ on:
 jobs:
   Unit-Tests:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10 # Consider increasing timeout
+    timeout-minutes: 15 # Consider increasing timeout
+
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, macos-14]
         python-version: ["3.12", "3.11", "3.10"]
-        # include:
-        #   - os: ubuntu-latest
-        #     python-version: "3.9"
 
     steps:
       - uses: actions/checkout@v3
@@ -124,12 +122,6 @@ jobs:
       with:
         fetch-depth: 0
 
-   # This action uses Python Semantic Release v8
-   # What this action does:
-   # - Determines the next version number based on the commit history
-    # - Creates a new tag with the new version number
-    # - Pushes the new tag to GitHub
-    # - Creates a GitHub release with the new version number
     - name: Python Semantic Release
       id: release
       uses: python-semantic-release/python-semantic-release@master
