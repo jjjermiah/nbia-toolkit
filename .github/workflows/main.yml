@@ -236,7 +236,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        docker_tag: ["latest", "${{ needs.Continuous-Deployment.outputs.tag }}"]
 
     steps:
       - name: Setup Docker to pull images
@@ -244,5 +243,5 @@ jobs:
 
       - name: Install using Docker
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ matrix.docker_tag }};
-          docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ matrix.docker_tag }} NBIAToolkit
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ needs.Continuous-Deployment.outputs.tag }};
+          docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/nbiatoolkit:${{ needs.Continuous-Deployment.outputs.tag }} NBIAToolkit
