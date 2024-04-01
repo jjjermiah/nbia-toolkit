@@ -21,6 +21,13 @@ from .utils import (
     ReturnType,
     conv_response_list,
 )
+
+from .dicomtags.tags import (
+    getReferencedSeriesUIDS,
+    extract_ROI_info,
+    getSequenceElement,
+)
+
 import pandas as pd
 import requests
 from requests.exceptions import JSONDecodeError as JSONDecodeError
@@ -614,6 +621,21 @@ class NBIAClient:
         response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_DICOM_TAGS, params=PARAMS)
 
         return conv_response_list(response, returnType)
+
+    def getRefSeriesUIDs(
+        self,
+        SeriesInstanceUID: str,
+    ) -> List[str]:
+
+        tags_df = self.getDICOMTags(
+            SeriesInstanceUID=SeriesInstanceUID,
+            return_type=ReturnType.DATAFRAME,
+        )
+
+        if type(tags_df) != pd.DataFrame:
+            raise ValueError("DICOM Tags not df or not found in the response.")
+
+        return getReferencedSeriesUIDS(series_tags_df=tags_df)
 
     def downloadSeries(
         self,

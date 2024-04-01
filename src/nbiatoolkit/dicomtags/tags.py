@@ -1,8 +1,8 @@
+from math import log
 from pydicom.datadict import dictionary_VR
 from pydicom.datadict import tag_for_keyword
-from pydicom._dicom_dict import DicomDictionary
 import pandas as pd
-from typing import Any, Union, List
+from typing import List
 
 
 def convert_element_to_int(element_str: str) -> int:
@@ -154,6 +154,17 @@ def getSeriesModality(series_tags_df: pd.DataFrame) -> str:
 def subsetSeriesTags(series_tags_df: pd.DataFrame, element: str) -> pd.DataFrame:
     """
     Subsets a DataFrame containing DICOM series tags based on the start and end elements.
+
+    Args:
+        series_tags_df (pd.DataFrame): A DataFrame containing DICOM series tags.
+        element (str): The element to subset the DataFrame.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the subset of the series tags.
+
+    Raises:
+        ValueError: If the element is not found in the series tags.
+        ValueError: If more than two elements are found in the series tags.
     """
 
     locs: pd.DataFrame
@@ -162,13 +173,31 @@ def subsetSeriesTags(series_tags_df: pd.DataFrame, element: str) -> pd.DataFrame
     if len(locs) == 0:
         raise ValueError("Element not found in the series tags.")
 
+    if len(locs) == 1:
+        raise ValueError(
+            "Only one element found in the series tags. Ensure element is a sequence"
+        )
+
     if len(locs) > 2:
         raise ValueError("More than two elements found in the series tags.")
 
-    return series_tags_df.iloc[locs.index[0] : locs.index[1]]
+    return series_tags_df.iloc[locs.index[0] : locs.index[1] + 1]
 
 
 def getReferencedFrameOfReferenceSequence(series_tags_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Given a DataFrame containing DICOM series tags, retrieves the ReferencedFrameOfReferenceSequence.
+
+    Args:
+        series_tags_df (pd.DataFrame): A DataFrame containing DICOM series tags.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the ReferencedFrameOfReferenceSequence.
+
+    Raises:
+        ValueError: If the series is not an RTSTRUCT.
+
+    """
     modality = getSeriesModality(series_tags_df=series_tags_df)
     if modality != "RTSTRUCT":
         raise ValueError("Series is not an RTSTRUCT.")
@@ -220,3 +249,112 @@ def getReferencedSeriesUIDS(series_tags_df: pd.DataFrame) -> List[str]:
     UIDS: list[str] = value["data"].to_list()
 
     return UIDS
+
+
+def getSequenceElement(
+    sequence_tags_df: pd.DataFrame, element_keyword: str
+) -> pd.DataFrame:
+    """
+    Given a DataFrame containing DICOM sequence tags, retrieves the search space
+    based on the element keyword.
+
+    Args:
+        sequence_tags_df (pd.DataFrame): A DataFrame containing DICOM sequence tags.
+        element_keyword (str): The keyword of the element to search for.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the search space based on the element keyword.
+
+    Raises:
+        ValueError: If the element is not found in the sequence tags.
+        ValueError: If more than two elements are found in the sequence tags.
+    """
+    tag: int = LOOKUP_TAG(keyword=element_keyword)
+    element: str = convert_int_to_element(combined_int=tag)
+
+    df: pd.DataFrame = subsetSeriesTags(
+        series_tags_df=sequence_tags_df, element=element
+    )
+
+    return df
+
+
+def camel_case_tag(string: str) -> str:
+    """
+    Convert a string to camel case.
+
+    Args:
+        string (str): The input string to be converted.
+
+    Returns:
+        str:  The camel case string.
+
+    Example:
+        >>> camel_case_tag("hello world")
+        'HelloWorld'
+
+    Note:
+        This function does not actually convert to camel case to not modify
+        the tags from the DICOM dictionary.
+    """
+    return "".join(word for word in string.split())
+
+
+def extract_ROI_info(StructureSetROISequence) -> dict[str, dict[str, str]]:
+    """
+    Extracts ROI information from the StructureSetROISequence.
+
+    Args:
+        StructureSetROISequence (pandas.DataFrame): A pandas DataFrame representing the StructureSetROISequence.
+
+    Returns:
+        dict[str, dict[str, str]]: A dictionary containing ROI information, where the key is the ROI number and the value is the ROI information.
+
+    Raises:
+        ValueError: If ROI Number is not found in the StructureSetROISequence.
+    """
+
+    # Initialize an empty dictionary to store ROI information
+    ROISet: dict[str, dict[str, str]] = {}
+
+    # get the rows where name = " ROI Number"
+    ROI_indices = StructureSetROISequence[
+        StructureSetROISequence["name"] == "ROI Number"
+    ].index
+
+    if ROI_indices.empty:
+        raise ValueError("ROI Number not found in the StructureSetROISequence.")
+
+    # Iterate between the indices of the ROI numbers, to extract the ROI information
+    # add to the dictionary where the key is the ROI number and the value is the ROI information
+    for i in range(len(ROI_indices) - 1):
+        ROI_number: str = StructureSetROISequence.loc[ROI_indices[i], "data"]
+
+        ROI_info: pd.DataFrame = StructureSetROISequence.loc[
+            ROI_indices[i] + 1 : ROI_indices[i + 1] - 1
+        ]
+
+        ROISet[ROI_number] = {
+            camel_case_tag(string=row["name"]): row["data"]
+            for _, row in ROI_info.iterrows()
+        }
+
+    return ROISet
+
+
+# def getRTSTRUCT_ROI_info(seriesUID: str) -> dict[str, dict[str, str]]:
+#     """
+#     Given a SeriesInstanceUID of an RTSTRUCT, retrieves the ROI information.
+
+#     Args:
+#         seriesUID (str): The SeriesInstanceUID of the RTSTRUCT.
+
+#     Returns:
+#         dict[str, dict[str, str]]: A dictionary containing the ROI information.
+#     """
+
+#     RTSTRUCT_Tags = client.getDICOMTags(seriesUID)
+
+#     StructureSetROISequence = getSequenceElement(sequence_tags_df=RTSTRUCT_Tags, element_keyword="StructureSetROISequence")
+
+#     return extract_ROI_info(StructureSetROISequence)
