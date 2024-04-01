@@ -4,7 +4,9 @@ from re import I
 import re
 import zipfile
 from tempfile import TemporaryDirectory
-from .dicomsort import DICOMSorter
+
+from pydicom import Dataset, FileDataset
+from .dicomsort import DICOMSorter, generateFilePathFromDICOMAttributes
 
 import multiprocessing
 from .auth import OAuth2
@@ -26,6 +28,7 @@ from .dicomtags.tags import (
     getReferencedSeriesUIDS,
     extract_ROI_info,
     getSequenceElement,
+    generateFileDatasetFromTags,
 )
 
 import pandas as pd
@@ -636,6 +639,47 @@ class NBIAClient:
             raise ValueError("DICOM Tags not df or not found in the response.")
 
         return getReferencedSeriesUIDS(series_tags_df=tags_df)
+
+    def generateFilePathFromDICOMTags(
+        self,
+        SeriesInstanceUID: str,
+        filePattern: str = "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
+    ) -> str:
+        """
+        Generates a file path from DICOM tags.
+
+        Args:
+            SeriesInstanceUID (str): The Series Instance UID of the DICOM series.
+            filePattern (str, optional): The file pattern to use for generating the file path. Defaults to "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm".
+
+        Returns:
+            str: The generated file path.
+
+        Note:
+            This only considers the first instance of the series.
+            Meant to be used to determine the dirname of the series files.
+        """
+        self.logger.debug("Getting DICOM tags for series %s", SeriesInstanceUID)
+        tags_df = self.getDICOMTags(
+            SeriesInstanceUID=SeriesInstanceUID,
+            return_type=ReturnType.DATAFRAME,
+        )
+
+        if type(tags_df) != pd.DataFrame:
+            raise ValueError("DICOM Tags not df or not found in the response.")
+
+        self.logger.debug("Generating file path from DICOM tags")
+        ds: Dataset = generateFileDatasetFromTags(tags_df=tags_df)
+        filePath: str = generateFilePathFromDICOMAttributes(
+            dataset=ds,
+            targetPattern=filePattern,
+            truncateUID=True,
+            sanitizeFilename=True,
+        )
+        self.logger.debug(
+            "Generated file path: %s for series %s", filePath, SeriesInstanceUID
+        )
+        return filePath
 
     def downloadSeries(
         self,

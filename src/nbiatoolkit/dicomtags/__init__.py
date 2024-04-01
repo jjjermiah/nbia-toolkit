@@ -10,6 +10,7 @@ from .tags import (
     subsetSeriesTags,
     getReferencedFrameOfReferenceSequence,
     getReferencedSeriesUIDS,
+    extract_ROI_info,
 )
 
 __all__ = [
@@ -21,4 +22,5 @@ __all__ = [
     "subsetSeriesTags",
     "getReferencedFrameOfReferenceSequence",
     "getReferencedSeriesUIDS",
+    "extract_ROI_info",
 ]

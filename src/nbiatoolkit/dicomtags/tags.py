@@ -1,6 +1,6 @@
 from math import log
-from pydicom.datadict import dictionary_VR
-from pydicom.datadict import tag_for_keyword
+import pydicom
+from pydicom.datadict import dictionary_VR, tag_for_keyword
 import pandas as pd
 from typing import List
 
@@ -340,6 +340,32 @@ def extract_ROI_info(StructureSetROISequence) -> dict[str, dict[str, str]]:
         }
 
     return ROISet
+
+
+def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
+    """
+    Generate a pydicom Dataset object from a DataFrame of DICOM tags.
+
+    Args:
+        tags_df (pd.DataFrame): DataFrame containing DICOM tags.
+
+    Returns:
+        pydicom.Dataset: A pydicom Dataset object containing the DICOM tags.
+    """
+
+    # Create a new FileDataset
+    ds = pydicom.Dataset()
+
+    for _, row in tags_df.iterrows():
+        tag = convert_element_to_int(row["element"])
+        value = row["data"]
+        if tag == -1:
+            continue
+        VR = element_VR_lookup(row["element"])[1]
+
+        ds.add_new(tag=tag, VR=VR, value=value)
+
+    return ds
 
 
 # def getRTSTRUCT_ROI_info(seriesUID: str) -> dict[str, dict[str, str]]:

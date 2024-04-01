@@ -13,6 +13,7 @@ from .nbia_cli import version
 from .auth import OAuth2
 from .logger.logger import setup_logger
 from .utils.nbia_endpoints import NBIA_ENDPOINTS
+from .dicomtags import *
 
 # define the __all__ variable
 __all__ = [
