@@ -239,7 +239,8 @@ jobs:
         docker_tag: ["latest", "${{ needs.Continuous-Deployment.outputs.tag }}"]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Setup Docker to pull images
+        uses: docker/setup-buildx-action@v3
 
       - name: Install using Docker
         run: |
