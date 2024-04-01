@@ -2,6 +2,31 @@
 
 
 
+## v1.3.0 (2024-04-01)
+
+### Build
+
+* build: Update Docker image tag in CI workflow ([`97f0c31`](https://github.com/jjjermiah/nbia-toolkit/commit/97f0c3185ed7af2cfb9169482e421fe8035523ce))
+
+### Feature
+
+* feat: Add DICOM tags module and update DICOM sorting functionality ([`dfc41fa`](https://github.com/jjjermiah/nbia-toolkit/commit/dfc41fa6d9e8a194596885dddb90d7375938c7b2))
+
+### Fix
+
+* fix: Update PyPi installation command ([`dd53773`](https://github.com/jjjermiah/nbia-toolkit/commit/dd537732acf5065853be49019a23f9407cfb7849))
+
+* fix: docker setup to test images ([`695f660`](https://github.com/jjjermiah/nbia-toolkit/commit/695f660de7b52e51adefea139a0fc4eafe0a3726))
+
+* fix: Update branch filter in CI/CD workflow ([`6cb12bc`](https://github.com/jjjermiah/nbia-toolkit/commit/6cb12bc08c7434b086f3931de3fa9099b9792c76))
+
+### Unknown
+
+* Merge pull request #130 from jjjermiah/development
+
+feat: add functionality to prepare filepaths from dicomtags ([`c2e90d1`](https://github.com/jjjermiah/nbia-toolkit/commit/c2e90d1becac0fb243b0310fd190a57667f4782e))
+
+
 ## v1.2.0 (2024-04-01)
 
 ### Build
@@ -9,6 +34,10 @@
 * build: Add development branch to CI/CD workflow ([`6ff1e96`](https://github.com/jjjermiah/nbia-toolkit/commit/6ff1e962c981f3a481728b2b0ba03c4d3d9edcc7))
 
 * build: Add timeout for Unit-Tests job and checkout code with tag in Continuous-Deployment job ([`2f85826`](https://github.com/jjjermiah/nbia-toolkit/commit/2f858265dd467267a0079919315280e62c34b173))
+
+### Chore
+
+* chore(sem-ver): 1.2.0 ([`e2e9b74`](https://github.com/jjjermiah/nbia-toolkit/commit/e2e9b74c9b790be49387df0fd596da24b4afde2b))
 
 ### Feature
 
