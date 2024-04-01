@@ -4,9 +4,9 @@ name: CI-CD
 on:
   push:
     # push to any branch *
-    branches: [ main , development ]
+    branches: [ main ]
   pull_request:
-    branches: [ main , development]
+    branches: [ main , development ]
 
 jobs:
   Unit-Tests:
@@ -97,10 +97,10 @@ jobs:
         issues: write
         pull-requests: write
 
-    # needs: [Unit-Tests]
+    needs: [Unit-Tests]
 
     # if pulling to main, deploy to PyPI
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     # Set up operating system
     runs-on: ubuntu-latest
