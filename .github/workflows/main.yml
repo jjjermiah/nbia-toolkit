@@ -227,7 +227,7 @@ jobs:
 
       - name: Install using PyPi
         run: |
-          pip install  nbiatoolkit;
+          pip install nbiatoolkit==${{ needs.Continuous-Deployment.outputs.version }}
           NBIAToolkit
 
   Test-Docker-Image:
