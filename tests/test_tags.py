@@ -1,3 +1,4 @@
+from pandas import DataFrame
 import pytest
 from src.nbiatoolkit import NBIAClient
 from src.nbiatoolkit.dicomtags.tags import convert_int_to_element
@@ -154,3 +155,31 @@ def test_getSeriesModality(RTSTRUCT_Tags):
 def test_failsubsetSeriesTags(RTSTRUCT_Series):
     with pytest.raises(KeyError) as e:
         subsetSeriesTags(RTSTRUCT_Series, "(0008,0060)")
+
+
+def test_extract_ROI_info(RTSTRUCT_Tags):
+    # tests both getSequenceElement and extract_ROI_info
+
+    StructureSetROISequence: DataFrame = getSequenceElement(
+        sequence_tags_df=RTSTRUCT_Tags, element_keyword="StructureSetROISequence"
+    )
+
+    # make sure that the StructureSetROISequence is not empty
+    assert (
+        not StructureSetROISequence.empty
+    ), "Expected StructureSetROISequence to not be empty, but got empty"
+
+    ROI_info: dict[str, dict[str, str]] = extract_ROI_info(StructureSetROISequence)
+
+    assert ROI_info is not None, "Expected ROI_info to not be None, but got None"
+
+    # ROI_info should have atleast 29 keys all of which are strings of ints from 1 to 28
+    assert len(ROI_info) >= 26, f"Expected atleast 26 keys, but got {len(ROI_info)}"
+    keys = [int(key) for key in ROI_info.keys()]
+
+    # assert all keys are between 1 and 29
+    assert all(
+        [1 <= key <= 29 for key in keys]
+    ), "Expected all keys to be between 1 and 28"
+
+    print("All test cases passed!")
