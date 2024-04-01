@@ -183,3 +183,11 @@ def test_extract_ROI_info(RTSTRUCT_Tags):
     ), "Expected all keys to be between 1 and 28"
 
     print("All test cases passed!")
+
+
+def test_getReferencedSeriesUIDS(client, RTSTRUCT_Series):
+    result = client.getRefSeriesUIDs(RTSTRUCT_Series["SeriesInstanceUID"].values[0])
+
+    expected = ["1.3.6.1.4.1.14519.5.2.1.133742245714270925254982946723351496764"]
+
+    assert result == expected, f"Expected {expected}, but got {result}"
