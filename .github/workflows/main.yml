@@ -11,6 +11,7 @@ on:
 jobs:
   Unit-Tests:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10 # Consider increasing timeout
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, macos-14]
@@ -101,7 +102,7 @@ jobs:
     needs: [Unit-Tests]
 
     # if pulling to main, deploy to PyPI
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     # Set up operating system
     runs-on: ubuntu-latest
@@ -140,8 +141,10 @@ jobs:
     if: needs.Continuous-Deployment.outputs.released == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout the code with tag ${{ needs.Continuous-Deployment.outputs.tag }}
         uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.Continuous-Deployment.outputs.tag }}
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v4
@@ -170,24 +173,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.Continuous-Deployment.outputs.tag }}
 
       - name: Set up QEMU
-        if: steps.release.outputs.released == 'true'
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        if: steps.release.outputs.released == 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        if: steps.release.outputs.released == 'true'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to the GitHub Container Registry
-        if: steps.release.outputs.released == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
