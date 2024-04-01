@@ -2,6 +2,29 @@
 
 
 
+## v1.2.0 (2024-04-01)
+
+### Build
+
+* build: Add development branch to CI/CD workflow ([`6ff1e96`](https://github.com/jjjermiah/nbia-toolkit/commit/6ff1e962c981f3a481728b2b0ba03c4d3d9edcc7))
+
+* build: Add timeout for Unit-Tests job and checkout code with tag in Continuous-Deployment job ([`2f85826`](https://github.com/jjjermiah/nbia-toolkit/commit/2f858265dd467267a0079919315280e62c34b173))
+
+### Feature
+
+* feat: release on development ([`b813e2a`](https://github.com/jjjermiah/nbia-toolkit/commit/b813e2a3e82d281f3cdfcb88415100ca451b43a2))
+
+* feat: release on development ([`71e68e0`](https://github.com/jjjermiah/nbia-toolkit/commit/71e68e02ce047331fe1adc7f5a658f9899c8d356))
+
+### Fix
+
+* fix: testing gha ([`272a9f5`](https://github.com/jjjermiah/nbia-toolkit/commit/272a9f52be5f6e1a5f2474c5cc433000a17fa4b6))
+
+### Unknown
+
+* Merge remote-tracking branch &#39;origin&#39; into development ([`2ed6d37`](https://github.com/jjjermiah/nbia-toolkit/commit/2ed6d37f9d776992bb9bbe23239ce639083aae53))
+
+
 ## v1.1.0 (2024-04-01)
 
 ### Build
@@ -13,6 +36,8 @@
 * build: improve gha for cleaner tree ([`aa9499d`](https://github.com/jjjermiah/nbia-toolkit/commit/aa9499dc481855a45a914ba9f5d12c14e2250e74))
 
 ### Chore
+
+* chore(sem-ver): 1.1.0 ([`c41b230`](https://github.com/jjjermiah/nbia-toolkit/commit/c41b2304acd2fc0360ac26ef4736bf10e774871b))
 
 * chore: Update README: 1.0.1 ([`1b7508f`](https://github.com/jjjermiah/nbia-toolkit/commit/1b7508f515ce2820c5b232810fb26660448e66a4))
 
@@ -33,6 +58,8 @@
 * feat: Add functions to query a dicomtags dataframe from NBIA ([`49af730`](https://github.com/jjjermiah/nbia-toolkit/commit/49af730875fbcabbbfd6896fdbe863ccb495933a))
 
 ### Fix
+
+* fix: Fix string formatting in version function ([`dc4bbd7`](https://github.com/jjjermiah/nbia-toolkit/commit/dc4bbd749a2b281e81faf7a99a2903bef278beca))
 
 * fix: python 3.9 only on ubuntu ([`1adb7b8`](https://github.com/jjjermiah/nbia-toolkit/commit/1adb7b8c66a6d73fb27374b557eb3b76d9d0c01c))
 

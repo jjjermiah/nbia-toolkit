@@ -8,7 +8,7 @@
 
 # ]
 
-from .dicomsort import DICOMSorter
+from .dicomsort import DICOMSorter, generateFilePathFromDICOMAttributes
 from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, _truncateUID
 
 __all__ = [
@@ -16,4 +16,5 @@ __all__ = [
     "sanitizeFileName",
     "_truncateUID",
     "DICOMSorter",
+    "generateFilePathFromDICOMAttributes",
 ]

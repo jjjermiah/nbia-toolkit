@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nbiatoolkit"
-version = "1.1.0"
+version = "1.2.0"
 description = "A python package to query the National Biomedical Imaging Archive (NBIA) database."
 authors = ["Jermiah Joseph"]
 license = "MIT"
@@ -64,7 +64,7 @@ changelog_file = "docs/project_info/CHANGELOG.md"
 exclude_commit_types = ["docs", "style", "refactor", "test", "chore"]
 
 [tool.semantic_release.branches.main]
-match = "(main|master)"
+match = "(main|master|development)"
 
 
 [tool.semantic_release.commit_parser_options]

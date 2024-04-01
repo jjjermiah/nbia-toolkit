@@ -14,6 +14,7 @@ import glob
 import shutil
 from .helper_functions import parseDICOMKeysFromFormat, sanitizeFileName, _truncateUID
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Union
 
 
 def get_dicom_files(sourceDir) -> list[str]:
@@ -39,7 +40,7 @@ def read_in_dicom_file(filePath: str) -> pydicom.FileDataset:
 
 
 def generateFilePathFromDICOMAttributes(
-    dataset: pydicom.FileDataset,
+    dataset: pydicom.Dataset,
     targetPattern: str,
     truncateUID: bool,
     sanitizeFilename: bool,
@@ -56,6 +57,10 @@ def generateFilePathFromDICOMAttributes(
     for key in keys:
         # Retrieve the attribute value if it exists or default to a placeholder string
         value = str(getattr(dataset, key, "Unknown" + key))
+
+        # if value is exactly "UnknownInstanceNumber", replace it with "1"
+        if value == "UnknownInstanceNumber":
+            value = "1"
 
         value = (
             _truncateUID(uid=value, lastDigits=5)
