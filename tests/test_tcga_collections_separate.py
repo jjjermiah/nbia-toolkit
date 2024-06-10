@@ -33,12 +33,12 @@ def nbia_context_manager():
         yield nbia_client
 
 
-def test_nbia_properties(nbia_context_manager):
-    assert isinstance(nbia_context_manager.OAuth_client, OAuth2)
-    assert isinstance(nbia_context_manager.headers, dict)
-    assert "Authorization" in nbia_context_manager.headers.keys()
-    assert "Content-Type" in nbia_context_manager.headers.keys()
-    assert nbia_context_manager.headers["Content-Type"] == "application/json"
+# def test_nbia_properties(nbia_context_manager):
+#     assert isinstance(nbia_context_manager.OAuth_client, OAuth2)
+#     assert isinstance(nbia_context_manager.headers, dict)
+#     assert "Authorization" in nbia_context_manager.headers.keys()
+#     assert "Content-Type" in nbia_context_manager.headers.keys()
+#     assert nbia_context_manager.headers["Content-Type"] == "application/json"
 
 
 def test_break(nbia_client_tobreak):

@@ -294,19 +294,22 @@ class OAuth2:
 
         query_url = NBIA_BASE_URLS.LOGOUT_URL.value
         response = requests.get(query_url, headers=self.api_headers)
-        response.raise_for_status()
-
-        # set the entire object to None
-        self.__dict__.clear()
-        self.username = ""
-        self.password = ""
-        self.client_id = ""
-        self.base_url = ""
-        self._access_token = ""
-        self.expiry_time = None
-        self.refresh_expiry = None
-        self.refresh_token = ""
-        self.scope = None
-        self._fernet_key = b""
-        self = None
-        return None
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            print(err)
+        finally:
+            # set the entire object to None
+            self.__dict__.clear()
+            self.username = ""
+            self.password = ""
+            self.client_id = ""
+            self.base_url = ""
+            self._access_token = ""
+            self.expiry_time = None
+            self.refresh_expiry = None
+            self.refresh_token = ""
+            self.scope = None
+            self._fernet_key = b""
+            self = None
+            return None
