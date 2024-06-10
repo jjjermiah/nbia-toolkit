@@ -2,11 +2,30 @@
 
 
 
+## v1.3.1 (2024-06-10)
+
+### Fix
+
+* fix: errors from tests ([`af6d30c`](https://github.com/jjjermiah/nbia-toolkit/commit/af6d30ccceddddbc8025f669de8038ec32b74345))
+
+* fix: lockfile ([`ae3021c`](https://github.com/jjjermiah/nbia-toolkit/commit/ae3021c12f4f57500d8b6ba3392f7bf4e9f80b1e))
+
+* fix: remove frozen requests ([`2740476`](https://github.com/jjjermiah/nbia-toolkit/commit/27404762d2683daed265dec29ff252d223811fb7))
+
+### Unknown
+
+* Update pyproject.toml ([`6ac58c6`](https://github.com/jjjermiah/nbia-toolkit/commit/6ac58c60d1e7697f736afc9461ad9818fc7b96a1))
+
+
 ## v1.3.0 (2024-04-01)
 
 ### Build
 
 * build: Update Docker image tag in CI workflow ([`97f0c31`](https://github.com/jjjermiah/nbia-toolkit/commit/97f0c3185ed7af2cfb9169482e421fe8035523ce))
+
+### Chore
+
+* chore(sem-ver): 1.3.0 ([`3b66683`](https://github.com/jjjermiah/nbia-toolkit/commit/3b66683f980f57c4789c38f9c5424a5636cadfa6))
 
 ### Feature
 

@@ -41,7 +41,7 @@ import zipfile
 from datetime import datetime
 
 # set __version__ variable
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 
 def downloadSingleSeries(
