@@ -20,7 +20,7 @@ getNewSeries = "nbiatoolkit.nbia_cli:getNewSeries_cli"
 
 [tool.poetry.dependencies]
 python = ">=3.09 || 3.12"
-requests = "2.31.0"
+requests = "^2.31.0"
 pydicom = "^2.4.0"
 tqdm = "^4.66.1"
 beautifulsoup4 = "^4.12.3"
