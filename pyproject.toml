@@ -17,7 +17,7 @@ getStudies = "nbiatoolkit.nbia_cli:getStudies_cli"
 getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
 getNewSeries = "nbiatoolkit.nbia_cli:getNewSeries_cli"
 
-
+# setting requests to min 2.31 instead of hard lock
 [tool.poetry.dependencies]
 python = ">=3.09 || 3.12"
 requests = "^2.31.0"
