@@ -1,7 +1,7 @@
 import requests
 import time
 from typing import Union, Tuple
-from .utils import NBIA_ENDPOINTS, NBIA_BASE_URLS
+from nbiatoolkit.utils import NBIA_BASE_URLS
 from cryptography.fernet import Fernet
 
 
@@ -296,8 +296,8 @@ class OAuth2:
         response = requests.get(query_url, headers=self.api_headers)
         try:
             response.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
+        except requests.exceptions.HTTPError:
+            pass # WAIT UNTIL TCIA IMPLEMENTS LOGOUT FUNCTIONALITY
         finally:
             # set the entire object to None
             self.__dict__.clear()

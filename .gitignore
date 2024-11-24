@@ -159,3 +159,7 @@ download.ipynb
 driver*.py
 logs
 logdir
+
+# pixi environments
+.pixi
+*.egg-info
