@@ -24,9 +24,9 @@ dev = [
 ]
 docs =  ["docs"]
 test = ["test", "quality"]
-py310 =  {features = ["py310", "test"], no-default-feature = true}
-py311 =  {features = ["py311", "test"], no-default-feature = true}
-py312 =  {features = ["py312", "test"], no-default-feature = true}
+py310 =  {features = ["py310", "test"], no-default-feature = false}
+py311 =  {features = ["py311", "test"], no-default-feature = false}
+py312 =  {features = ["py312", "test"], no-default-feature = false}
 
 ############################################## DEV ###############################################
 [feature.dev.dependencies]
@@ -51,7 +51,6 @@ pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
 pytest-mock = ">=3.14.0,<4"
-
 
 
 [feature.test.tasks.test]
