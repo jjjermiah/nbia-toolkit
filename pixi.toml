@@ -33,6 +33,7 @@ py312 =  {features = ["py312", "test"], no-default-feature = false}
 ipython = "*"
 ipykernel = "*"
 jupyterlab = "*"
+pandas-stubs = ">=2.2.3.241009,<3"
 
 
 ############################################## PYTHON ###############################################

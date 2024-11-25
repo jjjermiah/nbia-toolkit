@@ -12,7 +12,7 @@ from .nbia import NBIAClient, __version__, downloadSingleSeries
 from .nbia_cli import version
 from .auth import OAuth2
 from .logger.logger import setup_logger
-from .utils.nbia_endpoints import NBIA_ENDPOINTS
+from .utils.nbia_endpoints import NBIA_ENDPOINTS, NBIA_BASE_URLS
 from .dicomtags import *
 
 # define the __all__ variable
@@ -21,6 +21,7 @@ __all__ = [
     "OAuth2",
     "setup_logger",
     "NBIA_ENDPOINTS",
+    "NBIA_BASE_URLS",
     "version",
     "__version__",
     "downloadSingleSeries",

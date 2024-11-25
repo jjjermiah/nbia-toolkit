@@ -1,7 +1,3 @@
-from calendar import c
-from inspect import getmodule
-from re import I
-import re
 import zipfile
 from tempfile import TemporaryDirectory
 
