@@ -4,6 +4,7 @@ from typing import Tuple
 import requests
 from cryptography.fernet import Fernet
 
+from nbiatoolkit import logger
 from nbiatoolkit.utils import NBIA_BASE_URLS
 
 
@@ -145,9 +146,7 @@ class OAuth2:
 		self._fernet_key: bytes = Fernet.generate_key()
 		self.username: str
 		self.password: str
-		self.username, self.password = encrypt_credentials(
-			key=self.fernet_key, username=username, password=password
-		)
+
 		self.username, self.password = encrypt_credentials(
 			key=self._fernet_key, username=username, password=password
 		)
@@ -156,6 +155,8 @@ class OAuth2:
 			self.base_url = base_url.value
 		else:
 			self.base_url = base_url
+		logger.debug('OAuth2 client initialized with username %s', self.username)
+		logger.debug('base_url: %s', self.base_url)
 
 		self._access_token = None
 		self.expiry_time: int | None = None

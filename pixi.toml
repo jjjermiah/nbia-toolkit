@@ -9,7 +9,7 @@ version = "0.1.0"
 [tasks]
 
 [dependencies]
-python = "<3.13"
+python = ">=3.10.16,<3.14"
 
 [pypi-dependencies]
 nbia-toolkit = { path = ".", editable = true} 
@@ -33,7 +33,6 @@ py312 =  {features = ["py312", "test"], no-default-feature = false}
 ipython = "*"
 ipykernel = "*"
 jupyterlab = "*"
-pandas-stubs = ">=2.2.3.241009,<3"
 
 
 ############################################## PYTHON ###############################################
@@ -51,6 +50,7 @@ pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
 
+
 [feature.test.tasks.test]
 cmd = "pytest -c config/pytest.ini"
 inputs = ["src", "tests", "config/pytest.ini", "config/coverage.toml"]
@@ -62,6 +62,10 @@ cmd = "coverage report --rcfile=config/coverage.toml"
 inputs = ["src", "tests", "coverage-report/coverage.xml"]
 description = "Generate generated coverage report"
 depends-on = ["test"]
+
+[feature.test.pypi-dependencies]
+pytest-asyncio = ">=0.25.0, <0.26"
+pytest-aiohttp = ">=1.0.5, <2"
 
 
 ############################################## DOCS ###############################################
@@ -106,6 +110,7 @@ ruff = ">=0.4.4"
 mypy = ">=1.13.0,<2"
 types-requests = ">=2.32.0.20241016,<3"
 types-beautifulsoup4 = ">=4.12.0.20241020,<5"
+pandas-stubs = ">=2.2.3.241009,<3"
 
 [feature.quality.pypi-dependencies]
 pydoctest = ">=0.2.1, <0.3"

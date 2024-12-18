@@ -15,7 +15,7 @@ from rich.progress import (
 # Shared console instance for consistency
 console = Console()
 
-DEFAULT_LOG_LEVEL = 'INFO'
+DEFAULT_LOG_LEVEL = 'DEBUG'
 
 
 def get_rich_handler(
@@ -73,14 +73,6 @@ class RichProgressBar(Progress):
 
 	def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa # type: ignore
 		super().__init__(
-			'[progress.description]{task.description}',
-			BarColumn(),
-			'[progress.percentage]{task.percentage:>3.0f}%',
-			MofNCompleteColumn(),
-			'Time elapsed:',
-			TimeElapsedColumn(),
-			'Time remaining:',
-			TimeRemainingColumn(compact=True),
 			*args,
 			console=console,
 			**kwargs,
