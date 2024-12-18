@@ -104,6 +104,8 @@ doc-build.cmd = "make html --directory=docs"
 [feature.quality.dependencies]
 ruff = ">=0.4.4"
 mypy = ">=1.13.0,<2"
+types-requests = ">=2.32.0.20241016,<3"
+types-beautifulsoup4 = ">=4.12.0.20241020,<5"
 
 [feature.quality.pypi-dependencies]
 pydoctest = ">=0.2.1, <0.3"

@@ -11,10 +11,11 @@ def encrypt_credentials(key: bytes, username: str, password: str) -> Tuple[str, 
 	"""
 	Encrypts the given username and password using the provided key.
 
-	Args:
-	    key (bytes): The encryption key.
-	    username (str): The username to be encrypted.
-	    password (str): The password to be encrypted.
+	Parameters
+	----------
+		key (bytes): The encryption key.
+		username (str): The username to be encrypted.
+		password (str): The password to be encrypted.
 
 	Returns
 	-------
@@ -32,7 +33,8 @@ def decrypt_credentials(
 	"""
 	Decrypts the encrypted username and password using the provided key.
 
-	Args:
+	Parameters
+	----------
 	    key (bytes): The encryption key used to decrypt the credentials.
 	    encrypted_username (str): The encrypted username.
 	    encrypted_password (str): The encrypted password.
@@ -101,8 +103,8 @@ class OAuth2:
 	To use a custom account:
 
 	>>> oauth = OAuth2(
-	...     username="my_username",
-	...     password="my_password",
+	...     username='my_username',
+	...     password='my_password',
 	... )
 
 	Notes
@@ -119,9 +121,9 @@ class OAuth2:
 
 	def __init__(
 		self,
-		username: str = "nbia_guest",
-		password: str = "",
-		client_id: str = "NBIA",
+		username: str = 'nbia_guest',
+		password: str = '',
+		client_id: str = 'NBIA',
 		base_url: str | NBIA_BASE_URLS = NBIA_BASE_URLS.NBIA,
 	) -> None:
 		"""
@@ -158,7 +160,7 @@ class OAuth2:
 		self._access_token = None
 		self.expiry_time: int | None = None
 		self.refresh_expiry = None
-		self.refresh_token = ""  # Fix: Assign an empty string instead of None
+		self.refresh_token = ''  # Fix: Assign an empty string instead of None
 		self.scope = None
 
 	@property
@@ -166,7 +168,9 @@ class OAuth2:
 		return self._fernet_key
 
 	def is_logged_out(self) -> bool:  # noqa
-		return self._access_token == None and self.username == "" and self.password == ""
+		return (
+			self._access_token == None and self.username == '' and self.password == ''
+		)
 
 	@property
 	def access_token(self) -> str | None:  # noqa
@@ -174,7 +178,7 @@ class OAuth2:
 			return None
 
 		# Check if access token is not set or it's expired
-		if not self._access_token or self.is_token_expired():
+		if self.is_token_expired() or self._access_token is None:
 			self.refresh_token_or_request_new()
 
 		return self._access_token
@@ -184,75 +188,71 @@ class OAuth2:
 		return self.expiry_time is not None and time.time() > self.expiry_time
 
 	def refresh_token_or_request_new(self) -> None:  # noqa
-		if self.refresh_token != "":
+		if self.refresh_token != '':
 			self._refresh_access_token()
 		else:
 			self.request_new_access_token()
 
 	def _refresh_access_token(self) -> None:
-		assert self.refresh_token != "", "Refresh token is not set"
+		assert self.refresh_token != '', 'Refresh token is not set'
 
 		# Prepare the request data
 		data: dict[str, str] = {
-			"refresh_token": self.refresh_token,
-			"client_id": self.client_id,
-			"grant_type": "refresh_token",
+			'refresh_token': self.refresh_token,
+			'client_id': self.client_id,
+			'grant_type': 'refresh_token',
 		}
 
-		token_url: str = self.base_url + "oauth/token"
+		token_url: str = self.base_url + 'oauth/token'
 
 		response = requests.post(token_url, data=data)
 
-		try:
-			response.raise_for_status()
-		except requests.exceptions.HTTPError:
-			raise
-		else:
-			token_data = response.json()
-			self.set_token_data(token_data)
+		response.raise_for_status()
+		# requests.exceptions.HTTPError:
+
+		token_data = response.json()
+		self.set_token_data(token_data)
 
 	def request_new_access_token(self) -> None:  # noqa
 		data: dict[str, str] = {
-			"username": decrypt_credentials(
+			'username': decrypt_credentials(
 				key=self.fernet_key,
 				encrypted_username=self.username,
 				encrypted_password=self.password,
 			)[0],
-			"password": decrypt_credentials(
+			'password': decrypt_credentials(
 				key=self.fernet_key,
 				encrypted_username=self.username,
 				encrypted_password=self.password,
 			)[1],
-			"client_id": self.client_id,
-			"grant_type": "password",
+			'client_id': self.client_id,
+			'grant_type': 'password',
 		}
 
-		token_url: str = self.base_url + "oauth/token"
+		token_url: str = self.base_url + 'oauth/token'
 
 		response: requests.models.Response
 		response = requests.post(token_url, data=data)
 
-		try:
-			response = requests.post(token_url, data=data)
-			response.raise_for_status()
-		except requests.exceptions.HTTPError:
-			raise
-		else:
-			token_data = response.json()
-			self.set_token_data(token_data)
+		response = requests.post(token_url, data=data)
+		response.raise_for_status()
+		# requests.exceptions.HTTPError:
 
-	def set_token_data(self, token_data: dict):  # noqa
-		self._access_token = token_data["access_token"]
-		self.expiry_time = int(time.time()) + int(token_data.get("expires_in") or 0)
-		self.refresh_token = token_data["refresh_token"]
-		self.refresh_expiry = token_data.get("refresh_expires_in")
-		self.scope = token_data.get("scope")
+		token_data = response.json()
+		self.set_token_data(token_data)
+
+	def set_token_data(self, token_data: dict) -> None:
+		self._access_token = token_data['access_token']
+		self.expiry_time = int(time.time()) + int(token_data.get('expires_in') or 0)
+		self.refresh_token = token_data['refresh_token']
+		self.refresh_expiry = token_data.get('refresh_expires_in')
+		self.scope = token_data.get('scope')
 
 	@property
 	def api_headers(self) -> dict[str, str]:  # noqa
 		return {
-			"Authorization": f"Bearer {self.access_token}",
-			"Content-Type": "application/json",
+			'Authorization': f'Bearer {self.access_token}',
+			'Content-Type': 'application/json',
 		}
 
 	@property
@@ -269,15 +269,15 @@ class OAuth2:
 
 	def __repr__(self) -> str:  # noqa
 		if self.username:
-			return f"OAuth2(username={self.username}, client_id={self.client_id})"
+			return f'OAuth2(username={self.username}, client_id={self.client_id})'
 		else:
-			return ""
+			return ''
 
 	def __str__(self):  # noqa
 		if self.username:
-			return f"OAuth2(username={self.username}, client_id={self.client_id})"
+			return f'OAuth2(username={self.username}, client_id={self.client_id})'
 		else:
-			return ""
+			return ''
 
 	def logout(self) -> None:
 		"""Log out the user and revokes the access token.
@@ -300,12 +300,12 @@ class OAuth2:
 			pass  # WAIT UNTIL TCIA IMPLEMENTS LOGOUT FUNCTIONALITY
 		finally:
 			# set the entire object to None
-			self.username = ""
-			self.password = ""
-			self.client_id = ""
-			self.base_url = ""
+			self.username = ''
+			self.password = ''
+			self.client_id = ''
+			self.base_url = ''
 			self._access_token = None
 			self.expiry_time = None
 			self.refresh_expiry = None
-			self.refresh_token = ""
+			self.refresh_token = ''
 			self.scope = None

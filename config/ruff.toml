@@ -90,6 +90,7 @@ ignore = [
 [lint.isort]
 # Define project-specific imports for better organization
 known-first-party = ["nbiatoolkit"]
+lines-after-imports = 2
 
 # https://docs.astral.sh/ruff/settings/#pydocstyle
 [lint.pydocstyle]

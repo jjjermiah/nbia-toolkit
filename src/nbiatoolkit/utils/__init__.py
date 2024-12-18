@@ -1,5 +1,5 @@
 from .md5 import validateMD5
-from .nbia_endpoints import NBIA_BASE_URLS, NBIA_ENDPOINTS, ReturnType
+from .nbia_endpoints import NBIA_BASE_URLS, NBIA_ENDPOINTS
 from .parsers import (
     clean_html,
     convertDateFormat,

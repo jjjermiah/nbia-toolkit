@@ -8,6 +8,7 @@
 
 
 # import the modules
+from .logging import logger  # noqa
 from .auth import OAuth2
 
 # define the __all__ variable

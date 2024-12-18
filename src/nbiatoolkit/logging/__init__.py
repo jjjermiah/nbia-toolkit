@@ -1,4 +1,5 @@
-import logging
+from logging import Logger, getLogger
+from typing import Any
 
 from rich.console import Console
 from rich.logging import RichHandler
@@ -10,12 +11,11 @@ from rich.progress import (
 	TimeRemainingColumn,
 )
 
+
 # Shared console instance for consistency
 console = Console()
 
 DEFAULT_LOG_LEVEL = 'INFO'
-
-logger = setup_logger("nbiatoolkit", log_level=DEFAULT_LOG_LEVEL)
 
 
 def get_rich_handler(
@@ -28,14 +28,14 @@ def get_rich_handler(
 	Set up a basic logger using Rich.
 
 	Args:
-	        name (str): Name of the logger (not used directly for simplicity).
-	        log_level (str, optional): Log level. Defaults to "INFO".
-	        console_logging (bool, optional): Enable console logging. Defaults to True.
-	        log_format (str, optional): Format of the logs. Defaults to "%(message)s".
+		name (str): Name of the logger (not used directly for simplicity).
+		log_level (str, optional): Log level. Defaults to "INFO".
+		console_logging (bool, optional): Enable console logging. Defaults to True.
+		log_format (str, optional): Format of the logs. Defaults to "%(message)s".
 
 	Returns
 	-------
-	        RichHandler: Configured Rich logger handler.
+		RichHandler: Configured Rich logger handler.
 	"""
 	if not console_logging:
 		msg = 'This logger only supports console logging for simplicity.'
@@ -47,19 +47,19 @@ def get_rich_handler(
 	return handler
 
 
-def setup_logger(name: str, log_level: str = 'INFO') -> logging.Logger:
+def setup_logger(name: str, log_level: str = 'INFO') -> Logger:
 	"""
 	Set up a logger with the specified name and log level.
 
 	Args:
-	        name (str): Name of the logger.
-	        log_level (str, optional): Log level. Defaults to "INFO".
+		name (str): Name of the logger.
+		log_level (str, optional): Log level. Defaults to "INFO".
 
 	Returns
 	-------
-	        logging.Logger: Configured logger instance.
+		logging.Logger: Configured logger instance.
 	"""
-	logger = logging.getLogger(name)
+	logger = getLogger(name)
 	handler = get_rich_handler(name, log_level=log_level)
 	logger.addHandler(handler)
 	logger.setLevel(log_level)
@@ -71,7 +71,7 @@ class RichProgressBar(Progress):
 	A simple subclass of rich.progress.Progress that uses the shared console instance.
 	"""
 
-	def __init__(self, *args, **kwargs) -> None: # noqa
+	def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa # type: ignore
 		super().__init__(
 			'[progress.description]{task.description}',
 			BarColumn(),
@@ -87,12 +87,10 @@ class RichProgressBar(Progress):
 		)
 
 
+logger = setup_logger('nbiatoolkit', log_level=DEFAULT_LOG_LEVEL)
 # Example usage
 if __name__ == '__main__':
 	import time
-
-	# Example Logger Usage
-	logger = setup_logger(__name__)
 
 	console.print('Logging Example with Rich')
 
