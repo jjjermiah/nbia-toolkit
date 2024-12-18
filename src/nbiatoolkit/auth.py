@@ -1,7 +1,7 @@
 import requests
 import time
 from typing import Union, Tuple
-from .utils import NBIA_ENDPOINTS, NBIA_BASE_URLS
+from nbiatoolkit.utils import NBIA_BASE_URLS
 from cryptography.fernet import Fernet
 
 
@@ -210,7 +210,7 @@ class OAuth2:
             token_data = response.json()
             self.set_token_data(token_data)
 
-    def request_new_access_token(self):
+    def request_new_access_token(self) -> None:
         data: dict[str, str] = {
             "username": decrypt_credentials(
                 key=self.fernet_key,
@@ -266,7 +266,7 @@ class OAuth2:
     def token_scope(self):
         return self.scope
 
-    def __repr__(self) -> Union[str, None]:
+    def __repr__(self) -> str:
         if self.username:
             return f"OAuth2(username={self.username}, client_id={self.client_id})"
         else:
@@ -296,8 +296,8 @@ class OAuth2:
         response = requests.get(query_url, headers=self.api_headers)
         try:
             response.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
+        except requests.exceptions.HTTPError:
+            pass # WAIT UNTIL TCIA IMPLEMENTS LOGOUT FUNCTIONALITY
         finally:
             # set the entire object to None
             self.__dict__.clear()

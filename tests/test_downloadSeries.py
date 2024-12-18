@@ -1,5 +1,4 @@
 import pytest
-from sqlalchemy import over
 from src.nbiatoolkit import NBIAClient, downloadSingleSeries
 from tempfile import TemporaryDirectory
 import os

@@ -1,4 +1,3 @@
-from math import log
 import pydicom
 from pydicom.datadict import dictionary_VR, tag_for_keyword
 import pandas as pd
@@ -168,7 +167,8 @@ def subsetSeriesTags(series_tags_df: pd.DataFrame, element: str) -> pd.DataFrame
     """
 
     locs: pd.DataFrame
-    locs = series_tags_df[series_tags_df["element"].str.contains(element)]
+    escaped_element = element.replace("(", r"\(").replace(")", r"\)")
+    locs = series_tags_df[series_tags_df["element"].str.contains(escaped_element)]
 
     if len(locs) == 0:
         raise ValueError("Element not found in the series tags.")
@@ -242,8 +242,9 @@ def getReferencedSeriesUIDS(series_tags_df: pd.DataFrame) -> List[str]:
         series_tags_df=series_tags_df
     )
 
+    escaped_element = SeriesInstanceUID_element.replace("(", r"\(").replace(")", r"\)")
     value: pd.DataFrame = search_space[
-        search_space["element"].str.contains(SeriesInstanceUID_element)
+        search_space["element"].str.contains(escaped_element)
     ]
 
     UIDS: list[str] = value["data"].to_list()
