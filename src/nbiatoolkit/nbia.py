@@ -46,7 +46,7 @@ class NBIAClient:
 	async def query(self, progress: Progress, endpoint: NBIA_ENDPOINTS, params: Union[None, frozenset] = None) -> dict:
 		"""Query the NBIA API."""
 		hashable_params = frozenset(params.items()) if params else frozenset()
-		task = progress.add_task(f'Querying {endpoint.value}...', total=None)
+		task = progress.add_task(f'Querying {endpoint}...', total=None)
 
 		try:
 			result = await async_query_api(
@@ -65,13 +65,12 @@ class NBIAClient:
 if __name__ == '__main__':
 	from rich import print
 	from rich.progress import SpinnerColumn, Progress, TimeElapsedColumn
+	from nbiatoolkit.logging_config import console
 	import asyncio
+	import pandas as pd
 
 	async def main():
 		client = NBIAClient()
-
-		# print(client)
-		# print(client.headers)
 
 		with RichProgressBar(
 			'[progress.description]{task.description}',
@@ -93,19 +92,20 @@ if __name__ == '__main__':
 			for resp in responses:
 				logger.info(f"Found {len(resp)} items")
 
+			df = pd.DataFrame(responses[3])
+			console.print(df)
 			# series_responses = [
 			# 	client.query(
 			# 		progress,
 			# 		NBIA_ENDPOINTS.GET_SERIES,
 			# 		params=col,
 			# 	)
-			# 	for col in responses[0]
+			# 	for col in responses[0][:25]
 			# ]
 
 			# series = await asyncio.gather(*series_responses)
 
 			# for s in series:
 			# 	print(f"Found {len(s)} series")
-
 
 	asyncio.run(main())

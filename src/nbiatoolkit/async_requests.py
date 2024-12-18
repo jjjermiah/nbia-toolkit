@@ -24,10 +24,11 @@ async def async_get_request(url: str, headers: dict, params: dict, timeout: int 
 	try:
 		# Setting up a timeout for the request
 		async with aiohttp.ClientSession(
-			raise_for_status=True, timeout=aiohttp.ClientTimeout(total=timeout)
+			raise_for_status=True
 		) as session:
 			async with session.get(url, headers=headers, params=params) as response:
 				if 200 <= response.status < 300:  # Accepting any 2xx response
+					logger.info(f'Successful request with status code {response.status}')
 					return await response.read()
 				else:
 					logger.error(
