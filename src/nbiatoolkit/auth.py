@@ -210,7 +210,7 @@ class OAuth2:
             token_data = response.json()
             self.set_token_data(token_data)
 
-    def request_new_access_token(self):
+    def request_new_access_token(self) -> None:
         data: dict[str, str] = {
             "username": decrypt_credentials(
                 key=self.fernet_key,
@@ -266,7 +266,7 @@ class OAuth2:
     def token_scope(self):
         return self.scope
 
-    def __repr__(self) -> Union[str, None]:
+    def __repr__(self) -> str:
         if self.username:
             return f"OAuth2(username={self.username}, client_id={self.client_id})"
         else:
