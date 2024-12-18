@@ -44,6 +44,7 @@ class AbstractModel(BaseModel, ABC):
 			"%m/%d/%Y",
 			"%d/%m/%Y",
 			"%d-%m-%Y",
+			"%Y-%m-%d %H:%M:%S.%f",
 		]
 		if isinstance(input_date, datetime):
 			return input_date
