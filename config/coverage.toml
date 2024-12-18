@@ -7,7 +7,6 @@ source = ["nbiatoolkit"]
 # Excludes non-relevant files from coverage reporting
 omit = [
     "tests/*",
-    "*/__init__.py",
 ]
 
 [tool.coverage.report]

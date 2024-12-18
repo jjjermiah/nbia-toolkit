@@ -12,6 +12,8 @@ fix = true
 extend-exclude = [
   "docs/*",     # Skip documentation files
   "tests/*",    # Skip test files
+  "src/nbiatoolkit/utils/**/*.py", # Skip utils files
+  "src/nbiatoolkit/models/**/*.py", # Skip utils files
 ]
 
 # Set the ruff cache directory

@@ -1,5 +1,5 @@
 [semantic_release]
-version_variables = ["src/orcestradownloader/__init__.py:__version__"]
+version_variables = ["src/nbiatoolkit/__init__.py:__version__"]
 version_toml = ["pyproject.toml:project.version"]
 upload_to_release = true
 remove_dist = false

@@ -8,7 +8,7 @@ import time
 import pytest
 import requests
 
-from src.nbiatoolkit.auth import OAuth2
+from nbiatoolkit import OAuth2
 
 
 @pytest.fixture

@@ -30,3 +30,5 @@ class NBIAClient:
 	) -> None:
 		logger.debug("Setting up OAuth2 client... with username %s", username)
 		self._oauth2_client = OAuth2(username=username, password=password)
+
+

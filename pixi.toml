@@ -46,33 +46,22 @@ python = "3.11.*"
 python = "3.12.*"
 
 ############################################## TEST ################################################
-
 [feature.test.dependencies]
 pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
-pytest-mock = ">=3.14.0,<4"
-
 
 [feature.test.tasks.test]
-cmd = [
-  "pytest",
-  "-n=auto",
-  "--cov",
-  "--cov-report=xml:coverage-report/coverage.xml",
-  "--cov-config=config/coverage.toml",
-  "-c", "./config/pytest.ini",
-]
-inputs = ["src", "tests", "config/coverage.toml"]
+cmd = "pytest -c config/pytest.ini"
+inputs = ["src", "tests", "config/pytest.ini", "config/coverage.toml"]
 outputs = ["coverage-report/coverage.xml"]
-description = "Run pytest (Note: run `coverage` task to do both)"
+description = "Run pytest"
 
 [feature.test.tasks.coverage]
 cmd = "coverage report --rcfile=config/coverage.toml"
-inputs = ["coverage-report/coverage.xml", "config/coverage.toml"]
+inputs = ["src", "tests", "coverage-report/coverage.xml"]
+description = "Generate generated coverage report"
 depends-on = ["test"]
-description = "Run pytest and generate coverage report"
-
 
 
 ############################################## DOCS ###############################################
