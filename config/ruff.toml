@@ -1,28 +1,7 @@
-# NOTE:
-# The idea is that all future files should be included in the linting process.
-# To save the headache, we are excluding everything before, and hopefully we can
-# slowly fix everything
+cache-dir = "~/.cache/ruff"
+include = ["src/nbiatoolkit/nbia2.py"] 
 
-include = [
-  "src/imgtools/logging/**/*.py", 
-  "src/imgtools/cli/**/*.py",
-  "src/imgtools/dicom/**/*.py",
-]
-
-extend-exclude = [
-  ".pixi/**/*",
-  "tests/**/*.py",
-  "src/imgtools/ops/**/*.py",
-  "src/imgtools/io/**/*.py",
-  "src/imgtools/utils/**/*.py",
-  "src/imgtools/modules/**/*.py",
-  "src/imgtools/transforms/**/*.py",
-  "src/imgtools/autopipeline.py",
-  "src/imgtools/pipeline.py",
-  "src/imgtools/image.py",
-]
-
-
+# Same as Black.
 line-length = 100
 
 [lint]
@@ -69,6 +48,9 @@ select = [
   # Provide clear and explanatory error messages
   # https://docs.astral.sh/ruff/rules/#flake8-errmsg-em
   "EM",
+  # Check for McCabe complexity
+  # https://docs.astral.sh/ruff/rules/complex-structure/
+  "C",
 
   ###########################################################################
   # STANDARDS & STYLE
@@ -84,33 +66,44 @@ select = [
   # errors like undefined names and unused imports without enforcing style rules.
   # https://docs.astral.sh/ruff/rules/#pyflakes-f
   "F",
-  #
-  # https://docs.astral.sh/ruff/rules/#pep8-naming-n
-  "N",
+
   # Pydocstyle
   # https://docs.astral.sh/ruff/rules/#pydocstyle-d
-  # "D",
+  "D",
 ]
 
+
 ignore = [
-  # allow self to not need type annotations
-  "ANN101",
   # Allow too many arguments for functions
   "PLR0913",
   # Public Module Docstrings
   "D100",
   # Ignored because https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules 
   "COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/#missing-trailing-comma-com812
-  "D206"
+  "D206",
 ]
 
-# [lint.pydocstyle]
-# convention = "numpy"
+[lint.isort]
+known-first-party = ["nbiatoolkit"]
+force-wrap-aliases = true
+combine-as-imports = true
+relative-imports-order = "closest-to-furthest"
+
+[lint.mccabe]
+max-complexity = 10
+
+
+[lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+
 [lint.pydocstyle]
 convention = "numpy"
 
-[format]
 
-quote-style = "single"
+
+[format]
+quote-style = "double"
 indent-style = "tab"
 docstring-code-format = true
+docstring-code-line-length = 20

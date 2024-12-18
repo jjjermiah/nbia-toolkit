@@ -12,14 +12,12 @@ requires-python = ">=3.10,<4"
 dependencies = [
     "requests>=2.31.0,<3",
     "pydicom>=3.0",
-    "tqdm>=4.66.1",
-    "beautifulsoup4>=4.12.3",
     "cryptography>=43.0.3",
     "pandas>=2.2.0",
     "pydantic>=2.10",
     "aiohttp>=3.11.7",
     "aiofiles>=24.1.0",
-    "structlog"
+    "rich"
 ]
 
 [build-system]

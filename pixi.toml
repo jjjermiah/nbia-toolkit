@@ -122,11 +122,11 @@ types-tqdm = ">=4.66.0.20240417,<5"
 pydoctest = ">=0.2.1, <0.3"
 
 [feature.quality.tasks]
-ruff-check.cmd = ["ruff", "--config", "config/ruff.toml", "check", "src"]
+ruff-check.cmd = ["ruff", "--config", "config/ruff.toml"]
 ruff-check.inputs = ["config/ruff.toml", "src"]
 ruff-check.description = "Run ruff check"
 
-ruff-format.cmd = ["ruff", "--config", "config/ruff.toml", "format", "src"]
+ruff-format.cmd = ["ruff", "--config", "config/ruff.toml"]
 ruff-format.inputs = ["config/ruff.toml", "src"]
 ruff-format.depends_on = ["ruff-check"]
 ruff-format.description = "Run ruff format, run check first"
