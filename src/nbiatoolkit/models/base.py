@@ -1,8 +1,9 @@
-from typing import Any, Dict, List, Optional, Type, TypeVar, Union, Callable, Generic
-from pydantic import BaseModel, Field
-from pandas import DataFrame
-from datetime import datetime
 from abc import ABC
+from datetime import datetime
+from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union
+
+from pandas import DataFrame
+from pydantic import BaseModel, Field
 
 T = TypeVar("T", bound="AbstractModel")
 
@@ -53,7 +54,8 @@ class AbstractModel(BaseModel, ABC):
                 return datetime.strptime(input_date, date_format)
             except ValueError:
                 continue
-        raise ValueError(f"Invalid date format: {input_date}")
+        msg = f"Invalid date format: {input_date}"
+        raise ValueError(msg)
 
 
 M = TypeVar("M", bound=AbstractModel)
@@ -81,7 +83,8 @@ class AbstractListModel(BaseModel, Generic[M]):
         Returns a list of keys for the items in the list.
         """
         if not self.__key__:
-            raise AttributeError("Key attribute `__key__` not set for the list model.")
+            msg = "Key attribute `__key__` not set for the list model."
+            raise AttributeError(msg)
         return [getattr(item, self.__key__) for item in self.items]
 
     def filter(
@@ -117,9 +120,11 @@ class AbstractListModel(BaseModel, Generic[M]):
             for item in self.items:
                 if getattr(item, self.__key__) == index:
                     return item
-            raise KeyError(f"No item found with {self.__key__}='{index}'")
+            msg = f"No item found with {self.__key__}='{index}'"
+            raise KeyError(msg)
+        msg = "Index must be an integer or a string representing the key value."
         raise TypeError(
-            "Index must be an integer or a string representing the key value."
+            msg
         )
 
     def __len__(self) -> int:

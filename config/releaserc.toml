@@ -1,0 +1,34 @@
+[semantic_release]
+version_variables = ["src/orcestradownloader/__init__.py:__version__"]
+version_toml = ["pyproject.toml:project.version"]
+upload_to_release = true
+remove_dist = false
+commit_message = "chore(sem-ver): {version}"
+patch_without_tag = false
+major_on_zero = false
+
+[semantic_release.branches.main]
+match = "(main|master)"
+
+[semantic_release.branches.dev]
+# any branch that contains "dev" will be considered a dev branch
+match = "(dev|develop)"
+prerelease = true
+prerelease_token = "rc"
+
+[semantic_release.commit_parser_options]
+allowed_tags = [
+  "build",
+  "chore",
+  "ci",
+  "docs",
+  "feat",
+  "fix",
+  "perf",
+  "style",
+  "refactor",
+  "test",
+]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+default_bump_level = 0

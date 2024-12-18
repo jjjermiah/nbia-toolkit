@@ -38,7 +38,8 @@ def get_rich_handler(
 	        RichHandler: Configured Rich logger handler.
 	"""
 	if not console_logging:
-		raise ValueError('This logger only supports console logging for simplicity.')
+		msg = 'This logger only supports console logging for simplicity.'
+		raise ValueError(msg)
 
 	level = log_level.upper()
 	handler = RichHandler(console=console, level=level, show_time=True, show_level=True)

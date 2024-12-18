@@ -11,7 +11,7 @@ class NBIA_BASE_URLS(Enum):
     LOGOUT_URL = "https://services.cancerimagingarchive.net/nbia-api/logout"
 
     # Helper functions
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value
 
     def _format(self):
@@ -43,7 +43,7 @@ class NBIA_ENDPOINTS(Enum):
     DOWNLOAD_SERIES = "v2/getImageWithMD5Hash"
     GET_DICOM_TAGS = "getDicomTags"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value
 
     def _format(self):

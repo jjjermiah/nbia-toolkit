@@ -1,109 +1,119 @@
-cache-dir = "~/.cache/ruff"
-include = ["src/nbiatoolkit/nbia2.py"] 
+###########################################################################
+# RUFF CONFIGURATION
+# Ruff is an extremely fast Python linter and code formatter, written in Rust.
+# https://docs.astral.sh/ruff/settings/
 
-# Same as Black.
-line-length = 100
+# Show detailed output with rule codes and explanations
+output-format = "full"
+# Automatically fix issues when possible
+fix = true
+
+# Directories to exclude from all checks
+extend-exclude = [
+  "docs/*",     # Skip documentation files
+  "tests/*",    # Skip test files
+]
+
+# Set the ruff cache directory
+cache-dir = ".cache/ruff"
+
+###########################################################################
+# RUFF LINTING
+# https://docs.astral.sh/ruff/linter/
 
 [lint]
 
 select = [
   ###########################################################################
   # TYPE ANNOTATIONS
-  # Ensure all functions have type annotations
   # https://docs.astral.sh/ruff/rules/#flake8-annotations-ann
-  "ANN",
-  # Use type hinting consistently
+  "ANN",  # Enforces type annotations for functions, improving code clarity and IDE support
   # https://docs.astral.sh/ruff/rules/#flake8-type-checking-tch
-  "TCH",
+  "TCH",  # Ensures consistent usage of typing constructs and validates type checking patterns
 
   ###########################################################################
   # IMPORTS
-  # Sort imports naturally
   # https://docs.astral.sh/ruff/rules/#isort-i
-  "I",
-  # Follow import conventions
+  "I",    # Automatically sorts and formats imports according to PEP 8
   # https://docs.astral.sh/ruff/rules/#flake8-import-conventions-icn
-  "ICN",
-  # Clean up and organize imports
+  "ICN",  # Standardizes import conventions, especially for commonly confused modules
   # https://docs.astral.sh/ruff/rules/#flake8-tidy-imports-tid
-  "TID",
+  "TID",  # Prevents banned imports and enforces consistent import patterns
 
   ###########################################################################
   # CODE QUALITY
-  # Detect possible bugs, like unused variables or exception handling issues
   # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
-  "B",
-  # Avoid using Python builtins incorrectly
+  "B",    # Catches common bugs and design problems before they cause issues
   # https://docs.astral.sh/ruff/rules/#flake8-builtins-a
-  "A",
-  # Enforce correct usage of commas in lists, tuples, etc.
+  "A",    # Prevents naming conflicts with Python built-ins
   # https://docs.astral.sh/ruff/rules/#flake8-commas-com
-  "COM",
-  # Prevent use of debugging code, like breakpoints
+  "COM",  # Enforces consistent comma usage in multi-line structures
   # https://docs.astral.sh/ruff/rules/#flake8-debugger-t10
-  "T10",
-  # Disallow print statements
+  "T10",  # Prevents committed debugging code like breakpoint() statements
   # https://docs.astral.sh/ruff/rules/#flake8-print-t20
-  "T20",
-  # Provide clear and explanatory error messages
+  "T20",  # Catches print statements that should be proper logging calls
   # https://docs.astral.sh/ruff/rules/#flake8-errmsg-em
-  "EM",
-  # Check for McCabe complexity
-  # https://docs.astral.sh/ruff/rules/complex-structure/
-  "C",
+  "EM",   # Ensures exception messages are properly formatted
+  # https://docs.astral.sh/ruff/rules/#tryceratops-try
+  "TRY",  # Prevent try-except handling antipatterns https://blog.guilatrova.dev/handling-exceptions-in-python-like-a-pro
+  # https://docs.astral.sh/ruff/rules/#refurb-furb
+  "FURB",  # refurbish and modernize codebases
+  # https://docs.astral.sh/ruff/rules/#pandas-vet-pd
+  "PD",   # opinionated pandas code linting
 
   ###########################################################################
   # STANDARDS & STYLE
-  # Prefer pathlib for path manipulation
   # https://docs.astral.sh/ruff/rules/#flake8-use-pathlib-pth
-  "PTH",
-  # Adhere to Pylint conventions
+  "PTH",  # Modernizes code by using pathlib instead of os.path
   # https://docs.astral.sh/ruff/rules/#pylint-pl
-  "PL",
-  # Simplify code to reduce complexity
+  "PL",   # Applies Pylint's battle-tested code quality rules
   # https://docs.astral.sh/ruff/rules/#flake8-simplify-sim
-  "SIM",
-  # errors like undefined names and unused imports without enforcing style rules.
+  "SIM",  # Identifies code that can be simplified or made more idiomatic
   # https://docs.astral.sh/ruff/rules/#pyflakes-f
-  "F",
-
-  # Pydocstyle
-  # https://docs.astral.sh/ruff/rules/#pydocstyle-d
-  "D",
+  "F",    # Finds logical errors like undefined names and unused imports
+  # https://docs.astral.sh/ruff/rules/#pep8-naming-n
+  "N",    # Enforces PEP 8 naming conventions for consistency
 ]
-
 
 ignore = [
-  # Allow too many arguments for functions
-  "PLR0913",
-  # Public Module Docstrings
-  "D100",
-  # Ignored because https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules 
-  "COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/#missing-trailing-comma-com812
-  "D206",
+  "PLR0913", # Permits functions with many arguments when necessary
+  "D100",    # Allows modules without docstrings
+  # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+  "COM812",  # Avoids conflict with Ruff formatter trailing comma rules
+  "D206",     # Allows docstrings to be formatted flexibly
+  "T201",
 ]
 
+# https://docs.astral.sh/ruff/settings/#isort
 [lint.isort]
+# Define project-specific imports for better organization
 known-first-party = ["nbiatoolkit"]
-force-wrap-aliases = true
-combine-as-imports = true
-relative-imports-order = "closest-to-furthest"
 
-[lint.mccabe]
-max-complexity = 10
-
-
-[lint.per-file-ignores]
-"tests/*" = ["S101"]
-
-
+# https://docs.astral.sh/ruff/settings/#pydocstyle
 [lint.pydocstyle]
+# Use NumPy docstring convention for clear, structured documentation
 convention = "numpy"
 
+# https://docs.astral.sh/ruff/settings/#per-file-ignores
+[lint.per-file-ignores]
+# Allow assert statements in test files
+"tests/*" = ["S101"]
 
+# https://docs.astral.sh/ruff/settings/#mccabe
+[lint.mccabe]
+# Set maximum cyclomatic complexity to prevent overly complex functions
+max-complexity = 10
+
+###########################################################################
+# FORMATTING
+# https://docs.astral.sh/ruff/formatter/
 
 [format]
-quote-style = "double"
+# Use single quotes for string literals
+quote-style = "single"
+
+# Use tabs for indentation
 indent-style = "tab"
+
+# Format code blocks within docstrings
 docstring-code-format = true
-docstring-code-line-length = 20

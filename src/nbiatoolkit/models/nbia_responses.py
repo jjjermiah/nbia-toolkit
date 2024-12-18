@@ -1,7 +1,10 @@
-from nbiatoolkit.models.base import AbstractListModel, AbstractModel
-from typing import  Optional
-from pydantic import Field, validator
 from datetime import datetime
+from typing import Optional
+
+from pydantic import Field, validator
+
+from nbiatoolkit.models.base import AbstractListModel, AbstractModel
+
 
 class Patient(AbstractModel):
 	Collection: str
@@ -15,7 +18,7 @@ class Patient(AbstractModel):
 	SpeciesDescription: Optional[str] = None
 
 	@validator("PatientBirthDate", pre=True, always=True)
-	def validate_birth_date(cls, value):
+	def validate_birth_date(self, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -51,7 +54,7 @@ class Study(AbstractModel):
 	LongitudinalTemporalOffsetFromEvent: Optional[float] = None
 
 	@validator("StudyDate", pre=True, always=True)
-	def validate_study_date(cls, value):
+	def validate_study_date(self, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -60,7 +63,7 @@ class Study(AbstractModel):
 		return AbstractModel.convert_date(value)
 
 	@validator("PatientBirthDate", pre=True, always=True)
-	def validate_birth_date(cls, value):
+	def validate_birth_date(self, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -98,7 +101,7 @@ class Series(AbstractModel):
 	ThirdPartyAnalysis: Optional[str] = None
 
 	@validator("SeriesDate", pre=True, always=True)
-	def validate_series_date(cls, value):
+	def validate_series_date(self, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -107,7 +110,7 @@ class Series(AbstractModel):
 		return AbstractModel.convert_date(value)
 
 	@validator("StudyDate", pre=True, always=True)
-	def validate_study_date(cls, value):
+	def validate_study_date(self, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -119,9 +122,10 @@ class SeriesList(AbstractListModel[Series]):
 	__key__ = "SeriesInstanceUID"
 
 if __name__ == "__main__":
-	from nbiatoolkit import NBIAClient
-	from pathlib import Path
 	import json
+	from pathlib import Path
+
+	from nbiatoolkit import NBIAClient
 
 	client = NBIAClient(log_level="DEBUG")
 	

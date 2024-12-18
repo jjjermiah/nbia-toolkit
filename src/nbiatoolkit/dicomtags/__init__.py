@@ -1,16 +1,13 @@
 from .tags import (
+    LOOKUP_TAG,
     convert_element_to_int,
     convert_int_to_element,
-    LOOKUP_TAG,
     element_VR_lookup,
-    getSeriesModality,
-)
-
-from .tags import (
-    subsetSeriesTags,
+    extract_ROI_info,
     getReferencedFrameOfReferenceSequence,
     getReferencedSeriesUIDS,
-    extract_ROI_info,
+    getSeriesModality,
+    subsetSeriesTags,
 )
 
 __all__ = [

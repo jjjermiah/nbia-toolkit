@@ -205,8 +205,8 @@ class OAuth2:
 
 		try:
 			response.raise_for_status()
-		except requests.exceptions.HTTPError as err:
-			raise err
+		except requests.exceptions.HTTPError:
+			raise
 		else:
 			token_data = response.json()
 			self.set_token_data(token_data)
@@ -235,8 +235,8 @@ class OAuth2:
 		try:
 			response = requests.post(token_url, data=data)
 			response.raise_for_status()
-		except requests.exceptions.HTTPError as err:
-			raise err
+		except requests.exceptions.HTTPError:
+			raise
 		else:
 			token_data = response.json()
 			self.set_token_data(token_data)

@@ -1,7 +1,8 @@
+from typing import List
+
+import pandas as pd
 import pydicom
 from pydicom.datadict import dictionary_VR, tag_for_keyword
-import pandas as pd
-from typing import List
 
 
 def convert_element_to_int(element_str: str) -> int:
@@ -29,8 +30,9 @@ def convert_element_to_int(element_str: str) -> int:
 
     # Check if the element has the correct structure
     if len(elements) != 2:
+        msg = f"Invalid element format. Element must have the structure '(<INT>,<INT>)': {element_str}"
         raise ValueError(
-            f"Invalid element format. Element must have the structure '(<INT>,<INT>)': {element_str}"
+            msg
         )
 
     # Convert each element from string to integer
@@ -93,7 +95,8 @@ def LOOKUP_TAG(keyword: str) -> int:
     """
     tag: int | None = tag_for_keyword(keyword=keyword)
     if tag is None:
-        raise (ValueError(f"Tag not found for keyword: {keyword}"))
+        msg = f"Tag not found for keyword: {keyword}"
+        raise (ValueError(msg))
     return tag
 
 
@@ -138,7 +141,8 @@ def getSeriesModality(series_tags_df: pd.DataFrame) -> str:
     modality_tag = LOOKUP_TAG(keyword="Modality")
 
     if modality_tag is None:
-        raise ValueError("Modality tag not found in the DICOM dictionary.")
+        msg = "Modality tag not found in the DICOM dictionary."
+        raise ValueError(msg)
 
     modality_tag_element: str = convert_int_to_element(combined_int=modality_tag)
 
@@ -171,15 +175,18 @@ def subsetSeriesTags(series_tags_df: pd.DataFrame, element: str) -> pd.DataFrame
     locs = series_tags_df[series_tags_df["element"].str.contains(escaped_element)]
 
     if len(locs) == 0:
-        raise ValueError("Element not found in the series tags.")
+        msg = "Element not found in the series tags."
+        raise ValueError(msg)
 
     if len(locs) == 1:
+        msg = "Only one element found in the series tags. Ensure element is a sequence"
         raise ValueError(
-            "Only one element found in the series tags. Ensure element is a sequence"
+            msg
         )
 
     if len(locs) > 2:
-        raise ValueError("More than two elements found in the series tags.")
+        msg = "More than two elements found in the series tags."
+        raise ValueError(msg)
 
     return series_tags_df.iloc[locs.index[0] : locs.index[1] + 1]
 
@@ -200,7 +207,8 @@ def getReferencedFrameOfReferenceSequence(series_tags_df: pd.DataFrame) -> pd.Da
     """
     modality = getSeriesModality(series_tags_df=series_tags_df)
     if modality != "RTSTRUCT":
-        raise ValueError("Series is not an RTSTRUCT.")
+        msg = "Series is not an RTSTRUCT."
+        raise ValueError(msg)
 
     tag: int = LOOKUP_TAG(keyword="ReferencedFrameOfReferenceSequence")
 
@@ -324,7 +332,8 @@ def extract_ROI_info(StructureSetROISequence) -> dict[str, dict[str, str]]:
     ].index
 
     if ROI_indices.empty:
-        raise ValueError("ROI Number not found in the StructureSetROISequence.")
+        msg = "ROI Number not found in the StructureSetROISequence."
+        raise ValueError(msg)
 
     # Iterate between the indices of the ROI numbers, to extract the ROI information
     # add to the dictionary where the key is the ROI number and the value is the ROI information
