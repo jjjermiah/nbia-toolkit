@@ -61,6 +61,25 @@ class NBIAClient:
 
 		return result
 
+	async def getInsanceUIDs(self, SeriesInstanceUID: str, progress: Progress) -> dict:
+		"""Query the NBIA API."""
+		endpoint = NBIA_ENDPOINTS.GET_SOP_INSTANCE_UIDS
+		task = progress.add_task(f'Querying {endpoint}...', total=None)
+
+		try:
+			result = await async_query_api(
+				endpoint=endpoint.value,
+				params={'SeriesInstanceUID': SeriesInstanceUID},  # Convert back to dict for the API call
+				headers=self.headers,
+				base_url=self.base_url.value,
+			)
+		finally:
+			progress.update(task, completed=1)
+			progress.remove_task(task)
+
+		return result
+
+
 
 if __name__ == '__main__':
 	from rich import print
@@ -79,21 +98,35 @@ if __name__ == '__main__':
 			TimeElapsedColumn(),
 			transient=True,
 		) as progress:
+
+			response_list = []
 			# Define queries
-			response1 = client.query(progress, NBIA_ENDPOINTS.GET_COLLECTIONS)
-			response2 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_VALUES)
-			response3 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_PATIENT_COUNT)
-			response4 = client.query(progress, NBIA_ENDPOINTS.GET_PATIENTS)
-			# response5 = client.query(progress, NBIA_ENDPOINTS.GET_SERIES, params={'Collection': 'LIDC-IDRI'})
-			responses = await asyncio.gather(response1, response2, response3, response4)
+			# response1 = client.query(progress, NBIA_ENDPOINTS.GET_COLLECTIONS)
+			# response2 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_VALUES)
+			# response3 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_PATIENT_COUNT)
+			# response4 = client.query(progress, NBIA_ENDPOINTS.GET_PATIENTS)
+			response_list.append(client.query(progress, NBIA_ENDPOINTS.GET_SERIES, params={'Modality': 'RTSTRUCT'}))
+			responses = await asyncio.gather(*response_list)
 
 			# Execute queries concurrently
 			logger.info(f"Found {len(responses)} responses")
 			for resp in responses:
 				logger.info(f"Found {len(resp)} items")
 
-			df = pd.DataFrame(responses[3])
+			df = pd.DataFrame(responses[0])
 			console.print(df)
+
+			df.to_csv('Collections.csv', index=False)
+
+			sop_tasks = []
+			for s in df.itertuples():
+				sop_tasks.append(client.getInsanceUIDs(s.SeriesInstanceUID, progress))
+
+				if len(sop_tasks) == 50:
+					break
+			sop_responses = await asyncio.gather(*sop_tasks)
+
+			print(sop_responses)
 			# series_responses = [
 			# 	client.query(
 			# 		progress,
