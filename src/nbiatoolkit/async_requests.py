@@ -20,15 +20,15 @@ from nbiatoolkit.utils import NBIA_BASE_URLS
 	wait=wait_exponential(multiplier=1, min=1, max=25),
 	retry=retry_if_exception_type(aiohttp.ClientError),
 )
-async def async_get_request(url: str, headers: dict, params: dict, timeout: int = 60):
+async def async_get_request(url: str, headers: dict, params: dict) -> bytes:
 	try:
 		# Setting up a timeout for the request
-		async with aiohttp.ClientSession(
-			raise_for_status=True
-		) as session:
+		async with aiohttp.ClientSession(raise_for_status=True) as session:
 			async with session.get(url, headers=headers, params=params) as response:
 				if 200 <= response.status < 300:  # Accepting any 2xx response
-					logger.info(f'Successful request with status code {response.status}')
+					logger.debug(
+						f'Successful request with status code {response.status}'
+					)
 					return await response.read()
 				else:
 					logger.error(
@@ -41,7 +41,7 @@ async def async_get_request(url: str, headers: dict, params: dict, timeout: int 
 	except aiohttp.ClientError as e:
 		logger.error(f'Client error: {str(e)}')
 		raise
-	except asyncio.TimeoutError as e:
+	except asyncio.TimeoutError:
 		logger.error('Request timed out')
 		raise
 
@@ -66,13 +66,12 @@ async def async_query_api(
 	endpoint: str,
 	params: Dict[str, str],
 	headers: Dict[str, str],
-	max_retries: int = 10,
 	base_url: str = NBIA_BASE_URLS['NBIA'].value,
 ) -> List[Any]:
 	query_url = base_url + endpoint
-	logger.info(f'Querying {query_url} with params: {params}')
+	logger.debug(f'Querying {query_url} with params: {params}')
 	content = await async_get_request(
-		url=query_url, headers=headers, params=params, timeout=max_retries
+		url=query_url, headers=headers, params=params
 	)
 
 	if not content:

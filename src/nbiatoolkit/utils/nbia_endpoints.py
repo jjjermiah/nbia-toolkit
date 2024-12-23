@@ -33,7 +33,12 @@ class NBIA_ENDPOINTS(StrEnum):  # noqa: N801
 	GET_SERIES: str = 'v2/getSeries'
 	GET_UPDATED_SERIES: str = 'v2/getUpdatedSeries'  # ?fromDate=01/01/2024
 	GET_SERIES_METADATA: str = 'v1/getSeriesMetaData'
-	DOWNLOAD_SERIES: str = 'v2/getImageWithMD5Hash'
+	DOWNLOAD_SERIES_MD5: str = 'v2/getImageWithMD5Hash'
+	DOWNLOAD_SERIES: str = 'v2/getImage'
+	
+	# Needs SeriesInstanceUID and SOPInstanceUID
+	DOWNLOAD_IMAGE:str = 'v1/getSingleImage'
+
 	GET_DICOM_TAGS: str = 'getDicomTags'
 
 	GET_SOP_INSTANCE_UIDS: str = 'v1/getSOPInstanceUIDs'

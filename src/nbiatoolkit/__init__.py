@@ -8,7 +8,7 @@
 
 
 # import the modules
-from .logging_config import logger, RichProgressBar # noqa
+from .logging_config import logger, RichProgressBar, console # noqa
 from .auth import OAuth2
 from .utils.nbia_endpoints import NBIA_BASE_URLS, NBIA_ENDPOINTS
 # define the __all__ variable

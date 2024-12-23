@@ -16,6 +16,7 @@ from rich.progress import (
 console = Console()
 
 DEFAULT_LOG_LEVEL = 'DEBUG'
+DEFAULT_LOG_LEVEL = 'INFO'
 
 
 def get_rich_handler(

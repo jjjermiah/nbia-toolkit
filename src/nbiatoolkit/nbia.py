@@ -1,9 +1,18 @@
-from nbiatoolkit import OAuth2, logger, RichProgressBar, NBIA_BASE_URLS, NBIA_ENDPOINTS
 from dataclasses import dataclass, field
-from nbiatoolkit.async_requests import async_query_api
-from functools import lru_cache
 from typing import Union
+
 from rich.progress import Progress
+
+from nbiatoolkit import (
+	NBIA_BASE_URLS,
+	NBIA_ENDPOINTS,
+	OAuth2,
+	RichProgressBar,
+	console,
+	logger,
+)
+from nbiatoolkit.async_requests import async_query_api
+
 
 @dataclass(unsafe_hash=True)
 class NBIAClient:
@@ -30,6 +39,7 @@ class NBIAClient:
 	password: str = ''
 	log_level: str = 'INFO'
 	base_url: NBIA_BASE_URLS = NBIA_BASE_URLS.NBIA
+
 	OAuth_client: OAuth2 = field(init=False)
 
 	def __post_init__(self) -> None:
@@ -43,8 +53,15 @@ class NBIAClient:
 			'Content-Type': 'application/json',
 		}
 
-	async def query(self, progress: Progress, endpoint: NBIA_ENDPOINTS, params: Union[None, frozenset] = None) -> dict:
+	async def query(
+		self,
+		endpoint: NBIA_ENDPOINTS,
+		params: Union[None, frozenset] = None,
+		progress: Progress | None = None,
+	) -> dict:
 		"""Query the NBIA API."""
+		if progress is None:
+			progress = Progress()
 		hashable_params = frozenset(params.items()) if params else frozenset()
 		task = progress.add_task(f'Querying {endpoint}...', total=None)
 
@@ -61,84 +78,122 @@ class NBIAClient:
 
 		return result
 
-	async def getInsanceUIDs(self, SeriesInstanceUID: str, progress: Progress) -> dict:
+	async def getInsanceUIDs(self, SeriesInstanceUID: str) -> dict:
 		"""Query the NBIA API."""
 		endpoint = NBIA_ENDPOINTS.GET_SOP_INSTANCE_UIDS
-		task = progress.add_task(f'Querying {endpoint}...', total=None)
 
-		try:
-			result = await async_query_api(
-				endpoint=endpoint.value,
-				params={'SeriesInstanceUID': SeriesInstanceUID},  # Convert back to dict for the API call
-				headers=self.headers,
-				base_url=self.base_url.value,
-			)
-		finally:
-			progress.update(task, completed=1)
-			progress.remove_task(task)
+		result = await async_query_api(
+			endpoint=endpoint.value,
+			params={
+				'SeriesInstanceUID': SeriesInstanceUID
+			}, 
+			headers=self.headers,
+			base_url=self.base_url.value,
+		)
+
 
 		return result
 
-
-
 if __name__ == '__main__':
-	from rich import print
-	from rich.progress import SpinnerColumn, Progress, TimeElapsedColumn
-	from nbiatoolkit.logging_config import console
 	import asyncio
+
 	import pandas as pd
+	from rich.progress import Progress, SpinnerColumn, TimeElapsedColumn, BarColumn, TextColumn, ProgressColumn
 
-	async def main():
+	async def get_instance_uids_with_semaphore(client, SeriesInstanceUID, progress, semaphore, task):
+		async with semaphore:
+			result = await client.getInsanceUIDs(SeriesInstanceUID)
+			progress.advance(task)
+			return result
+	
+	async def get_image_with_semaphore(client, SeriesInstanceUID, SOPInstanceUID, progress, semaphore, task):
+		async with semaphore:
+			result = await client.getInsanceUIDs(SeriesInstanceUID, SOPInstanceUID)
+			progress.advance(task)
+			return result
+
+	async def main(): # noqa
 		client = NBIAClient()
+		semaphore = asyncio.Semaphore(5)  # Limit to 5 concurrent tasks
 
+		response_list = []
+		# Define queries
+		# response1 = client.query(progress, NBIA_ENDPOINTS.GET_COLLECTIONS)
+		# response2 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_VALUES)
+		# response3 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_PATIENT_COUNT)
+		# response4 = client.query(progress, NBIA_ENDPOINTS.GET_PATIENTS)
+		response_list.append(
+			client.query(
+				NBIA_ENDPOINTS.GET_SERIES,
+				params={'Modality': 'RTSTRUCT', 'Collection': 'NSCLC-Radiomics'},
+			)
+		)
+		responses = await asyncio.gather(*response_list)
 		with RichProgressBar(
 			'[progress.description]{task.description}',
+			BarColumn(),
+			'[progress.percentage]{task.percentage:>3.0f}%',
 			SpinnerColumn(),
 			'Time elapsed:',
 			TimeElapsedColumn(),
 			transient=True,
 		) as progress:
 
-			response_list = []
-			# Define queries
-			# response1 = client.query(progress, NBIA_ENDPOINTS.GET_COLLECTIONS)
-			# response2 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_VALUES)
-			# response3 = client.query(progress, NBIA_ENDPOINTS.GET_MODALITY_PATIENT_COUNT)
-			# response4 = client.query(progress, NBIA_ENDPOINTS.GET_PATIENTS)
-			response_list.append(client.query(progress, NBIA_ENDPOINTS.GET_SERIES, params={'Modality': 'RTSTRUCT'}))
-			responses = await asyncio.gather(*response_list)
-
 			# Execute queries concurrently
-			logger.info(f"Found {len(responses)} responses")
+			logger.info(f'Found {len(responses)} responses')
+			totalcount = 0
 			for resp in responses:
-				logger.info(f"Found {len(resp)} items")
+				logger.info(f'Found {len(resp)} items')
+				totalcount += len(resp)
 
-			df = pd.DataFrame(responses[0])
-			console.print(df)
+			task = progress.add_task('Fetching SOPInstanceUIDs...', total=totalcount)
 
-			df.to_csv('Collections.csv', index=False)
+			rt_df = pd.DataFrame(responses[0])
+			console.print(rt_df)
 
-			sop_tasks = []
-			for s in df.itertuples():
-				sop_tasks.append(client.getInsanceUIDs(s.SeriesInstanceUID, progress))
+			# only subset to first 50
+			rt_df = rt_df.head(50)
 
-				if len(sop_tasks) == 50:
-					break
-			sop_responses = await asyncio.gather(*sop_tasks)
+			sop_tasks = {
+				s.SeriesInstanceUID: get_instance_uids_with_semaphore(
+					client, s.SeriesInstanceUID, progress, semaphore, task
+				)
+				for s in rt_df.itertuples()
+			}
 
-			print(sop_responses)
-			# series_responses = [
-			# 	client.query(
-			# 		progress,
-			# 		NBIA_ENDPOINTS.GET_SERIES,
-			# 		params=col,
-			# 	)
-			# 	for col in responses[0][:25]
-			# ]
+			sop_responses = await asyncio.gather(*sop_tasks.values())
 
-			# series = await asyncio.gather(*series_responses)
+			series_to_sop = {
+				uid: response[0] 
+				for uid, response in zip(sop_tasks.keys(), sop_responses)
+			}
 
-			# for s in series:
-			# 	print(f"Found {len(s)} series")
+			new_params = []
+			for key, value in series_to_sop.items():
+				new_params.append({'SeriesInstanceUID': key, 'SOPInstanceUID': value['SOPInstanceUID']})
+
+			sop_df = pd.DataFrame(new_params)
+
+			console.print(sop_df)
+			sop_df.to_csv('SOPs.csv', index=False)
+
+			progress.remove_task(task)
+
+			new_task = progress.add_task('Downloading images...', total=len(series_to_sop))
+
+
+			download_tasks = {
+				uid: get_image_with_semaphore(
+					client, uid, sop['SOPInstanceUID'], progress, semaphore, new_task
+				)
+				for uid, sop in series_to_sop.items()
+			}
+
+			download_responses = await asyncio.gather(*download_tasks.values())
+
+			download_df = pd.DataFrame(download_responses)
+			console.print(download_df)
+
+
 
 	asyncio.run(main())
