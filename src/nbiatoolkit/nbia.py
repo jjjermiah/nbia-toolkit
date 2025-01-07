@@ -1,12 +1,16 @@
 import asyncio
+import shutil
 from dataclasses import dataclass, field
 from io import BytesIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from typing import Any
+from zipfile import ZipFile
 
-import pydicom
+import SimpleITK as sitk
 from imgtools.modules import StructureSet  # type: ignore
 from rich.progress import (
     BarColumn,
-    Progress,
     SpinnerColumn,
     TimeElapsedColumn,
 )
@@ -109,12 +113,15 @@ class NBIAClient(RetryHandlerMixin):
         else:
             if not result:
                 msg = f"Failed to query {endpoint}: No content returned."
+                msg += f"\nURL: {url}\nParams: {params}"
                 logger.error(msg)
                 raise FailedQueryError(msg)
+            logger.info("Query successful.")
         finally:
             progress.update(task, completed=1)
             progress.remove_task(task)
-            progress.stop()
+            if not progress.tasks:
+                progress.stop()
         return result
 
     async def query(
@@ -156,12 +163,58 @@ class NBIAClient(RetryHandlerMixin):
         else:
             return asyncio.run(self._downloadImage(params))
 
+    async def _downloadSeries(
+        self,
+        params: dict,
+    ) -> bytes:
+        """Query the NBIA API."""
+        endpoint = NBIA_ENDPOINT.DOWNLOAD_SERIES
+        return await self._raw_query(endpoint, params=params)
+
+    async def gather(self, *tasks: Any) -> Any:
+        return await asyncio.gather(*tasks)
+
+    def downloadSeriesWithMetadata(
+        self,
+        params: dict,
+    ) -> tuple[bytes, list[dict]]:
+        tasks = [
+            self._downloadSeries(params),
+            self._getSeries(params),
+        ]
+        result = asyncio.run(self.gather(*tasks))
+        logger.info(f"Downloaded series with metadata: {params}")
+        return result[0], result[1]
+
     async def _download_multiple_images(
         self,
         params: list[dict],
     ) -> list[bytes]:
         tasks = [self._downloadImage(p) for p in params]
         return await asyncio.gather(*tasks)
+
+    async def _getSeriesMetadata(
+        self,
+        SeriesInstanceUID: str,
+    ) -> list[dict]:
+        """Query the NBIA API."""
+        endpoint = NBIA_ENDPOINT.GET_SERIES_METADATA
+
+        params = {"SeriesInstanceUID": SeriesInstanceUID}
+        try:
+            result = await self.query(
+                endpoint=endpoint.value,
+                params=params,
+            )
+        except FailedQueryError as e:
+            params = {"list": SeriesInstanceUID}
+            result = await self.query(
+                endpoint=endpoint.value,
+                params=params,
+            )
+        assert result, f"Unexpected result: {result}"
+
+        return result
 
     async def _getSOPInstanceUIDs(self, SeriesInstanceUID: str | dict) -> dict:
         """Query the NBIA API."""
@@ -225,7 +278,7 @@ def get_single_image_per_series(
     modality: str,
     num_series: int,
     client: NBIAClient | None = None,
-) -> list[pydicom.dataset.FileDataset]:
+) -> list[StructureSet]:
     client = client or NBIAClient()
 
     series = client.getSeries(params={"Modality": modality, "Collection": collection})
@@ -254,20 +307,98 @@ def get_single_image_per_series(
         for img in raw_images
     ]
 
-    filtered = [
-        dcm for dcm in dcm_images if dcm.search_roi("Heart.*")
-    ]
+    filtered = [dcm for dcm in dcm_images if dcm.search_roi("GTV.*")]
 
     return filtered
+
+
+class SimpleITKImageWithMetadata(sitk.Image):
+    def __init__(self, image: sitk.Image, metadata: dict[str, Any]):
+        super().__init__(image)
+        self.metadata = metadata
+
+
+def load_dicom_series_from_zip(zip_data: bytes) -> sitk.Image:
+    """
+    Load a DICOM series from a ZIP archive in memory and return a SimpleITK image.
+
+    Parameters
+    ----------
+    zip_data : bytes
+        The content of the ZIP archive containing the DICOM series.
+
+    Returns
+    -------
+    sitk.Image
+        A SimpleITK image created from the DICOM series in the ZIP archive.
+    """
+    with TemporaryDirectory() as temporary_dir:
+        temp_dir = Path(temporary_dir)
+
+        try:
+            with ZipFile(BytesIO(zip_data)) as zf:
+                dicom_files = [name for name in zf.namelist() if name.endswith(".dcm")]
+                for dicom_file in dicom_files:
+                    with zf.open(dicom_file) as file:
+                        temp_file_path = temp_dir / Path(dicom_file).name
+                        with temp_file_path.open("wb") as temp_file:
+                            temp_file.write(file.read())
+
+            reader = sitk.ImageSeriesReader()
+            dicom_series = reader.GetGDCMSeriesFileNames(str(temp_dir))
+            reader.SetFileNames(dicom_series)
+            image = reader.Execute()
+        finally:
+            shutil.rmtree(temp_dir)
+
+    return image
+
+
+def get_referenced_CT_image(
+    rtstruct: StructureSet,
+    client: NBIAClient | None = None,
+) -> SimpleITKImageWithMetadata:
+    client = client or NBIAClient()
+
+    referenced_ct_uid = rtstruct.metadata["ReferencedSeriesInstanceUID"]
+    zip_data, metadata = client.downloadSeriesWithMetadata(
+        params={"SeriesInstanceUID": referenced_ct_uid}
+    )
+    assert len(metadata) == 1, f"Unexpected metadata: {metadata}"
+    console.print(metadata)
+
+    image = load_dicom_series_from_zip(zip_data)
+    return SimpleITKImageWithMetadata(image, metadata[0])
 
 
 if __name__ == "__main__":
     client = NBIAClient()
 
-    result = get_single_image_per_series(
+    result: list[StructureSet] = get_single_image_per_series(
         collection="NSCLC-Radiomics",
         modality="RTSTRUCT",
-        num_series=5,
+        num_series=1,
         client=client,
     )
     console.print(result)
+
+    rtstruct = result[0]
+    ct_image = get_referenced_CT_image(rtstruct, client=client)
+    console.print(ct_image)
+
+    rt_image = rtstruct.to_segmentation(
+        reference_image=ct_image,
+        continuous=False,
+    )
+
+    console.print(rt_image)
+
+    from imgtools.io.writers.nifti_writer import NiftiWriter
+
+    writer = NiftiWriter(
+        root_directory=Path.cwd(),
+        filename_format="{PatientID}_{Modality}.nii.gz",
+    )
+
+    writer.save(rt_image, **rt_image.metadata)
+    writer.save(ct_image, **ct_image.metadata)
