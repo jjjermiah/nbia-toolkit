@@ -12,28 +12,25 @@ version = "0.1.0"
 python = ">=3.10.16,<3.14"
 
 [pypi-dependencies]
-nbia-toolkit = { path = ".", editable = true} 
+nbia-toolkit = { path = ".", editable = true }
 
 [environments]
-dev = [
-  "test",
-  "quality",
-  "build",
-  "dev",
-  "docs",
-]
-docs =  ["docs"]
+dev = ["test", "quality", "build", "dev", "docs"]
+docs = ["docs"]
 test = ["test", "quality"]
-py310 =  {features = ["py310", "test"], no-default-feature = false}
-py311 =  {features = ["py311", "test"], no-default-feature = false}
-py312 =  {features = ["py312", "test"], no-default-feature = false}
+py310 = { features = ["py310", "test"], no-default-feature = false }
+py311 = { features = ["py311", "test"], no-default-feature = false }
+py312 = { features = ["py312", "test"], no-default-feature = false }
 
-############################################## DEV ###############################################
+############################################## DEV ##################################################
 [feature.dev.dependencies]
 ipython = "*"
 ipykernel = "*"
 jupyterlab = "*"
 
+
+[feature.dev.pypi-dependencies]
+med-imagetools = { path = "../med-imagetools", editable = true }
 
 ############################################## PYTHON ###############################################
 
