@@ -6112,35 +6112,6 @@ packages:
   - pkg:pypi/mdurl?source=hash-mapping
   size: 14680
   timestamp: 1704317789138
-- pypi: ../med-imagetools
-  name: med-imagetools
-  version: 1.10.1
-  sha256: c073ca91c80d3c58a48ef5f06203b4dc7e002a047970b8f54cf57eded7ccf75c
-  requires_dist:
-  - h5py>=3.11.0,<4
-  - joblib>=1.4.2,<2
-  - numpy<3
-  - matplotlib>=3.8.4,<4
-  - pandas<3
-  - pydicom>=2.4.4
-  - pynrrd>=1.0.0,<2
-  - scikit-image>=0.23.2,<1
-  - scikit-learn>=1.4.2,<2
-  - simpleitk>=2.3.1,<3
-  - tqdm>=4.66.4,<5
-  - pyyaml>=6.0.1,<7
-  - dill>=0.3.8,<1
-  - attrs>=23.2.0
-  - structlog>=24.0,<25
-  - click>=8.1,<9
-  - rich>=13.9.4
-  - sqlitedict>=2.0
-  - sqlalchemy>=2.0.0
-  - torch ; extra == 'torch'
-  - torchio ; extra == 'torch'
-  - pyvis ; extra == 'debug'
-  requires_python: '>=3.10,<4'
-  editable: true
 - pypi: https://files.pythonhosted.org/packages/d7/e4/fc0cab0d7c28d56dc71988a223bc10266ef369e45ea896625aa9f2360975/med_imagetools-1.11.0-py3-none-any.whl
   name: med-imagetools
   version: 1.11.0
@@ -6169,6 +6140,35 @@ packages:
   - torch ; extra == 'torch'
   - torchio ; extra == 'torch'
   requires_python: '>=3.10,<4'
+- pypi: ../med-imagetools
+  name: med-imagetools
+  version: 1.11.1
+  sha256: 96699bd3312a0064b4952d9d4d6f7226daecf571ca515bf0ecb5022a62fff185
+  requires_dist:
+  - h5py>=3.11.0,<4
+  - joblib>=1.4.2,<2
+  - numpy<3
+  - matplotlib>=3.8.4,<4
+  - pandas<3
+  - pydicom>=2.4.4
+  - pynrrd>=1.0.0,<2
+  - scikit-image>=0.23.2,<1
+  - scikit-learn>=1.4.2,<2
+  - simpleitk>=2.3.1,<3
+  - tqdm>=4.66.4,<5
+  - pyyaml>=6.0.1,<7
+  - dill>=0.3.8,<1
+  - attrs>=23.2.0
+  - structlog>=24.0,<25
+  - click>=8.1,<9
+  - rich>=13.9.4
+  - sqlitedict>=2.0
+  - sqlalchemy>=2.0.0
+  - torch ; extra == 'torch'
+  - torchio ; extra == 'torch'
+  - pyvis ; extra == 'debug'
+  requires_python: '>=3.10,<4'
+  editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/mergedeep-1.3.4-pyhd8ed1ab_0.tar.bz2
   sha256: 41ad8c16876820981adfc6e17a62935c950214bd9a9bb092e6aaefdc89a33f0b
   md5: 1a160a3cab5cb6bd46264b52cd6f69a2

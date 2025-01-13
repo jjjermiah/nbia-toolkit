@@ -165,3 +165,4 @@ logdir
 *.egg-info
 
 devnotes/data/*
+**.nii.gz
