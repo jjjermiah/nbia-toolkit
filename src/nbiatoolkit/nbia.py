@@ -116,7 +116,6 @@ class NBIAClient(RetryHandlerMixin):
                 msg += f"\nURL: {url}\nParams: {params}"
                 logger.error(msg)
                 raise FailedQueryError(msg)
-            logger.info("Query successful.")
         finally:
             progress.update(task, completed=1)
             progress.remove_task(task)
@@ -279,6 +278,15 @@ def get_single_image_per_series(
     num_series: int,
     client: NBIAClient | None = None,
 ) -> list[StructureSet]:
+    """
+    Ideas for refactoring:
+        - Use a generator to save memory when downloading images
+        - Let the async functions return the StructureSet objects
+        - Have a function that also does the get referenced_CT_image
+            - like given a collection, (assume modality is RTSTRUCT for the seg), and number of series...
+            - Return a tuple of (StructureSet, SimpleITKImageWithMetadata)
+        - trying to downnload like 3000 RADCURE, will try to load 600GB into memory before returning.
+    """
     client = client or NBIAClient()
 
     series = client.getSeries(params={"Modality": modality, "Collection": collection})
@@ -307,7 +315,16 @@ def get_single_image_per_series(
         for img in raw_images
     ]
 
-    filtered = [dcm for dcm in dcm_images if dcm.search_roi("GTV.*")]
+    # for each structureset, use StructureSet.metadata["SeriesInstanceUID"] to filter the series list for the metadata
+    for dcm in dcm_images:
+        meta = next(
+            s
+            for s in series
+            if s["SeriesInstanceUID"] == dcm.metadata["SeriesInstanceUID"]
+        )
+        dcm.metadata.update(meta)
+
+    filtered = [dcm for dcm in dcm_images if dcm.has_roi("GTV.*")]
 
     return filtered
 
@@ -372,6 +389,8 @@ def get_referenced_CT_image(
 
 
 if __name__ == "__main__":
+    from imgtools.io.writers.nifti_writer import NiftiWriter  # type: ignore
+
     client = NBIAClient()
 
     result: list[StructureSet] = get_single_image_per_series(
@@ -387,18 +406,16 @@ if __name__ == "__main__":
     console.print(ct_image)
 
     rt_image = rtstruct.to_segmentation(
-        reference_image=ct_image,
-        continuous=False,
+        reference_image=ct_image, continuous=False, roi_names={"GTV": "^GTV.*$"}
     )
 
     console.print(rt_image)
 
-    from imgtools.io.writers.nifti_writer import NiftiWriter
-
     writer = NiftiWriter(
         root_directory=Path.cwd(),
-        filename_format="{PatientID}_{Modality}.nii.gz",
+        filename_format="{PatientID}/StudyUID-{StudyInstanceUID}/Modality-{Modality}_{SeriesInstanceUID}_{IMAGE_ID}.nii.gz",
+        truncate_uid=5,
     )
 
-    writer.save(rt_image, **rt_image.metadata)
-    writer.save(ct_image, **ct_image.metadata)
+    writer.save(rt_image, **rt_image.metadata, IMAGE_ID="GTV")
+    writer.save(ct_image, **ct_image.metadata, IMAGE_ID="original")
