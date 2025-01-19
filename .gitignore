@@ -166,3 +166,4 @@ logdir
 
 devnotes/data/*
 **.nii.gz
+.pixi_old
