@@ -35,16 +35,12 @@ class Login(BaseModel):
     nbia_username: str = "nbia_guest"
     nbia_password: str = ""
 
-    def write_toml(self, path: Path) -> None:
+    def write_toml(self, toml_path: Path) -> None:
         import toml  # noqa
 
-        data = {
-            "login": {
-                "nbia_username": self.nbia_username,
-                "nbia_password": self.nbia_password,
-            }
-        }
-        with path.open("w") as toml_file:
+        data = self.model_dump()
+
+        with toml_path.open("w") as toml_file:
             toml.dump(data, toml_file)
 
 
@@ -83,3 +79,11 @@ class Settings(BaseSettings):
             init_settings,
             TomlConfigSettingsSource(settings_cls),
         )
+
+    @property
+    def NBIA_USERNAME(self) -> str:
+        return self.login.nbia_username
+
+    @property
+    def NBIA_PASSWORD(self) -> str:
+        return self.login.nbia_password
