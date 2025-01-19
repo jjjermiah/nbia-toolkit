@@ -165,15 +165,6 @@ class OAuth2:
         self.scope = None
 
     @property
-    def fernet_key(self) -> bytes:  # noqa
-        return self._fernet_key
-
-    def is_logged_out(self) -> bool:  # noqa
-        return (
-            self._access_token is None and self.username == "" and self.password == ""
-        )
-
-    @property
     def access_token(self) -> str | None:  # noqa
         if self.is_logged_out():
             return None
@@ -183,6 +174,34 @@ class OAuth2:
             self.refresh_token_or_request_new()
 
         return self._access_token
+
+    @property
+    def api_headers(self) -> dict[str, str]:  # noqa
+        return {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
+        }
+
+    @property
+    def token_expiration_time(self):  # noqa
+        return self.expiry_time
+
+    @property
+    def refresh_expiration_time(self):  # noqa
+        return self.refresh_expiry
+
+    @property
+    def token_scope(self):  # noqa
+        return self.scope
+
+    @property
+    def fernet_key(self) -> bytes:  # noqa
+        return self._fernet_key
+
+    def is_logged_out(self) -> bool:  # noqa
+        return (
+            self._access_token is None and self.username == "" and self.password == ""
+        )
 
     def is_token_expired(self) -> bool:  # noqa
         # Check if the token expiration time is set and if it's expired
@@ -248,25 +267,6 @@ class OAuth2:
         self.refresh_token = token_data["refresh_token"]
         self.refresh_expiry = token_data.get("refresh_expires_in")
         self.scope = token_data.get("scope")
-
-    @property
-    def api_headers(self) -> dict[str, str]:  # noqa
-        return {
-            "Authorization": f"Bearer {self.access_token}",
-            "Content-Type": "application/json",
-        }
-
-    @property
-    def token_expiration_time(self):  # noqa
-        return self.expiry_time
-
-    @property
-    def refresh_expiration_time(self):  # noqa
-        return self.refresh_expiry
-
-    @property
-    def token_scope(self):  # noqa
-        return self.scope
 
     def __repr__(self) -> str:  # noqa
         if self.username:

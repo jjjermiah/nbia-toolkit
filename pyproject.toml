@@ -12,6 +12,7 @@ dependencies = [
     "cryptography>=43.0.3",
     "pydantic-settings>=2.7.1",
     "toml>=0.10.2",
+    "click>=8.0.3",
     "pydicom>=3.0",
     "beautifulsoup4",
     "pandas<3",
