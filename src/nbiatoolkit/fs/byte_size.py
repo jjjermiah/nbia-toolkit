@@ -13,11 +13,12 @@ class ByteSize(int):
 
     _METRIC_BASE: ClassVar[int] = 1000
     _BINARY_BASE: ClassVar[int] = 1024
-    _metric_suffixes: ClassVar[tuple[str, ...]] = ("B", "KB", "MB", "GB", "TB")
-    _binary_suffixes: ClassVar[tuple[str, ...]] = ("B", "KiB", "MiB", "GiB", "TiB")
+    _metric_suffixes: ClassVar[tuple[str, ...]] = ("KB", "MB", "GB", "TB")
+    _binary_suffixes: ClassVar[tuple[str, ...]] = ("KiB", "MiB", "GiB", "TiB")
 
     _unit_map: ClassVar[MappingProxyType] = MappingProxyType(
         {
+            "B": 1,
             "kilobytes": _METRIC_BASE,
             "KB": _METRIC_BASE,
             "megabytes": _METRIC_BASE**2,
@@ -44,7 +45,7 @@ class ByteSize(int):
 
     def __init__(self, value: int) -> None:
         """Initialize the ByteSize instance."""
-        self.bytes = int(value)
+        self.bytes = self.B = int(value)
         super().__init__()
 
     @lru_cache(maxsize=None)
@@ -81,6 +82,25 @@ class ByteSize(int):
     def readable_binary(self) -> tuple[str, float]:
         """Get the most appropriate binary (base-1024) representation."""
         return self._get_readable(self._BINARY_BASE, self._binary_suffixes)
+
+    def apparent_size(self, block_size: int) -> ByteSize:
+        """
+        Calculate the apparent size of this ByteSize value based on block size.
+
+        Parameters
+        ----------
+        block_size : int
+            The size of a single block in bytes.
+
+        Returns
+        -------
+        ByteSize
+            The apparent size in bytes, accounting for block allocation.
+        """
+        if block_size <= 0:
+            raise ValueError("Block size must be greater than 0.")
+        blocks = (self.bytes + block_size - 1) // block_size
+        return ByteSize(blocks * block_size)
 
     def __getattr__(self, name: str) -> float:
         """
@@ -123,8 +143,6 @@ class ByteSize(int):
 
     def __format__(self, format_spec: str) -> str:
         """Return a formatted string based on the specified format."""
-        # if format_spec contains a colon :, split on it and use the second half
-        # as the suffix for the formatted string
         if ":" in format_spec:
             format_spec, suffix = format_spec.split(":")
             if suffix in self._unit_map:
@@ -133,6 +151,12 @@ class ByteSize(int):
                 return f"{val:{format_spec}} {suffix}"
             else:
                 raise ValueError(f"Unknown unit: {suffix}")
+        elif format_spec in self._unit_map:
+            base = self._unit_map[format_spec]
+            val = self.bytes / base
+            if format_spec == "B":
+                return f"{val:.0f} {format_spec}"
+            return f"{val:.2f} {format_spec}"
         else:
             suffix, val = self.readable_binary
             return f"{val:{format_spec}} {suffix}"
@@ -165,5 +189,16 @@ if __name__ == "__main__":
     print(f"{size:.2f}")  # Output: "10.00 GiB"
     print(f"{size:.2f:GB}")  # Output: "10.74 GB"
     print(f"{size:.2f:KiB}")  # Output: "10485760.00 KiB"
+    print(f"{size:KiB}")  # Output: "10485760.00 KiB"
 
     print(repr(size))  # Output: "ByteSize(10737418240) = 10.00 GiB"
+
+    # apparant sizes for different block sizes
+    size = ByteSize(1_024 * 2 + 123)
+    # print the bare size
+    print(f"Size: {size:B}")
+    print(f"Apparent size with 512 block size: {size.apparent_size(512):B}")
+    print(f"Apparent size with 1024 block size: {size.apparent_size(1024):B}")
+    print(f"Apparent size with 4096 block size: {size.apparent_size(4096):B}")
+    print(f"Apparent size with 8192 block size: {size.apparent_size(8192):B}")
+    print(f"Apparent size with 16384 block size: {size.apparent_size(16384):B}")
