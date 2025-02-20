@@ -63,6 +63,7 @@ class NBIAClient(RetryHandlerMixin):
     password: str = ""
     log_level: str = "INFO"
     base_url: NBIA_BASE_URLS = NBIA_BASE_URLS.NBIA
+    disable_progress_bar: bool = False
 
     OAuth_client: OAuth2 = field(init=False)
     progress_bar: RichProgressBar = field(init=False)
@@ -79,6 +80,7 @@ class NBIAClient(RetryHandlerMixin):
             "Time elapsed:",
             TimeElapsedColumn(),
             transient=True,
+            disable=self.disable_progress_bar,
         )  # Initialize a reusable progress bar
 
     @property

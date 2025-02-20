@@ -44,5 +44,6 @@ class NBIA_ENDPOINTS(StrEnum):  # noqa: N801
 
     GET_SOP_INSTANCE_UIDS: str = "v1/getSOPInstanceUIDs"
 
+
 # better name for the ENUM
 NBIA_ENDPOINT = NBIA_ENDPOINTS
