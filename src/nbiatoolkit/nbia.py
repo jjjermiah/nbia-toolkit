@@ -145,6 +145,11 @@ class NBIAClient(RetryHandlerMixin):
 
         return parsed_result
 
+    async def _getCollections(self) -> list[dict]:
+        """Query the NBIA API."""
+        endpoint = NBIA_ENDPOINT.GET_COLLECTIONS
+        return await self.query(endpoint)
+
     async def _downloadImage(
         self,
         params: dict,
