@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import io
 
 import aiohttp
 from tenacity import (
@@ -23,6 +24,10 @@ MAX_WAIT = 25
 
 
 class UnexpectedResponseStructureError(Exception):
+    pass
+
+
+class InvalidBinaryDataError(Exception):
     pass
 
 
@@ -92,3 +97,46 @@ class RetryHandlerMixin:
                 msg += f"Received: {type(json_response)}"
                 logger.error(msg)
                 raise UnexpectedResponseStructureError(msg)
+
+    async def parse_bytes(self, response: bytes) -> io.BytesIO:
+        """Parse response as binary data (e.g., zip file).
+        
+        Args:
+            response: The binary response data
+            
+        Returns:
+            BytesIO object containing the binary content
+            
+        Raises:
+            InvalidBinaryDataError: If the response doesn't appear to be valid binary data
+        """
+        if not response or not isinstance(response, bytes):
+            msg = f"Invalid binary response: {type(response) if response else 'None'}"
+            logger.error(msg)
+            raise InvalidBinaryDataError(msg)
+
+        # Check for common binary file signatures
+        # ZIP file signature: PK\x03\x04
+        if response.startswith(b'PK\x03\x04'):
+            logger.debug("Detected ZIP file content")
+            return io.BytesIO(response)
+        # DICOM signature typically at 128 bytes in
+        elif len(response) > 132 and response[128:132] == b'DICM':
+            logger.debug("Detected DICOM file content")
+            return io.BytesIO(response)
+        # Generic binary check - look for non-printable bytes in first few bytes
+        elif any(byte < 9 or (14 < byte < 32) for byte in response[:32]):
+            logger.debug("Detected generic binary content")
+            return io.BytesIO(response)
+        else:
+            # If we can't confirm it's binary, check if it might be text
+            try:
+                # Try to decode as text - if it works without errors, it's likely not binary
+                response[:100].decode('utf-8')
+                msg = "Response appears to be text data, not binary content"
+                logger.error(msg)
+                raise InvalidBinaryDataError(msg)
+            except UnicodeDecodeError:
+                # Failed to decode as text, so it's likely binary
+                logger.debug("Detected binary content (failed UTF-8 decode)")
+                return io.BytesIO(response)

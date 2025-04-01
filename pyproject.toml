@@ -10,8 +10,13 @@ dependencies = [
     # utility
     "pybytesize",
     "platformdirs>=4.3.7,<5",
+    "frozendict",
     # api
+    "tenacity",
+    "async-lru",
+    "aiohttp>=3.11.7",
     "requests>=2.31.0,<3",
+    # other
     "cryptography>=43.0.3",
     "pydantic-settings>=2.7.1",
     "toml>=0.10.2",
@@ -20,10 +25,8 @@ dependencies = [
     "beautifulsoup4",
     "pandas<3",
     "pydantic>=2.10",
-    "aiohttp>=3.11.7",
     "aiofiles>=24.1.0",
     "rich",
-    "tenacity",
     "med-imagetools",
 ]
 
