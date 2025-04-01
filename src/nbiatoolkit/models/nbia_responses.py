@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 
 from nbiatoolkit.models.base import AbstractListModel, AbstractModel
 
@@ -17,8 +17,8 @@ class Patient(AbstractModel):
 	SpeciesCode: Optional[str] = None
 	SpeciesDescription: Optional[str] = None
 
-	@validator("PatientBirthDate", pre=True, always=True)
-	def validate_birth_date(self, value):
+	@field_validator("PatientBirthDate", mode="before")
+	def validate_birth_date(cls, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -52,8 +52,8 @@ class Study(AbstractModel):
 	LongitudinalTemporalEventType: Optional[str] = None
 	LongitudinalTemporalOffsetFromEvent: Optional[float] = None
 
-	@validator("StudyDate", pre=True, always=True)
-	def validate_study_date(self, value):
+	@field_validator("StudyDate", mode="before")
+	def validate_study_date(cls, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -61,8 +61,8 @@ class Study(AbstractModel):
 			return value
 		return AbstractModel.convert_date(value)
 
-	@validator("PatientBirthDate", pre=True, always=True)
-	def validate_birth_date(self, value):
+	@field_validator("PatientBirthDate", mode="before")
+	def validate_birth_date(cls, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -99,8 +99,8 @@ class Series(AbstractModel):
 	StudyDate: Optional[datetime] = None
 	ThirdPartyAnalysis: Optional[str] = None
 
-	@validator("SeriesDate", pre=True, always=True)
-	def validate_series_date(self, value):
+	@field_validator("SeriesDate", mode="before")
+	def validate_series_date(cls, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -108,8 +108,8 @@ class Series(AbstractModel):
 			return value
 		return AbstractModel.convert_date(value)
 
-	@validator("StudyDate", pre=True, always=True)
-	def validate_study_date(self, value):
+	@field_validator("StudyDate", mode="before")
+	def validate_study_date(cls, value):
 		"""
 		Custom validator to convert date strings to datetime using the convert_date method.
 		"""
@@ -117,8 +117,8 @@ class Series(AbstractModel):
 			return value
 		return AbstractModel.convert_date(value)
 
-# class SeriesList(AbstractListModel[Series]):
-# 	__key__ = "SeriesInstanceUID"
+class SeriesList(AbstractListModel[Series]):
+	__key__ = "SeriesInstanceUID"
 
 # if __name__ == "__main__":
 # 	import json

@@ -19,10 +19,7 @@ DEFAULT_LOG_LEVEL = "INFO"
 
 
 def get_rich_handler(
-    name: str,
-    log_level: str = "INFO",
     console_logging: bool = True,
-    log_format: str = "%(message)s",
 ) -> RichHandler:
     """
     Set up a basic logger using Rich.
@@ -41,8 +38,7 @@ def get_rich_handler(
         msg = "This logger only supports console logging for simplicity."
         raise ValueError(msg)
 
-    level = log_level.upper()
-    handler = RichHandler(console=console, level=level, show_time=True, show_level=True)
+    handler = RichHandler(console=console, show_time=True, show_level=True)
     handler.setFormatter(None)  # Use default Rich formatting
     return handler
 
@@ -52,15 +48,15 @@ def setup_logger(name: str, log_level: str = "INFO") -> Logger:
     Set up a logger with the specified name and log level.
 
     Args:
-            name (str): Name of the logger.
-            log_level (str, optional): Log level. Defaults to "INFO".
+        name (str): Name of the logger.
+        log_level (str, optional): Log level. Defaults to "INFO".
 
     Returns
     -------
-            logging.Logger: Configured logger instance.
+        logging.Logger: Configured logger instance.
     """
     logger = getLogger(name)
-    handler = get_rich_handler(name, log_level=log_level)
+    handler = get_rich_handler(name)
     logger.addHandler(handler)
     logger.setLevel(log_level)
     return logger

@@ -1,0 +1,6 @@
+#:schema ./settings.schema.json
+log_level = "DEBUG"
+
+[api]
+max_attempts = 10
+max_concurrent_requests = 30

@@ -1,5 +1,7 @@
+from __future__ import annotations
 from abc import ABC
 from datetime import datetime
+import sys
 from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from pandas import DataFrame
@@ -27,11 +29,21 @@ class AbstractModel(BaseModel, ABC):
         return cls(**data)
 
     @classmethod
-    def from_dicts(cls: Type[T], data: List[Dict[str, Any]]) -> List[T]:
+    def from_dicts(cls: Type[T], data: List[Dict[str, Any]]) -> "AbstractListModel[T]":
         """
-        Creates a list of model instances from a list of dictionaries.
+        Creates a model instance list from a list of dictionaries.
+        Automatically tries to find the corresponding List class (e.g., PatientList for Patient).
         """
-        return [cls.from_dict(item) for item in data]
+        items = [cls.from_dict(item) for item in data]
+        
+        # Try to find the corresponding list class in the module where cls is defined
+        module_name = cls.__module__
+        module = sys.modules[module_name]
+        list_class_name = f"{cls.__name__}List"
+        list_class = getattr(module, list_class_name, AbstractListModel)
+        
+        # Return an instance of the specific list class if found, otherwise use AbstractListModel
+        return list_class(items=items)
 
     @staticmethod
     def convert_date(input_date: Union[str, datetime]) -> datetime:
@@ -98,34 +110,40 @@ class AbstractListModel(BaseModel, Generic[M]):
 
         Returns:
             AbstractListModel[M]: A new instance of the model list containing filtered items.
+        
+        Example:
+            >>> patients = PatientList(items=[Patient(PatientID='1'), Patient(PatientID='2')])
+            >>> filtered_patients = patients.filter(lambda p: p.PatientID == '1')
+            >>> print(filtered_patients)
         """
         if not condition:
             return self
         filtered_items = [item for item in self.items if condition(item)]
         return self.__class__(items=filtered_items)
 
-    def __getitem__(self, index: Union[int, str]) -> M:
+    def __getitem__(self, index: Union[int, slice, str]) -> M | AbstractListModel[M]:
         """
-        Access an item by index or by the value of the key attribute.
+        Access an item or slice of items by index, or an item by the value of the key attribute.
 
         Args:
-            index (Union[int, str]): The index of the item or the key value.
+            index (Union[int, slice, str]): The index or slice of the item(s), or the key value.
 
         Returns:
-            M: The item at the specified index or matching the key value.
+            M | AbstractListModel[M]: The item at the specified index or matching the key value,
+                                      or a new AbstractListModel containing the slice of items.
         """
         if isinstance(index, int):
             return self.items[index]
+        if isinstance(index, slice):
+            return self.__class__(items=self.items[index])
         if isinstance(index, str) and self.__key__:
             for item in self.items:
                 if getattr(item, self.__key__) == index:
                     return item
             msg = f"No item found with {self.__key__}='{index}'"
             raise KeyError(msg)
-        msg = "Index must be an integer or a string representing the key value."
-        raise TypeError(
-            msg
-        )
+        msg = "Index must be an integer, slice, or a string representing the key value."
+        raise TypeError(msg)
 
     def __len__(self) -> int:
         """

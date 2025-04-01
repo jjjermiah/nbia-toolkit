@@ -52,7 +52,7 @@ class APISettings(BaseModel):
 	)
 
 	timeout_seconds: float = Field(
-		default=30.0,
+		default=60.0,
 		description=(
 			'Maximum total time (in seconds) to wait for a single API request to complete. '
 			'Includes connection, read, and response time. '
@@ -66,14 +66,6 @@ class Login(BaseModel):
 
 	nbia_username: str = Field('nbia_guest', description='NBIA Username')
 	nbia_password: str = Field('', description='NBIA Password')
-
-	def write_toml(self, toml_path: Path) -> None:
-		import toml  # noqa
-
-		data = self.model_dump()
-
-		with toml_path.open('w') as toml_file:
-			toml.dump(data, toml_file)
 
 
 class Settings(BaseSettings):
@@ -100,14 +92,27 @@ class Settings(BaseSettings):
 	# project_name: str | None = None
 	login: Login = Login()
 	api: APISettings = APISettings()
+	log_level: str = Field(
+		default='INFO',
+		description=(
+			'Logging level for the application. '
+			'Set to DEBUG for verbose output, or INFO for standard logging.'
+		),
+	)
 
 	model_config = SettingsConfigDict(
 		# to instantiate the Login class, the variable name would be login.nbia_username in the environment
 		env_nested_delimiter='__',
 		env_file='.env',
 		env_file_encoding='utf-8',
-		# Global settings file
-		toml_file=dirs.user_config_path / 'settings.toml',
+		# TOML Settings
+		# if user has a nbia.toml file, it will take precedence
+		# over the settings.toml file
+		# this allows for a local config file to be used for development
+		toml_file=(
+			dirs.user_config_path / 'settings.toml',
+			Path().cwd() / 'nbia.toml',
+		),
 		# allow for other fields to be present in the config file
 		# this allows for the config file to be used for other purposes
 		# but also for users to define anything else they might want
@@ -124,10 +129,10 @@ class Settings(BaseSettings):
 		file_secret_settings: PydanticBaseSettingsSource,
 	) -> Tuple[PydanticBaseSettingsSource, ...]:
 		return (
+			init_settings,
 			env_settings,
 			dotenv_settings,
 			# file_secret_settings,
-			init_settings,
 			TomlConfigSettingsSource(settings_cls),
 		)
 
@@ -144,17 +149,39 @@ class Settings(BaseSettings):
 		"""Return the JSON schema for the settings."""
 		return self.model_json_schema()
 
+	def write_toml(self, toml_path: Path) -> None:
+		import toml  # noqa
+
+		toml_path = Path(toml_path)
+		toml_path.parent.mkdir(parents=True, exist_ok=True)
+
+		data = self.model_dump()
+
+		with toml_path.open('w') as toml_file:
+			toml.dump(data, toml_file)
+
+	def write_json_schema(self, schema_path: Path) -> None:
+		schema_path = Path(schema_path)
+		schema_path.parent.mkdir(parents=True, exist_ok=True)
+
+		with schema_path.open('w') as schema_file:
+			json.dump(self.json_schema, schema_file, indent=2)
+
 
 if __name__ == '__main__':
-	from rich import print
+	from rich import print  # noqa
 	import json
 
 	settings = Settings()
+	print(settings)
 
-	schema = Settings().json_schema
-	schema_path = Path('schemas/settings.schema.json')
-	schema_path.parent.mkdir(parents=True, exist_ok=True)
-	schema_path.write_text(json.dumps(schema, indent=2))
+	# write schema
+	Settings().write_json_schema('settings.schema.json')
 
-	print(f'Saved schema to {schema_path}')
+	# schema = Settings().json_schema
+	# schema_path = Path('schemas/settings.schema.json')
+	# schema_path.parent.mkdir(parents=True, exist_ok=True)
+	# schema_path.write_text(json.dumps(schema, indent=2))
+
+	# print(f'Saved schema to {schema_path}')
 	# add "#:schema settings.schema.json" to the top of the toml file
