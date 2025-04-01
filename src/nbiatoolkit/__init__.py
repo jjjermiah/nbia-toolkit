@@ -11,7 +11,7 @@
 from .logging_config import logger, RichProgressBar, console  # noqa
 from .auth import OAuth2
 from .utils.nbia_endpoints import NBIA_BASE_URLS, NBIA_ENDPOINT
-
+from .settings import Settings
 # define the __all__ variable
 
 __all__ = [

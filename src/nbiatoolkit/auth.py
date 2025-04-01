@@ -8,47 +8,40 @@ from nbiatoolkit import logger
 from nbiatoolkit.utils import NBIA_BASE_URLS
 
 
-def encrypt_credentials(key: bytes, username: str, password: str) -> Tuple[str, str]:
+def encrypt_password(key: bytes, password: str) -> str:
     """
-    Encrypts the given username and password using the provided key.
+    Encrypts the given password using the provided key.
 
     Parameters
     ----------
-            key (bytes): The encryption key.
-            username (str): The username to be encrypted.
-            password (str): The password to be encrypted.
+        key (bytes): The encryption key.
+        password (str): The password to be encrypted.
 
     Returns
     -------
-        Tuple[str, str]: A tuple containing the encrypted username and password.
+        str: The encrypted password.
     """
     cipher_suite = Fernet(key=key)
     encrypted_password = cipher_suite.encrypt(password.encode()).decode()
-    encrypted_username = cipher_suite.encrypt(username.encode()).decode()
-    return encrypted_username, encrypted_password
+    return encrypted_password
 
 
-def decrypt_credentials(
-    key: bytes, encrypted_username: str, encrypted_password: str
-) -> tuple[str, str]:
+def decrypt_password(key: bytes, encrypted_password: str) -> str:
     """
-    Decrypts the encrypted username and password using the provided key.
+    Decrypts the encrypted password using the provided key.
 
     Parameters
     ----------
-        key (bytes): The encryption key used to decrypt the credentials.
-        encrypted_username (str): The encrypted username.
+        key (bytes): The encryption key used to decrypt the password.
         encrypted_password (str): The encrypted password.
 
     Returns
     -------
-        tuple[str, str]: A tuple containing the decrypted username and password.
+        str: The decrypted password.
     """
     cipher_suite = Fernet(key=key)
-    decrypted_username = cipher_suite.decrypt(encrypted_username.encode()).decode()
     decrypted_password = cipher_suite.decrypt(encrypted_password.encode()).decode()
-    # return the decrypted client_id and username
-    return decrypted_username, decrypted_password
+    return decrypted_password
 
 
 class OAuth2:
@@ -139,17 +132,14 @@ class OAuth2:
         client_id : str, optional
             The client ID for authentication. Default is "NBIA".
         base_url : str or NBIA_BASE_URLS, optional. Default is NBIA_BASE_URLS.NBIA
-
         """
         self.client_id = client_id
 
         self._fernet_key: bytes = Fernet.generate_key()
-        self.username: str
-        self.password: str
-
-        self.username, self.password = encrypt_credentials(
-            key=self._fernet_key, username=username, password=password
-        )
+        self.username: str = username  # Store username in plaintext
+        
+        # Only encrypt the password
+        self.password = encrypt_password(key=self._fernet_key, password=password)
 
         if isinstance(base_url, NBIA_BASE_URLS):
             self.base_url = base_url.value
@@ -235,24 +225,16 @@ class OAuth2:
 
     def request_new_access_token(self) -> None:  # noqa
         data: dict[str, str] = {
-            "username": decrypt_credentials(
+            "username": self.username,  # Use plaintext username directly
+            "password": decrypt_password(
                 key=self.fernet_key,
-                encrypted_username=self.username,
                 encrypted_password=self.password,
-            )[0],
-            "password": decrypt_credentials(
-                key=self.fernet_key,
-                encrypted_username=self.username,
-                encrypted_password=self.password,
-            )[1],
+            ),
             "client_id": self.client_id,
             "grant_type": "password",
         }
 
         token_url: str = self.base_url + "oauth/token"
-
-        response: requests.models.Response
-        response = requests.post(token_url, data=data)
 
         response = requests.post(token_url, data=data)
         response.raise_for_status()
@@ -310,3 +292,21 @@ class OAuth2:
             self.refresh_expiry = None
             self.refresh_token = ""
             self.scope = None
+
+
+if __name__ == "__main__":
+    from nbiatoolkit import Settings
+    from rich import print
+
+    settings = Settings()
+
+    oauth = OAuth2(
+        username=settings.NBIA_USERNAME,
+        password=settings.NBIA_PASSWORD,
+    )
+    print(oauth)
+    print(f"{oauth.is_logged_out()=}")
+    print(f"{oauth.access_token=}")
+    print(f"{oauth.api_headers=}")
+    print(f"{oauth.token_expiration_time=}")
+    print(f"{oauth.refresh_expiration_time=}")

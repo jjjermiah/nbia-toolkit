@@ -12,25 +12,7 @@ from pydantic_settings import (
 
 
 class Login(BaseModel):
-    """Login Credentials
-
-    Order of precedence:
-
-    1. Environment Variables
-        - LOGIN__NBIA_USERNAME
-        - LOGIN__NBIA_PASSWORD
-
-    2. .env file
-        - LOGIN__NBIA_USERNAME
-        - LOGIN__NBIA_PASSWORD
-
-    3. '~/.config/nbiatoolkit/settings.toml'
-        - [login]
-            - nbia_username
-            - nbia_password
-
-    # TODO: implement docker secrets /run/secrets/nbia_username /run/secrets/nbia_password
-    """
+    """Login Credentials"""
 
     nbia_username: str = "nbia_guest"
     nbia_password: str = ""
@@ -45,6 +27,25 @@ class Login(BaseModel):
 
 
 class Settings(BaseSettings):
+    """
+    
+    Order of precedence:
+
+    1. '~/.config/nbiatoolkit/settings.toml'
+        [login]
+        nbia_username = "username"
+        nbia_password = "password"
+
+    2. .env file
+        LOGIN__NBIA_USERNAME="username"
+        LOGIN__NBIA_PASSWORD="password"
+
+    3. Environment Variables
+        export LOGIN__NBIA_USERNAME="username"
+        export LOGIN__NBIA_PASSWORD="password"
+
+    # TODO: implement docker secrets /run/secrets/nbia_username /run/secrets/nbia_password
+    """
     # project_name: str | None = None
     login: Login = Login()
 
@@ -53,10 +54,8 @@ class Settings(BaseSettings):
         env_nested_delimiter="__",
         env_file=".env",
         env_file_encoding="utf-8",
-        # unsure if i want to use yamls
-        # yaml_file="nbia.yaml",
         # Global settings file
-        toml_file=Path("~/.config", "nbiatoolkit").resolve() / "settings.toml",
+        toml_file=Path("~/.config", "nbiatoolkit").expanduser() / "settings.toml",
         # allow for other fields to be present in the config file
         # this allows for the config file to be used for other purposes
         # but also for users to define anything else they might want
