@@ -3,9 +3,10 @@ from __future__ import annotations
 import io
 import json
 from abc import ABC, abstractmethod
-from asyncio import Semaphore, TimeoutError
+from asyncio import Semaphore
+from asyncio import TimeoutError as AsyncioTimeoutError
 from functools import wraps
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, ParamSpec, TypeVar
 
 import aiohttp
 from aiohttp import ClientSession
@@ -51,13 +52,17 @@ class InvalidBinaryDataError(Exception):
 	pass
 
 
-def freezeargs(func):
+P = ParamSpec('P')
+R = TypeVar('R')
+
+
+def freezeargs(func: Callable[P, R]) -> Callable[P, R]:
 	"""Convert a mutable dictionary into immutable.
 	Useful to be compatible with cache
 	"""
 
 	@wraps(func)
-	def wrapped(*args, **kwargs):
+	def wrapped(*args: P.args, **kwargs: P.kwargs) -> R:
 		args = (frozendict(arg) if isinstance(arg, dict) else arg for arg in args)
 		kwargs = {
 			k: frozendict(v) if isinstance(v, dict) else v for k, v in kwargs.items()
@@ -291,7 +296,7 @@ class BaseClient(ABC):
 			except aiohttp.ClientError as e:
 				logger.error(f'Client error: {str(e)}')
 				raise
-			except TimeoutError:
+			except AsyncioTimeoutError:
 				logger.error('Request timed out')
 				raise
 
