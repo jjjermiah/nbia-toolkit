@@ -12,6 +12,7 @@ import aiohttp
 from aiohttp import ClientSession
 from async_lru import alru_cache
 from frozendict import frozendict
+from rich.progress import BarColumn, Progress, TaskID, TextColumn
 from tenacity import (
 	retry,
 	retry_if_exception_type,
@@ -19,7 +20,7 @@ from tenacity import (
 	wait_exponential,
 )
 
-from nbiatoolkit.logging_config import logger
+from nbiatoolkit.logging_config import RichProgressBar, logger
 
 
 # Automatically apply nest_asyncio to make the package work seamlessly in Jupyter
@@ -126,6 +127,70 @@ class BaseClient(ABC):
 		self.max_wait = max_wait or MAX_WAIT
 		self.timeout_seconds = timeout_seconds or TIMEOUT
 		self._semaphore: Semaphore = Semaphore(self.max_concurrent_requests)
+		self._progress: Progress = RichProgressBar(
+			TextColumn('[progress.description]{task.description}'),
+			BarColumn(bar_width=None),
+			TextColumn('[{task.completed}/{task.total} Total Requests]'),
+			TextColumn(
+				'[{task.fields[active_requests]}/{task.fields[max_concurrent]} Active Requests]'
+			),
+		)
+		self._progress_task: TaskID = self._progress.add_task(
+			description='Querying API',
+			total=0,  # Start with 0 total requests
+			completed=0,  # Start with 0 total requests
+			visible=False,  # Start with progress bar hidden
+			active_requests=0,
+			max_concurrent=self.max_concurrent_requests,
+			completed_requests=0,
+		)
+		self._active_requests: int = 0  # Counter for active requests
+		self._total_requests: int = 0  # Counter for total requests initiated
+		self._completed_requests: int = 0  # Counter for completed requests
+		self._progress.start()
+
+	def _show_progress(self) -> None:
+		"""Show the progress bar when there are active requests."""
+		if self._active_requests == 1:  # First active request
+			self._progress.update(self._progress_task, visible=True)
+
+	def _hide_progress(self) -> None:
+		"""Hide the progress bar when there are no active requests."""
+		if self._active_requests == 0:  # No more active requests
+			self._progress.update(self._progress_task, visible=False)
+
+	def _update_request_counts(
+		self, initiated: bool = False, completed: bool = False
+	) -> None:
+		"""Update request counters and progress bar.
+
+		Parameters
+		----------
+		initiated : bool, optional
+		    Whether a new request was initiated, by default False
+		completed : bool, optional
+		    Whether a request was completed, by default False
+		"""
+		if initiated:
+			self._total_requests += 1
+			# Update the progress bar total and completed count to exact values
+			self._progress.update(
+				self._progress_task,
+				total=self._total_requests,
+				completed=self._completed_requests,
+			    active_requests=self._active_requests,
+			    completed_requests=self._completed_requests,
+			)
+		if completed:
+			self._completed_requests += 1
+
+		# Update progress bar fields with new counts
+		self._progress.update(
+			self._progress_task,
+			completed=self._completed_requests,
+			active_requests=self._active_requests,
+			completed_requests=self._completed_requests,
+		)
 
 	@property
 	@abstractmethod
@@ -145,9 +210,9 @@ class BaseClient(ABC):
 		params: dict[str, str] | None = None,
 	) -> bytes:
 		url = self.base_url + endpoint
-		logger.debug(
-			'Making request to %s with %s', url, dict(params) if params else {}
-		)
+		# logger.debug(
+		# 	'Making request to %s with %s', url, dict(params) if params else {}
+		# )
 
 		result = await self.async_get_request(
 			url=url,
@@ -241,29 +306,19 @@ class BaseClient(ABC):
 			retry=retry_if_exception_type(aiohttp.ClientError),
 		)
 		async def _get_request() -> bytes | None:
-			"""Inner function to make the actual GET request with retry logic.
-
-			Returns
-			-------
-			Optional[bytes]
-			    The response content as bytes if successful, None otherwise
-
-			Raises
-			------
-			aiohttp.ClientResponseError
-			    When an error response is received from the server
-			aiohttp.ClientError
-			    When a client-side error occurs
-			asyncio.TimeoutError
-			    When the request times out
-			"""
+			"""Inner function to make the actual GET request with retry logic."""
 			try:
+				# Track that a new request is being initiated
+				self._update_request_counts(initiated=True)
+
 				# First acquire the semaphore before creating the session
 				async with self._semaphore:
-					logger.debug(
-						'Sempahore available: %s/%s',
-						self._semaphore._value,
-						self.max_concurrent_requests,
+					# Increment active requests and show progress if needed
+					self._active_requests += 1
+					self._show_progress()
+					# Update active requests count in progress bar
+					self._progress.update(
+						self._progress_task, active_requests=self._active_requests
 					)
 					try:
 						async with (
@@ -285,18 +340,28 @@ class BaseClient(ABC):
 								logger.error(msg)
 								return None
 					finally:
-						logger.debug(
-							'Released semaphore %s/%s',
-							self._semaphore._value,
-							self.max_concurrent_requests,
+						# Decrement active requests and hide progress if needed
+						self._active_requests -= 1
+						self._progress.update(
+							self._progress_task, active_requests=self._active_requests
 						)
+						self._hide_progress()
+
+						# Track that a request has been completed
+						self._update_request_counts(completed=True)
 			except aiohttp.ClientResponseError as e:
+				# Mark request as completed even if it failed
+				self._update_request_counts(completed=True)
 				logger.error(f'Request failed: {e.status}. Error: {e.message}')
 				raise
 			except aiohttp.ClientError as e:
+				# Mark request as completed even if it failed
+				self._update_request_counts(completed=True)
 				logger.error(f'Client error: {str(e)}')
 				raise
 			except AsyncioTimeoutError:
+				# Mark request as completed even if it timed out
+				self._update_request_counts(completed=True)
 				logger.error('Request timed out')
 				raise
 

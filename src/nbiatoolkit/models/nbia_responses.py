@@ -7,118 +7,118 @@ from nbiatoolkit.models.base import AbstractListModel, AbstractModel
 
 
 class Patient(AbstractModel):
-	Collection: str
-	PatientID: str = Field(..., alias="PatientId")
-	PatientName: Optional[str] = None
-	PatientSex: Optional[str] = None
-	PatientBirthDate: Optional[datetime] = None
-	EthnicGroup: Optional[str] = None
-	Phantom: Optional[str] = None
-	SpeciesCode: Optional[str] = None
-	SpeciesDescription: Optional[str] = None
+  Collection: str
+  PatientID: str = Field(..., alias="PatientId")
+  PatientName: Optional[str] = None
+  PatientSex: Optional[str] = None
+  PatientBirthDate: Optional[datetime] = None
+  EthnicGroup: Optional[str] = None
+  Phantom: Optional[str] = None
+  SpeciesCode: Optional[str] = None
+  SpeciesDescription: Optional[str] = None
 
-	@field_validator("PatientBirthDate", mode="before")
-	def validate_birth_date(cls, value):
-		"""
-		Custom validator to convert date strings to datetime using the convert_date method.
-		"""
-		if value is None:
-			return value
-		return AbstractModel.convert_date(value)
+  @field_validator("PatientBirthDate", mode="before")
+  def validate_birth_date(cls, value):
+    """
+    Custom validator to convert date strings to datetime using the convert_date method.
+    """
+    if value is None:
+      return value
+    return AbstractModel.convert_date(value)
 
-	def is_male(self) -> bool:
-		return self.PatientSex == 'M'
+  def is_male(self) -> bool:
+    return self.PatientSex == 'M'
 
-	def is_female(self) -> bool:
-		return self.PatientSex == 'F'
+  def is_female(self) -> bool:
+    return self.PatientSex == 'F'
 
 
 class PatientList(AbstractListModel[Patient]):
-	__key__ = "PatientID"
+  __key__ = "PatientID"
 
 class Study(AbstractModel):
-	Collection: str
-	PatientID: str
-	StudyInstanceUID: str = Field(..., alias="StudyInstanceUID")
-	StudyDate: Optional[datetime] = None
-	StudyDescription: Optional[str] = None
-	StudyID: Optional[str] = None
-	PatientAge: Optional[str] = None
-	PatientName: Optional[str] = None
-	PatientSex: Optional[str] = None
-	PatientBirthDate: Optional[datetime] = None
-	SeriesCount: Optional[int] = None
-	AdmittingDiagnosesDescription: Optional[str] = None
-	LongitudinalTemporalEventType: Optional[str] = None
-	LongitudinalTemporalOffsetFromEvent: Optional[float] = None
+  Collection: str
+  PatientID: str
+  StudyInstanceUID: str = Field(..., alias="StudyInstanceUID")
+  StudyDate: Optional[datetime] = None
+  StudyDescription: Optional[str] = None
+  StudyID: Optional[str] = None
+  PatientAge: Optional[str] = None
+  PatientName: Optional[str] = None
+  PatientSex: Optional[str] = None
+  PatientBirthDate: Optional[datetime] = None
+  SeriesCount: Optional[int] = None
+  AdmittingDiagnosesDescription: Optional[str] = None
+  LongitudinalTemporalEventType: Optional[str] = None
+  LongitudinalTemporalOffsetFromEvent: Optional[float] = None
 
-	@field_validator("StudyDate", mode="before")
-	def validate_study_date(cls, value):
-		"""
-		Custom validator to convert date strings to datetime using the convert_date method.
-		"""
-		if value is None:
-			return value
-		return AbstractModel.convert_date(value)
+  @field_validator("StudyDate", mode="before")
+  def validate_study_date(cls, value):
+    """
+    Custom validator to convert date strings to datetime using the convert_date method.
+    """
+    if value is None:
+      return value
+    return AbstractModel.convert_date(value)
 
-	@field_validator("PatientBirthDate", mode="before")
-	def validate_birth_date(cls, value):
-		"""
-		Custom validator to convert date strings to datetime using the convert_date method.
-		"""
-		if value is None:
-			return value
-		return AbstractModel.convert_date(value)
+  @field_validator("PatientBirthDate", mode="before")
+  def validate_birth_date(cls, value):
+    """
+    Custom validator to convert date strings to datetime using the convert_date method.
+    """
+    if value is None:
+      return value
+    return AbstractModel.convert_date(value)
 
 class StudyList(AbstractListModel[Study]):
-	__key__ = "StudyInstanceUID"
+  __key__ = "StudyInstanceUID"
 
 class Series(AbstractModel):
-	Collection: str
-	SeriesInstanceUID: str = Field(..., alias="SeriesInstanceUID")
-	StudyInstanceUID: Optional[str] = None
-	Modality: Optional[str] = None
-	ProtocolName: Optional[str] = None
-	SeriesDate: Optional[datetime] = None
-	SeriesDescription: Optional[str] = None
-	BodyPartExamined: Optional[str] = None
-	SeriesNumber: Optional[int] = None
-	AnnotationsFlag: Optional[bool] = None
-	PatientID: Optional[str] = None
-	Manufacturer: Optional[str] = None
-	ManufacturerModelName: Optional[str] = None
-	SoftwareVersions: Optional[str] = None
-	ImageCount: Optional[int] = None
-	TimeStamp: Optional[str] = None
-	LicenseName: Optional[str] = None
-	LicenseURI: Optional[str] = None
-	CollectionURI: Optional[str] = None
-	FileSize: Optional[int] = None
-	DateReleased: Optional[datetime] = None
-	StudyDescription: Optional[str] = None
-	StudyDate: Optional[datetime] = None
-	ThirdPartyAnalysis: Optional[str] = None
+  Collection: str
+  SeriesInstanceUID: str = Field(..., alias="SeriesInstanceUID")
+  StudyInstanceUID: Optional[str] = None
+  Modality: Optional[str] = None
+  ProtocolName: Optional[str] = None
+  SeriesDate: Optional[datetime] = None
+  SeriesDescription: Optional[str] = None
+  BodyPartExamined: Optional[str] = None
+  SeriesNumber: Optional[int] = None
+  AnnotationsFlag: Optional[bool] = None
+  PatientID: Optional[str] = None
+  Manufacturer: Optional[str] = None
+  ManufacturerModelName: Optional[str] = None
+  SoftwareVersions: Optional[str] = None
+  ImageCount: Optional[int] = None
+  TimeStamp: Optional[str] = None
+  LicenseName: Optional[str] = None
+  LicenseURI: Optional[str] = None
+  CollectionURI: Optional[str] = None
+  FileSize: Optional[int] = None
+  DateReleased: Optional[datetime] = None
+  StudyDescription: Optional[str] = None
+  StudyDate: Optional[datetime] = None
+  ThirdPartyAnalysis: Optional[str] = None
 
-	@field_validator("SeriesDate", mode="before")
-	def validate_series_date(cls, value):
-		"""
-		Custom validator to convert date strings to datetime using the convert_date method.
-		"""
-		if value is None:
-			return value
-		return AbstractModel.convert_date(value)
+  @field_validator("SeriesDate", mode="before")
+  def validate_series_date(cls, value):
+    """
+    Custom validator to convert date strings to datetime using the convert_date method.
+    """
+    if value is None:
+      return value
+    return AbstractModel.convert_date(value)
 
-	@field_validator("StudyDate", mode="before")
-	def validate_study_date(cls, value):
-		"""
-		Custom validator to convert date strings to datetime using the convert_date method.
-		"""
-		if value is None:
-			return value
-		return AbstractModel.convert_date(value)
+  @field_validator("StudyDate", mode="before")
+  def validate_study_date(cls, value):
+    """
+    Custom validator to convert date strings to datetime using the convert_date method.
+    """
+    if value is None:
+      return value
+    return AbstractModel.convert_date(value)
 
 class SeriesList(AbstractListModel[Series]):
-	__key__ = "SeriesInstanceUID"
+  __key__ = "SeriesInstanceUID"
 
 # if __name__ == "__main__":
 # 	import json
@@ -127,7 +127,7 @@ class SeriesList(AbstractListModel[Series]):
 # 	from nbiatoolkit import NBIAClient
 
 # 	client = NBIAClient(log_level="DEBUG")
-	
+  
 # 	collections_list_file = Path("data/collections_list.json")
 # 	patient_list_file = Path("data/patient_list.json")
 # 	study_list_file = Path("data/study_list.json")
@@ -174,7 +174,7 @@ class SeriesList(AbstractListModel[Series]):
 
 # 	print(patient_list.filter(lambda x: x.PatientID.startswith('LIDC')).df)
 # 	print(patient_list.filter(lambda x: not x.PatientID.startswith('LIDC')).df)
-	
+  
 # 	# two ways
 # 	print(patient_list.filter(lambda x: x.PatientSex == 'F').df)
 # 	print(patient_list.filter(lambda x: x.is_female()).df)
