@@ -6,8 +6,8 @@ authors = [{ name = "Jermiah Joseph" }]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10,<4"
-
 dependencies = [
+    "pybytesize",
     "requests>=2.31.0,<3",
     "cryptography>=43.0.3",
     "pydantic-settings>=2.7.1",
@@ -22,13 +22,11 @@ dependencies = [
     "rich",
     "tenacity",
     "med-imagetools",
-
 ]
 
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
-
 
 [tool.hatch.build]
 directory = "dist"
@@ -36,7 +34,6 @@ directory = "dist"
 [tool.hatch.build.targets.wheel]
 packages = ["src/nbiatoolkit"]
 include = ["pyproject.toml", "README.md", "src/**"]
-
 
 [tool.semantic_release]
 version_variables = ["src/nbiatoolkit/nbia.py:__version__"]
