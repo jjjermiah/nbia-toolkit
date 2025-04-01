@@ -16,8 +16,7 @@ dependencies = [
     "async-lru",
     "aiohttp>=3.11.7",
     "requests>=2.31.0,<3",
-    "semaphore",
-    "nested-asyncio",
+    "nest_asyncio",
     # other
     "cryptography>=43.0.3",
     "pydantic-settings>=2.7.1",
