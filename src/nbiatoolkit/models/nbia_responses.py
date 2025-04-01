@@ -26,7 +26,6 @@ class Patient(AbstractModel):
 			return value
 		return AbstractModel.convert_date(value)
 
-
 	def is_male(self) -> bool:
 		return self.PatientSex == 'M'
 
@@ -39,12 +38,12 @@ class PatientList(AbstractListModel[Patient]):
 
 class Study(AbstractModel):
 	Collection: str
+	PatientID: str
 	StudyInstanceUID: str = Field(..., alias="StudyInstanceUID")
 	StudyDate: Optional[datetime] = None
 	StudyDescription: Optional[str] = None
 	StudyID: Optional[str] = None
 	PatientAge: Optional[str] = None
-	PatientID: Optional[str] = None
 	PatientName: Optional[str] = None
 	PatientSex: Optional[str] = None
 	PatientBirthDate: Optional[datetime] = None

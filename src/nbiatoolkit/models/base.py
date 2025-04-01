@@ -94,10 +94,10 @@ class AbstractListModel(BaseModel, Generic[M]):
         Filters the models in the list based on a condition function.
 
         Args:
-                condition (Callable[[M], bool]): A function that returns True for items to keep.
+            condition (Callable[[M], bool]): A function that returns True for items to keep.
 
         Returns:
-                AbstractListModel[M]: A new instance of the model list containing filtered items.
+            AbstractListModel[M]: A new instance of the model list containing filtered items.
         """
         if not condition:
             return self
@@ -109,10 +109,10 @@ class AbstractListModel(BaseModel, Generic[M]):
         Access an item by index or by the value of the key attribute.
 
         Args:
-                        index (Union[int, str]): The index of the item or the key value.
+            index (Union[int, str]): The index of the item or the key value.
 
         Returns:
-                        M: The item at the specified index or matching the key value.
+            M: The item at the specified index or matching the key value.
         """
         if isinstance(index, int):
             return self.items[index]
@@ -132,7 +132,7 @@ class AbstractListModel(BaseModel, Generic[M]):
         Returns the number of items in the list.
 
         Returns:
-                int: The number of items.
+            int: The number of items.
         """
         return len(self.items)
 
