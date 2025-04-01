@@ -2,7 +2,7 @@ from __future__ import annotations
 from abc import ABC
 from datetime import datetime
 import sys
-from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union
+from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar, Union, Iterator
 
 from pandas import DataFrame
 from pydantic import BaseModel, Field
@@ -159,3 +159,9 @@ class AbstractListModel(BaseModel, Generic[M]):
         Checks if an item is in the list.
         """
         return item in self.items
+
+    def __iter__(self) -> Iterator[M]:
+        """
+        Returns an iterator over the items in the list.
+        """
+        return iter(self.items)
