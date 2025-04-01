@@ -10,6 +10,7 @@ from pydantic_settings import (
     TomlConfigSettingsSource,
 )
 
+from nbiatoolkit.config import dirs
 
 class Login(BaseModel):
     """Login Credentials"""
@@ -55,7 +56,7 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         # Global settings file
-        toml_file=Path("~/.config", "nbiatoolkit").expanduser() / "settings.toml",
+        toml_file=dirs.user_config_path / "settings.toml",
         # allow for other fields to be present in the config file
         # this allows for the config file to be used for other purposes
         # but also for users to define anything else they might want
