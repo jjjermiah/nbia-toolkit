@@ -1,7 +1,6 @@
 import asyncio
-import shutil
 from dataclasses import dataclass, field
-from typing import Any
+
 from rich.progress import (
     BarColumn,
     SpinnerColumn,
@@ -76,7 +75,6 @@ class NBIAClient(BaseClient):
 
     async def _getSeries(self, params: dict | list[dict]) -> list[dict]:
         """Fetch series data, supporting single or multiple parameter sets."""
-        description = "Fetching series..."
         if isinstance(params, list):
             # submit multiple requests at the same time
             tasks = [self.query_json(NBIA_ENDPOINT.GET_SERIES.value, param) for param in params]
