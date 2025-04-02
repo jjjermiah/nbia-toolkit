@@ -435,16 +435,11 @@ class BaseClient(ABC):
 
 		# Check for common binary file signatures
 		# ZIP file signature: PK\x03\x04
-		if response.startswith(b'PK\x03\x04'):
-			logger.debug('Detected ZIP file content')
-			return io.BytesIO(response)
-		# DICOM signature typically at 128 bytes in
-		elif len(response) > 132 and response[128:132] == b'DICM':  # noqa: PLR2004
-			logger.debug('Detected DICOM file content')
-			return io.BytesIO(response)
-		# Generic binary check - look for non-printable bytes in first few bytes
-		elif any(byte < 9 or (14 < byte < 32) for byte in response[:32]):  # noqa: PLR2004
-			logger.debug('Detected generic binary content')
+		if (
+			response.startswith(b'PK\x03\x04')
+			or (len(response) > 132 and response[128:132] == b'DICM')
+			or (any(byte < 9 or (14 < byte < 32) for byte in response[:32]))
+		):
 			return io.BytesIO(response)
 		else:
 			# If we can't confirm it's binary, check if it might be text
