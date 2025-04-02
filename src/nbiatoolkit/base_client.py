@@ -178,8 +178,8 @@ class BaseClient(ABC):
 				self._progress_task,
 				total=self._total_requests,
 				completed=self._completed_requests,
-			    active_requests=self._active_requests,
-			    completed_requests=self._completed_requests,
+				active_requests=self._active_requests,
+				completed_requests=self._completed_requests,
 			)
 		if completed:
 			self._completed_requests += 1

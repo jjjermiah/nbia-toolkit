@@ -30,6 +30,8 @@ py312 = { features = ["py312", "test"], no-default-feature = false }
 ipython = "*"
 ipykernel = "*"
 jupyterlab = "*"
+plotly = ">=6.0.1,<7"
+tabulate = ">=0.9.0,<0.10"
 
 
 [feature.dev.pypi-dependencies]
