@@ -192,6 +192,16 @@ class NBIAClient(BaseClient):
 		"""Get series metadata from NBIA."""
 		return asyncio.run(self._getSeries(params))
 
+	async def _download_series(self, SeriesInstanceUID: str) -> dict:
+		"""Download series metadata from NBIA."""
+		endpoint = NBIA_ENDPOINT.DOWNLOAD_SERIES.value
+		params = {'SeriesInstanceUID': SeriesInstanceUID}
+		return await self.query_bytes(endpoint, params=params)
+
+	def download_series(self, SeriesInstanceUID: str) -> dict:
+		"""Download series metadata from NBIA."""
+		return asyncio.run(self._download_series(SeriesInstanceUID))
+
 	async def _build_collection_database(
 		self, params: dict | list[dict]
 	) -> list[tuple]:
@@ -396,10 +406,12 @@ if __name__ == '__main__':
 	settings = Settings()
 
 	# save settings to a file
-	settings.write_toml('settings.toml')
-
+	# settings.write_toml('settings.toml')
 
 	client = NBIAClient.from_settings(settings)
+
+	s = '1.3.6.1.4.1.14519.5.2.1.6834.5010.263257070197787007872578860295'
+	series_bytes = client.download_series(s)
 
 	# collections = client.getCollections()
 	# all_dbs = client.build_collection_database(params=collections)

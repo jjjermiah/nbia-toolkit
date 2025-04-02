@@ -256,7 +256,7 @@ class BaseClient(ABC):
 
 	async def query_bytes(
 		self, endpoint: str, params: dict[str, str] | None = None
-	) -> bytes:
+	) -> io.BytesIO:
 		"""Query API endpoint and return raw bytes response.
 
 		Parameters
@@ -276,7 +276,12 @@ class BaseClient(ABC):
 		FailedQueryError
 		    If the request fails or returns empty
 		"""
-		return await self._request(endpoint, params)
+		raw_bytes = await self._request(endpoint, params)
+		if not raw_bytes:
+			msg = f'Request to {self.base_url + endpoint} failed or returned empty.'
+			logger.error(msg)
+			raise FailedQueryError(endpoint, self.base_url, params or {})
+		return await self.parse_bytes(raw_bytes)
 
 	async def async_get_request(
 		self, url: str, headers: Dict[str, Any], params: Dict[str, Any]
