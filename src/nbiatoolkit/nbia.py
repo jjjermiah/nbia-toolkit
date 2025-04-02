@@ -394,6 +394,11 @@ if __name__ == '__main__':
 	from nbiatoolkit import Settings
 
 	settings = Settings()
+
+	# save settings to a file
+	settings.write_toml('settings.toml')
+
+
 	client = NBIAClient.from_settings(settings)
 
 	# collections = client.getCollections()
@@ -402,10 +407,10 @@ if __name__ == '__main__':
 	# all_dbs = pd.concat(all_dbs, ignore_index=True)
 	# all_dbs.to_csv('data/all_series.csv', index=False)
 
-	all_series = pd.read_csv('data/all_series.csv')
-	sop_map = client.getSOPIDs(
-		[{'SeriesInstanceUID': s} for s in all_series.SeriesInstanceUID.unique()[:100]]
-	)
+	# all_series = pd.read_csv('data/all_series.csv')
+	# sop_map = client.getSOPIDs(
+	# 	[{'SeriesInstanceUID': s} for s in all_series.SeriesInstanceUID.unique()[:100]]
+	# )
 
 	# all_series.SeriesInstanceUID.unique()
 
