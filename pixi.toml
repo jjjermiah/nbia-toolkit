@@ -33,16 +33,17 @@ jupyterlab = "*"
 plotly = ">=6.0.1,<7"
 tabulate = ">=0.9.0,<0.10"
 
-
 [feature.dev.pypi-dependencies]
-med-imagetools = { path = "../med-imagetools", editable = true }
+# med-imagetools = { path = "../med-imagetools", editable = true }
+med-imagetools = "*"
 
 ############################################## PYTHON ###############################################
-
 [feature.py310.dependencies]
 python = "3.10.*"
+
 [feature.py311.dependencies]
 python = "3.11.*"
+
 [feature.py312.dependencies]
 python = "3.12.*"
 
@@ -51,7 +52,6 @@ python = "3.12.*"
 pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
-
 
 [feature.test.tasks.test]
 cmd = "pytest -c config/pytest.ini"
@@ -68,7 +68,6 @@ depends-on = ["test"]
 [feature.test.pypi-dependencies]
 pytest-asyncio = ">=0.25.0, <0.26"
 pytest-aiohttp = ">=1.0.5, <2"
-
 
 ############################################## DOCS ###############################################
 [feature.docs.dependencies]
@@ -95,16 +94,14 @@ sphinx-rtd-dark-mode = ">=1.3.0, <2"
 
 [feature.docs.tasks]
 doc-build.cmd = "make html --directory=docs"
+
 # [feature.docs.tasks]
 # doc-build.description = "Build the documentation using MkDocs"
 # doc-build.cmd = "mkdocs build -f mkdocs.yml"
 # doc-build.inputs = ["docs", "mkdocs.yml"]
 # doc-build.outputs = ["site"]
-
 # serve.description = "Serve the documentation to http://localhost:8000/"
 # serve.cmd = "mkdocs serve -f mkdocs.yml"
-
-
 ############################################## QUALITY ###############################################
 # Quality includes linting, type checking, and formatting
 [feature.quality.dependencies]
@@ -121,37 +118,24 @@ pydoctest = ">=0.2.1, <0.3"
 ruff-check.cmd = ["ruff", "--config", "config/ruff.toml", "check", "src"]
 ruff-check.inputs = ["config/ruff.toml", "src"]
 ruff-check.description = "Run ruff check"
-
 ruff-format.cmd = ["ruff", "--config", "config/ruff.toml", "format", "src"]
 ruff-format.inputs = ["config/ruff.toml", "src"]
 ruff-format.depends-on = ["ruff-check"]
 ruff-format.description = "Run ruff format, run check first"
-
 type-check.cmd = ["mypy", "--config-file", "config/mypy.ini"]
 type-check.inputs = ["config/mypy.ini", "src"]
 type-check.description = "Run mypy type check."
-
 qc.depends-on = ["ruff-format", "ruff-check", "type-check"]
 qc.description = "Quality check: ruff & mypy"
 
-
 #################################### RELEASE & BUILD ###############################################
-
-
 [feature.build.dependencies]
 python-semantic-release = ">=9.14"
 hatch = ">=1.13"
 
 [feature.build.tasks]
 semver = 'echo "Next Version is: $(semantic-release version --print)"'
-
-build = { cmd = [
-  "hatch",
-  "build",
-  "--clean",
-], inputs = [
-  "src",
-  "pyproject.toml",
-], outputs = [
-  "dist/*",
-], description = "Build the package" }
+build = { cmd = ["hatch", "build", "--clean"], inputs = [
+    "src",
+    "pyproject.toml",
+], outputs = ["dist/*"], description = "Build the package" }
