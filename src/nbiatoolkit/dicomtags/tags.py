@@ -4,7 +4,6 @@ from pydicom.datadict import dictionary_VR, tag_for_keyword
 import pandas as pd
 from typing import List
 
-
 def convert_element_to_int(element_str: str) -> int:
     """
     Converts a DICOM element string representation to an integer.
@@ -341,6 +340,37 @@ def extract_ROI_info(StructureSetROISequence) -> dict[str, dict[str, str]]:
 
     return ROISet
 
+def convert_dicom_value(val: str, vr: str):
+    vr = vr.upper()
+    try:
+        if val == '':
+            # if its an empty string just return None.
+            return None
+        # Multi-valued strings are separated by backslashes
+        values = val.split('\\') if isinstance(val, str) else [val]
+
+        if vr in {"IS", "SS", "US", "SL", "UL"}:
+            # Convert to int
+            result = [int(v) for v in values]
+            return result if len(result) > 1 else result[0]
+        
+        elif vr in {"DS", "FL", "FD"}:
+            # Convert to float
+            result = [float(v) for v in values]
+            return result if len(result) > 1 else result[0]
+        
+        elif vr in {"OB", "OW", "OF", "UN", "OL"}:
+            # Interpret as hex values (e.g., "FF\\00\\A3")
+            byte_vals = bytes(int(v, 16) for v in values)
+            return byte_vals
+        
+        else:
+            # Leave things like DA, TM, PN, LO, etc. as-is
+            return val
+        
+    except Exception as e:
+        raise ValueError(f"Failed to convert value '{val}' with VR '{vr}': {e}")
+
 
 def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
     """
@@ -355,32 +385,28 @@ def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
 
     # Create a new FileDataset
     ds = pydicom.Dataset()
-
+    ds.ensure_file_meta()
     for _, row in tags_df.iterrows():
         tag = convert_element_to_int(row["element"])
         value = row["data"]
         if tag == -1:
             continue
         VR = element_VR_lookup(row["element"])[1]
-
-        ds.add_new(tag=tag, VR=VR, value=value)
-
+        if len(VR) > 2: 
+            
+            
+            if VR == "Unknown,KeyError":
+                continue
+            else:
+                # if VR is something like "US or SS" we will assume its the latter.
+                VR = VR[-2:] 
+        value = convert_dicom_value(value, VR)
+        if tag == 0x30060010:
+            print(value)
+        if tag >> 16 == 0x0002:
+            ds.file_meta.add_new(tag=tag, VR=VR, value=value)
+        else:
+            ds.add_new(tag=tag, VR=VR, value=value)
+    ds.preamble=b"\0" * 128
     return ds
 
-
-# def getRTSTRUCT_ROI_info(seriesUID: str) -> dict[str, dict[str, str]]:
-#     """
-#     Given a SeriesInstanceUID of an RTSTRUCT, retrieves the ROI information.
-
-#     Args:
-#         seriesUID (str): The SeriesInstanceUID of the RTSTRUCT.
-
-#     Returns:
-#         dict[str, dict[str, str]]: A dictionary containing the ROI information.
-#     """
-
-#     RTSTRUCT_Tags = client.getDICOMTags(seriesUID)
-
-#     StructureSetROISequence = getSequenceElement(sequence_tags_df=RTSTRUCT_Tags, element_keyword="StructureSetROISequence")
-
-#     return extract_ROI_info(StructureSetROISequence)
