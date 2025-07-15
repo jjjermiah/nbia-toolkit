@@ -410,8 +410,10 @@ def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
         # Get Value Representation based on tag id.
         VR = element_VR_lookup(row["element"])[1]
         if len(VR) > 2: 
+            # If the DICOM tag is invalid, we skip it.
             if VR == "Unknown,KeyError":
                 continue
+            # If the VR is "US or SS", we determine which VR fits the actual value.
             elif VR == "US or SS":
                 if int(value) < 0:
                     VR = "SS"
@@ -420,7 +422,7 @@ def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
             else:
                 # if VR is something with multiple values we will just pretend its the latter one.
                 VR = VR[-2:]
-
+        
         value = convert_dicom_value(value, VR)
         
         # tags with a prefix of 0002 are metadata. 
