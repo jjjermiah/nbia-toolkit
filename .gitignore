@@ -170,3 +170,5 @@ temp_output
 devnotes/data/*
 **.nii.gz
 .pixi_old
+
+test.py
