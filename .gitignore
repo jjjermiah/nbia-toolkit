@@ -160,6 +160,9 @@ driver*.py
 logs
 logdir
 
+.imgtools
+temp_output
+
 # pixi environments
 .pixi
 *.egg-info

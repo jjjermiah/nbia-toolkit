@@ -16,31 +16,13 @@ from pydicom import dcmread
 import os
 import pydicom
 
-def get_series_instance_uids(dicom_dir):
-    """Scan a directory for DICOM files and extract unique SeriesInstanceUIDs."""
-    series_uids = set()
-
-    for root, _, files in os.walk(dicom_dir):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            try:
-                ds = pydicom.dcmread(filepath, stop_before_pixels=True, force=True)
-                if 'SeriesInstanceUID' in ds:
-                    series_uids.add(ds.SeriesInstanceUID)
-            except Exception as e:
-                # Optional: print or log file-level errors
-                pass
-
-    return sorted(series_uids)
+print(f"USERNAME: {os.getenv("NBIA_USERNAME")} \nPASSWORD: {os.getenv("NBIA_PASSWORD")}\n\n\n\n")
 
 client = NBIAClient()
+#collections = client.getCollections()
 
-# collections = client.getCollections()
-collections = ["4D-Lung"]
+collections = ["ACRIN-NSCLC-FDG-PET"]
 
-ref_path = "/Users/declankorda/BKHLAB-Internship-Stuff/med-imagetools/data/4D-Lung"
-
-uids = get_series_instance_uids(ref_path)
 
 
 
@@ -52,11 +34,7 @@ for collection in collections:
 
     for s in series:
         output_path = Path("temp_output")
-        is_struct = False
-        if s['SeriesInstanceUID'] not in uids:
-            continue
         if s["Modality"] not in ["CT", "PT", "MR"]:
-            is_struct = True
             sop_uid = client.getSOPIDs(s)
             for key in sop_uid:
                 # blehh
@@ -78,13 +56,9 @@ for collection in collections:
         # add header to file before trying to save
         output_path = Path("temp_output")
         output_path.mkdir(parents=True, exist_ok=True)
-        #print(f"\nfor {ds.SeriesInstanceUID} ({ds.Modality}):\n")
-        #print(ds.get("FrameOfReferenceUID", "Missing"))
-        #print(ds[0x00200052] if 0x00200052 in ds else "Tag not in dataset")
         ds.save_as(output_path / f"{s['SeriesInstanceUID']}.dcm", enforce_file_format=False)
         if n > 50:
-            pass
-            #break
+            break
 
         n += 1
 

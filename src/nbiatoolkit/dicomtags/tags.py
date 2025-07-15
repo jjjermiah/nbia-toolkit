@@ -3,6 +3,7 @@ import pydicom
 from pydicom.datadict import dictionary_VR, tag_for_keyword
 import pandas as pd
 from typing import List
+from typing import Any
 
 def convert_element_to_int(element_str: str) -> int:
     """
@@ -340,7 +341,24 @@ def extract_ROI_info(StructureSetROISequence) -> dict[str, dict[str, str]]:
 
     return ROISet
 
-def convert_dicom_value(val: str, vr: str):
+def convert_dicom_value(val: str, vr: str) -> Any:
+    """
+    Convert a Dicom tag value to the correct datatype according to its Value-Representation(VR).
+
+    Parameters:
+    -----------
+
+    val : str
+        The value to be converted.
+    vr : str
+        The value-representation associated with val.
+    
+    Returns:
+    --------
+
+    val : Any
+        val converted to the correct data type according to vr.
+    """
     vr = vr.upper()
     try:
         if val == '':
@@ -359,18 +377,16 @@ def convert_dicom_value(val: str, vr: str):
             result = [float(v) for v in values]
             return result if len(result) > 1 else result[0]
         
-        elif vr in {"OB", "OW", "OF", "UN", "OL"}:
+        elif vr in {"OB", "OW", "OF", "UN", "OL", "OB OR OW"}:
             # Interpret as hex values (e.g., "FF\\00\\A3")
             byte_vals = bytes(int(v, 16) for v in values)
             return byte_vals
-        
         else:
             # Leave things like DA, TM, PN, LO, etc. as-is
             return val
         
     except Exception as e:
         raise ValueError(f"Failed to convert value '{val}' with VR '{vr}': {e}")
-
 
 def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
     """
@@ -391,22 +407,28 @@ def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
         value = row["data"]
         if tag == -1:
             continue
+        # Get Value Representation based on tag id.
         VR = element_VR_lookup(row["element"])[1]
         if len(VR) > 2: 
-            
-            
             if VR == "Unknown,KeyError":
                 continue
+            elif VR == "US or SS":
+                if int(value) < 0:
+                    VR = "SS"
+                else:
+                    VR = "US"
             else:
-                # if VR is something like "US or SS" we will assume its the latter.
-                VR = VR[-2:] 
+                # if VR is something with multiple values we will just pretend its the latter one.
+                VR = VR[-2:]
+
         value = convert_dicom_value(value, VR)
-        if tag == 0x30060010:
-            print(value)
-        if tag >> 16 == 0x0002:
+        
+        # tags with a prefix of 0002 are metadata. 
+        if tag >> 16 == 0x0002: 
             ds.file_meta.add_new(tag=tag, VR=VR, value=value)
         else:
             ds.add_new(tag=tag, VR=VR, value=value)
+    # Add DICOM header
     ds.preamble=b"\0" * 128
     return ds
 
