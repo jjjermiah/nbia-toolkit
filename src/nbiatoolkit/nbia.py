@@ -202,6 +202,17 @@ class NBIAClient(BaseClient):
     def download_series(self, SeriesInstanceUID: str) -> BytesIO:
         """Download series metadata from NBIA."""
         return asyncio.run(self._download_series(SeriesInstanceUID))
+    
+    async def _download_single_image(self, SeriesInstanceUID: str, SOPInstanceUID: str) -> BytesIO:
+        """Download series metadata from NBIA."""
+        endpoint = NBIA_ENDPOINT.DOWNLOAD_SERIES.value
+        params = {"SeriesInstanceUID": SeriesInstanceUID, "SOPInstanceUID": SOPInstanceUID}
+        return await self.query_bytes(endpoint, params=params)
+
+
+    def download_single_image(self, SeriesInstanceUID: str, SOPInstanceUID: str) -> BytesIO:
+        """Download single image from NBIAToolkit."""
+        return asyncio.run(self._download_single_image(SeriesInstanceUID, SOPInstanceUID))
 
     async def _build_collection_database(
         self, params: dict | list[dict]

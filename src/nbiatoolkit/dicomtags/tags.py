@@ -403,33 +403,37 @@ def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
     ds = pydicom.Dataset()
     ds.ensure_file_meta()
     for _, row in tags_df.iterrows():
-        tag = convert_element_to_int(row["element"])
-        value = row["data"]
-        if tag == -1:
-            continue
-        # Get Value Representation based on tag id.
-        VR = element_VR_lookup(row["element"])[1]
-        if len(VR) > 2: 
-            # If the DICOM tag is invalid, we skip it.
-            if VR == "Unknown,KeyError":
+        try:
+            tag = convert_element_to_int(row["element"])
+            value = row["data"]
+            if tag == -1:
                 continue
-            # If the VR is "US or SS", we determine which VR fits the actual value.
-            elif VR == "US or SS":
-                if int(value) < 0:
-                    VR = "SS"
+            # Get Value Representation based on tag id.
+            VR = element_VR_lookup(row["element"])[1]
+            if len(VR) > 2: 
+                # If the DICOM tag is invalid, we skip it.
+                if VR == "Unknown,KeyError":
+                    continue
+                # If the VR is "US or SS", we determine which VR fits the actual value.
+                elif VR == "US or SS":
+                    if int(value) < 0:
+                        VR = "SS"
+                    else:
+                        VR = "US"
                 else:
-                    VR = "US"
+                    # if VR is something with multiple values we will just pretend its the latter one.
+                    VR = VR[-2:]
+            
+            value = convert_dicom_value(value, VR)
+            
+            # tags with a prefix of 0002 are metadata. 
+            if tag >> 16 == 0x0002: 
+                ds.file_meta.add_new(tag=tag, VR=VR, value=value)
             else:
-                # if VR is something with multiple values we will just pretend its the latter one.
-                VR = VR[-2:]
-        
-        value = convert_dicom_value(value, VR)
-        
-        # tags with a prefix of 0002 are metadata. 
-        if tag >> 16 == 0x0002: 
-            ds.file_meta.add_new(tag=tag, VR=VR, value=value)
-        else:
-            ds.add_new(tag=tag, VR=VR, value=value)
+                ds.add_new(tag=tag, VR=VR, value=value)
+        except Exception:
+            # if a tag fails to be parsed just skip!
+            pass
     # Add DICOM header
     ds.preamble=b"\0" * 128
     return ds
