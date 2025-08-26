@@ -205,7 +205,7 @@ class NBIAClient(BaseClient):
     
     async def _download_single_image(self, SeriesInstanceUID: str, SOPInstanceUID: str) -> BytesIO:
         """Download series metadata from NBIA."""
-        endpoint = NBIA_ENDPOINT.DOWNLOAD_SERIES.value
+        endpoint = NBIA_ENDPOINT.DOWNLOAD_IMAGE.value
         params = {"SeriesInstanceUID": SeriesInstanceUID, "SOPInstanceUID": SOPInstanceUID}
         return await self.query_bytes(endpoint, params=params)
 
