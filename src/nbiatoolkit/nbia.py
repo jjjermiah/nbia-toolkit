@@ -221,7 +221,7 @@ class NBIAClient(BaseClient):
 
     def getNewSeries(self, params: dict | list[dict]) -> list[dict]:
         """Get series metadata from NBIA."""
-        return asyncio.run(self._getSeries(params))
+        return asyncio.run(self._getNewSeries(params))
     
 
     async def _download_series(self, SeriesInstanceUID: str) -> BytesIO:
