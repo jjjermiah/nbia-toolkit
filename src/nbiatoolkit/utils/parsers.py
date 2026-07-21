@@ -1,9 +1,9 @@
-from requests.exceptions import JSONDecodeError as JSONDecodeError
-from bs4 import BeautifulSoup
 from datetime import datetime, timezone
-from typing import Union, Any, Dict, List, Literal, Optional, Tuple
-import pandas as pd
+from typing import Any, List, Union
+
 import requests
+from bs4 import BeautifulSoup
+from requests.exceptions import JSONDecodeError
 
 
 def clean_html(html_string: str) -> str:
@@ -77,7 +77,8 @@ def convertDateFormat(
         except ValueError:
             pass  # If parsing fails, continue with the next format
     # If none of the formats match, raise an exception or return a default value
-    raise ValueError("Invalid date format: {}".format(input_date))
+    msg = "Invalid date format: {}".format(input_date)
+    raise ValueError(msg)
 
 
 def parse_response(response: requests.Response) -> List[dict[Any, Any]]:
@@ -93,27 +94,37 @@ def parse_response(response: requests.Response) -> List[dict[Any, Any]]:
 
     if not "application/json" in content_type:
         if response.content == b"":
-            raise ValueError(
+            msg = (
                 "The response content is empty. "
                 "Check your request parameters and try again."
             )
-        else:
             raise ValueError(
+                msg
+            )
+        else:
+            msg = (
                 "The response content type must be 'application/json' but is {}".format(
                     content_type
                 )
+            )
+            raise ValueError(
+                msg
             )
 
     try:
         response_list = response.json()
     except JSONDecodeError:
-        raise JSONDecodeError("Failed to decode JSON response")
+        msg = "Failed to decode JSON response"
+        raise JSONDecodeError(msg)
     else:
         if not isinstance(response_list, list):
-            raise TypeError(
+            msg = (
                 "The JSON response must be a dictionary but is a {}".format(
                     type(response_list)
                 )
+            )
+            raise TypeError(
+                msg
             )
 
     return response_list

@@ -3,10 +3,12 @@
 # to run this test file use the following command from the src directory :
 # pytest -v -s
 
-import pytest
-from src.nbiatoolkit import OAuth2
 import time
+
+import pytest
 import requests
+
+from nbiatoolkit import OAuth2
 
 
 @pytest.fixture
@@ -27,9 +29,9 @@ def test_oauth2(oauth: OAuth2) -> None:
 
 
 def test_is_token_expired(oauth: OAuth2) -> None:
-    assert oauth.is_token_expired() == False
+    assert not oauth.is_token_expired()
     oauth.expiry_time = time.time() - 100
-    assert oauth.is_token_expired() == True
+    assert oauth.is_token_expired() is True
 
 
 def test_refresh_token_or_request_new(oauth: OAuth2) -> None:
@@ -51,7 +53,7 @@ def test_refresh_after_expiry(oauth: OAuth2) -> None:
     assert oauth.refresh_token is not None
     assert oauth.refresh_expiry is not None
     assert oauth.expiry_time is not None
-    assert oauth.is_token_expired() == False
+    assert oauth.is_token_expired() is False
 
 
 def test_failed_refresh(oauth: OAuth2) -> None:
@@ -72,25 +74,37 @@ def test_request_new_access_token(oauth: OAuth2) -> None:
     assert oauth.refresh_token is not None
     assert oauth.refresh_expiry is not None
     assert oauth.expiry_time is not None
-    assert oauth.is_token_expired() == False
+    assert oauth.is_token_expired() is False
 
 
 def test_logout(oauth: OAuth2) -> None:
     oauth.logout()
     assert oauth.access_token is None
-    assert oauth.refresh_token is ""
+    assert oauth.refresh_token == ""
     assert oauth.refresh_expiry is None
     assert oauth.expiry_time is None
     assert oauth.api_headers == {
         "Authorization": "Bearer None",
         "Content-Type": "application/json",
     }
-    assert oauth.token_expiration_time == None
-    assert oauth.refresh_expiration_time == None
-    assert oauth.token_scope == None
+    assert oauth.token_expiration_time is None
+    assert oauth.refresh_expiration_time is None
+    assert oauth.token_scope is None
     assert oauth.__repr__() == ""
     assert oauth.__str__() == ""
     assert oauth.username == ""
     assert oauth.client_id == ""
     assert oauth.password == ""
     assert oauth.base_url == ""
+    
+		# try logging out again
+    result = oauth.logout()
+    assert result is None
+
+
+def test_str(oauth: OAuth2) -> None:
+    # f"OAuth2(username={self.username}, client_id={self.client_id})"
+    assert (
+        str(oauth) == f"OAuth2(username={oauth.username}, client_id={oauth.client_id})"
+    )
+

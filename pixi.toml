@@ -1,0 +1,141 @@
+[project]
+authors = ["Jermiah Joseph <jermiahjoseph98@gmail.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "nbia-toolkit"
+platforms = ["linux-64", "osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = ">=3.10.16,<3.14"
+pydantic-settings = ">=2.7.1,<3"
+toml = ">=0.10.2,<0.11"
+click = ">=8.1.8,<9"
+
+[pypi-dependencies]
+nbia-toolkit = { path = ".", editable = true }
+med-imagetools = ">=2.11.1, <3"
+
+[environments]
+dev = ["test", "quality", "build", "dev", "docs"]
+docs = ["docs"]
+test = ["test", "quality"]
+py310 = { features = ["py310", "test"], no-default-feature = false }
+py311 = { features = ["py311", "test"], no-default-feature = false }
+py312 = { features = ["py312", "test"], no-default-feature = false }
+
+############################################## DEV ##################################################
+[feature.dev.dependencies]
+ipython = "*"
+ipykernel = "*"
+jupyterlab = "*"
+plotly = ">=6.0.1,<7"
+tabulate = ">=0.9.0,<0.10"
+
+[feature.dev.pypi-dependencies]
+med-imagetools = ">=2.11.1, <3"
+
+############################################## PYTHON ###############################################
+[feature.py310.dependencies]
+python = "3.10.*"
+
+[feature.py311.dependencies]
+python = "3.11.*"
+
+[feature.py312.dependencies]
+python = "3.12.*"
+
+############################################## TEST ################################################
+[feature.test.dependencies]
+pytest = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
+
+[feature.test.tasks.test]
+cmd = "pytest -c config/pytest.ini"
+inputs = ["src", "tests", "config/pytest.ini", "config/coverage.toml"]
+outputs = ["coverage-report/coverage.xml"]
+description = "Run pytest"
+
+[feature.test.tasks.coverage]
+cmd = "coverage report --rcfile=config/coverage.toml"
+inputs = ["src", "tests", "coverage-report/coverage.xml"]
+description = "Generate generated coverage report"
+depends-on = ["test"]
+
+[feature.test.pypi-dependencies]
+pytest-asyncio = ">=0.25.0, <0.26"
+pytest-aiohttp = ">=1.0.5, <2"
+
+############################################## DOCS ###############################################
+[feature.docs.dependencies]
+mkdocs = "*"
+mkdocs-material = ">=9.5.44,<10"
+mkdocstrings = ">=0.27.0,<0.28"
+mkdocstrings-python = ">=1.12.2,<2"
+mkdocs-git-authors-plugin = ">=0.9.0,<0.10"
+mkdocs-git-revision-date-localized-plugin = ">=1.2.9,<2"
+griffe-inherited-docstrings = ">=1.1.1,<2"
+mike = ">=2.1.2,<3"
+mkdocs-include-markdown-plugin = ">=7.1.1,<8"
+jupyter = "*"
+sphinx-autoapi = ">=3.3.3,<4"
+sphinx-rtd-theme = ">=3.0.1,<4"
+
+[feature.docs.pypi-dependencies]
+mkdocs-awesome-pages-plugin = ">=2.9.3, <3"
+sphinx-exec-code = ">=0.14, <0.15"
+myst-nb = ">=1.1.2, <2"
+sphinx-tabs = ">=3.4.7, <4"
+piccolo-theme = ">=0.24.0, <0.25"
+sphinx-rtd-dark-mode = ">=1.3.0, <2"
+
+[feature.docs.tasks]
+doc-build.cmd = "make html --directory=docs"
+
+# [feature.docs.tasks]
+# doc-build.description = "Build the documentation using MkDocs"
+# doc-build.cmd = "mkdocs build -f mkdocs.yml"
+# doc-build.inputs = ["docs", "mkdocs.yml"]
+# doc-build.outputs = ["site"]
+# serve.description = "Serve the documentation to http://localhost:8000/"
+# serve.cmd = "mkdocs serve -f mkdocs.yml"
+############################################## QUALITY ###############################################
+# Quality includes linting, type checking, and formatting
+[feature.quality.dependencies]
+ruff = ">=0.4.4"
+mypy = ">=1.13.0,<2"
+types-requests = ">=2.32.0.20241016,<3"
+types-beautifulsoup4 = ">=4.12.0.20241020,<5"
+pandas-stubs = ">=2.2.3.241009,<3"
+
+[feature.quality.pypi-dependencies]
+pydoctest = ">=0.2.1, <0.3"
+
+[feature.quality.tasks]
+ruff-check.cmd = ["ruff", "--config", "config/ruff.toml", "check", "src"]
+ruff-check.inputs = ["config/ruff.toml", "src"]
+ruff-check.description = "Run ruff check"
+ruff-format.cmd = ["ruff", "--config", "config/ruff.toml", "format", "src"]
+ruff-format.inputs = ["config/ruff.toml", "src"]
+ruff-format.depends-on = ["ruff-check"]
+ruff-format.description = "Run ruff format, run check first"
+type-check.cmd = ["mypy", "--config-file", "config/mypy.ini"]
+type-check.inputs = ["config/mypy.ini", "src"]
+type-check.description = "Run mypy type check."
+qc.depends-on = ["ruff-format", "ruff-check", "type-check"]
+qc.description = "Quality check: ruff & mypy"
+
+#################################### RELEASE & BUILD ###############################################
+[feature.build.dependencies]
+python-semantic-release = ">=9.14"
+hatch = ">=1.13"
+
+[feature.build.tasks]
+semver = 'echo "Next Version is: $(semantic-release version --print)"'
+build = { cmd = ["hatch", "build", "--clean"], inputs = [
+    "src",
+    "pyproject.toml",
+], outputs = ["dist/*"], description = "Build the package" }

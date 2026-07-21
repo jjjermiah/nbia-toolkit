@@ -159,3 +159,16 @@ download.ipynb
 driver*.py
 logs
 logdir
+
+.imgtools
+temp_output
+
+# pixi environments
+.pixi
+*.egg-info
+
+devnotes/data/*
+**.nii.gz
+.pixi_old
+
+test.py

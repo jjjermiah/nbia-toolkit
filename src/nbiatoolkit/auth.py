@@ -1,47 +1,47 @@
-import requests
 import time
-from typing import Union, Tuple
-from .utils import NBIA_ENDPOINTS, NBIA_BASE_URLS
+from typing import Tuple
+
+import requests
 from cryptography.fernet import Fernet
 
+from nbiatoolkit import logger
+from nbiatoolkit.utils import NBIA_BASE_URLS
 
-def encrypt_credentials(key: bytes, username: str, password: str) -> Tuple[str, str]:
+
+def encrypt_password(key: bytes, password: str) -> str:
     """
-    Encrypts the given username and password using the provided key.
+    Encrypts the given password using the provided key.
 
-    Args:
+    Parameters
+    ----------
         key (bytes): The encryption key.
-        username (str): The username to be encrypted.
         password (str): The password to be encrypted.
 
-    Returns:
-        Tuple[str, str]: A tuple containing the encrypted username and password.
+    Returns
+    -------
+        str: The encrypted password.
     """
     cipher_suite = Fernet(key=key)
     encrypted_password = cipher_suite.encrypt(password.encode()).decode()
-    encrypted_username = cipher_suite.encrypt(username.encode()).decode()
-    return encrypted_username, encrypted_password
+    return encrypted_password
 
 
-def decrypt_credentials(
-    key: bytes, encrypted_username: str, encrypted_password: str
-) -> tuple[str, str]:
+def decrypt_password(key: bytes, encrypted_password: str) -> str:
     """
-    Decrypts the encrypted username and password using the provided key.
+    Decrypts the encrypted password using the provided key.
 
-    Args:
-        key (bytes): The encryption key used to decrypt the credentials.
-        encrypted_username (str): The encrypted username.
+    Parameters
+    ----------
+        key (bytes): The encryption key used to decrypt the password.
         encrypted_password (str): The encrypted password.
 
-    Returns:
-        tuple[str, str]: A tuple containing the decrypted username and password.
+    Returns
+    -------
+        str: The decrypted password.
     """
     cipher_suite = Fernet(key=key)
-    decrypted_username = cipher_suite.decrypt(encrypted_username.encode()).decode()
     decrypted_password = cipher_suite.decrypt(encrypted_password.encode()).decode()
-    # return the decrypted client_id and username
-    return decrypted_username, decrypted_password
+    return decrypted_password
 
 
 class OAuth2:
@@ -86,7 +86,9 @@ class OAuth2:
 
     Example Usage
     -------------
-    >>> from nbiatoolkit.auth import OAuth2
+    >>> from nbiatoolkit.auth import (
+    ...     OAuth2,
+    ... )
 
     To use the NBIA Guest account:
 
@@ -94,7 +96,10 @@ class OAuth2:
 
     To use a custom account:
 
-    >>> oauth = OAuth2(username="my_username", password="my_password")
+    >>> oauth = OAuth2(
+    ...     username='my_username',
+    ...     password='my_password',
+    ... )
 
     Notes
     -----
@@ -118,7 +123,6 @@ class OAuth2:
         """
         Initialize the OAuth2 class.
 
-
         Parameters
         ----------
         username : str, optional
@@ -128,61 +132,72 @@ class OAuth2:
         client_id : str, optional
             The client ID for authentication. Default is "NBIA".
         base_url : str or NBIA_BASE_URLS, optional. Default is NBIA_BASE_URLS.NBIA
-
         """
-
         self.client_id = client_id
 
         self._fernet_key: bytes = Fernet.generate_key()
-        self.username: str
-        self.password: str
-        self.username, self.password = encrypt_credentials(
-            key=self.fernet_key, username=username, password=password
-        )
-        self.username, self.password = encrypt_credentials(
-            key=self._fernet_key, username=username, password=password
-        )
+        self.username: str = username  # Store username in plaintext
+        
+        # Only encrypt the password
+        self.password = encrypt_password(key=self._fernet_key, password=password)
 
         if isinstance(base_url, NBIA_BASE_URLS):
             self.base_url = base_url.value
         else:
             self.base_url = base_url
+        logger.debug("OAuth2 client initialized with username %s", self.username)
+        logger.debug("base_url: %s", self.base_url)
 
         self._access_token = None
-        self.expiry_time = None
+        self.expiry_time: int | None = None
         self.refresh_expiry = None
         self.refresh_token = ""  # Fix: Assign an empty string instead of None
         self.scope = None
 
     @property
-    def fernet_key(self) -> bytes:
-        return self._fernet_key
-
-    def is_logged_out(self) -> bool:
-        return (
-            self._access_token == ""
-            and self.username == ""
-            and self.password == ""
-            and self.client_id == ""
-            and self.base_url == ""
-        )
-
-    @property
-    def access_token(self) -> str | None:
+    def access_token(self) -> str | None:  # noqa
         if self.is_logged_out():
             return None
 
         # Check if access token is not set or it's expired
-        if not self._access_token or self.is_token_expired():
+        if self.is_token_expired() or self._access_token is None:
             self.refresh_token_or_request_new()
 
         return self._access_token
 
-    def is_token_expired(self) -> bool:
+    @property
+    def api_headers(self) -> dict[str, str]:  # noqa
+        return {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
+        }
+
+    @property
+    def token_expiration_time(self):  # noqa
+        return self.expiry_time
+
+    @property
+    def refresh_expiration_time(self):  # noqa
+        return self.refresh_expiry
+
+    @property
+    def token_scope(self):  # noqa
+        return self.scope
+
+    @property
+    def fernet_key(self) -> bytes:  # noqa
+        return self._fernet_key
+
+    def is_logged_out(self) -> bool:  # noqa
+        return (
+            self._access_token is None and self.username == "" and self.password == ""
+        )
+
+    def is_token_expired(self) -> bool:  # noqa
         # Check if the token expiration time is set and if it's expired
         return self.expiry_time is not None and time.time() > self.expiry_time
 
-    def refresh_token_or_request_new(self) -> None:
+    def refresh_token_or_request_new(self) -> None:  # noqa
         if self.refresh_token != "":
             self._refresh_access_token()
         else:
@@ -202,85 +217,53 @@ class OAuth2:
 
         response = requests.post(token_url, data=data)
 
-        try:
-            response.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            raise err
-        else:
-            token_data = response.json()
-            self.set_token_data(token_data)
+        response.raise_for_status()
+        # requests.exceptions.HTTPError:
 
-    def request_new_access_token(self):
+        token_data = response.json()
+        self.set_token_data(token_data)
+
+    def request_new_access_token(self) -> None:  # noqa
         data: dict[str, str] = {
-            "username": decrypt_credentials(
+            "username": self.username,  # Use plaintext username directly
+            "password": decrypt_password(
                 key=self.fernet_key,
-                encrypted_username=self.username,
                 encrypted_password=self.password,
-            )[0],
-            "password": decrypt_credentials(
-                key=self.fernet_key,
-                encrypted_username=self.username,
-                encrypted_password=self.password,
-            )[1],
+            ),
             "client_id": self.client_id,
             "grant_type": "password",
         }
 
         token_url: str = self.base_url + "oauth/token"
 
-        response: requests.models.Response
         response = requests.post(token_url, data=data)
+        response.raise_for_status()
+        # requests.exceptions.HTTPError:
 
-        try:
-            response = requests.post(token_url, data=data)
-            response.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            raise err
-        else:
-            token_data = response.json()
-            self.set_token_data(token_data)
+        token_data = response.json()
+        self.set_token_data(token_data)
 
-    def set_token_data(self, token_data: dict):
+    def set_token_data(self, token_data: dict) -> None:
         self._access_token = token_data["access_token"]
-        self.expiry_time = time.time() + int(token_data.get("expires_in") or 0)
-        self.refresh_token: str = token_data["refresh_token"]
+        self.expiry_time = int(time.time()) + int(token_data.get("expires_in") or 0)
+        self.refresh_token = token_data["refresh_token"]
         self.refresh_expiry = token_data.get("refresh_expires_in")
         self.scope = token_data.get("scope")
 
-    @property
-    def api_headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"Bearer {self.access_token}",
-            "Content-Type": "application/json",
-        }
-
-    @property
-    def token_expiration_time(self):
-        return self.expiry_time
-
-    @property
-    def refresh_expiration_time(self):
-        return self.refresh_expiry
-
-    @property
-    def token_scope(self):
-        return self.scope
-
-    def __repr__(self) -> Union[str, None]:
+    def __repr__(self) -> str:  # noqa
         if self.username:
             return f"OAuth2(username={self.username}, client_id={self.client_id})"
         else:
             return ""
 
-    def __str__(self):
+    def __str__(self):  # noqa
         if self.username:
             return f"OAuth2(username={self.username}, client_id={self.client_id})"
         else:
             return ""
 
     def logout(self) -> None:
-        """
-        Logs out the user and revokes the access token.
+        """Log out the user and revokes the access token.
 
         This method sends a request to the NBIA API to revoke the access token
         and logs out the user.
@@ -296,20 +279,34 @@ class OAuth2:
         response = requests.get(query_url, headers=self.api_headers)
         try:
             response.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
+        except requests.exceptions.HTTPError:
+            pass  # WAIT UNTIL TCIA IMPLEMENTS LOGOUT FUNCTIONALITY
         finally:
             # set the entire object to None
-            self.__dict__.clear()
             self.username = ""
             self.password = ""
             self.client_id = ""
             self.base_url = ""
-            self._access_token = ""
+            self._access_token = None
             self.expiry_time = None
             self.refresh_expiry = None
             self.refresh_token = ""
             self.scope = None
-            self._fernet_key = b""
-            self = None
-            return None
+
+
+if __name__ == "__main__":
+    from nbiatoolkit import Settings
+    from rich import print
+
+    settings = Settings()
+
+    oauth = OAuth2(
+        username=settings.NBIA_USERNAME,
+        password=settings.NBIA_PASSWORD,
+    )
+    print(oauth)
+    print(f"{oauth.is_logged_out()=}")
+    print(f"{oauth.access_token=}")
+    print(f"{oauth.api_headers=}")
+    print(f"{oauth.token_expiration_time=}")
+    print(f"{oauth.refresh_expiration_time=}")

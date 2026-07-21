@@ -1,736 +1,515 @@
-from calendar import c
-from inspect import getmodule
-from re import I
+from __future__ import annotations
+
+import asyncio
+from io import BytesIO
 import re
-import zipfile
-from tempfile import TemporaryDirectory
-
-from pydicom import Dataset, FileDataset
-from .dicomsort import DICOMSorter, generateFilePathFromDICOMAttributes
-
-import multiprocessing
-from .auth import OAuth2
-from .logger.logger import setup_logger
-from logging import Logger
-from .utils import (
-    NBIA_ENDPOINTS,
-    NBIA_BASE_URLS,
-    validateMD5,
-    clean_html,
-    convertMillis,
-    convertDateFormat,
-    parse_response,
-    ReturnType,
-    conv_response_list,
-)
-
-from .dicomtags.tags import (
-    getReferencedSeriesUIDS,
-    extract_ROI_info,
-    getSequenceElement,
-    generateFileDatasetFromTags,
-)
+from dataclasses import dataclass, field
 
 import pandas as pd
-import requests
-from requests.exceptions import JSONDecodeError as JSONDecodeError
-from typing import Union, Optional, Any, Dict, List
-import io
-import zipfile
+from rich.progress import (
+    BarColumn,
+    SpinnerColumn,
+    TimeElapsedColumn,
+)
 
-from datetime import datetime
-
-# set __version__ variable
-__version__ = "1.3.1"
-
-
-def downloadSingleSeries(
-    SeriesInstanceUID: str,
-    downloadDir: str,
-    filePattern: str,
-    overwrite: bool,
-    api_headers: dict[str, str],
-    base_url: NBIA_BASE_URLS,
-    log: Logger,
-    Progressbar: bool = False,
-):
-    """
-    Downloads a single series from the NBIA server.
-
-    Args:
-        SeriesInstanceUID (str): The unique identifier of the series.
-        downloadDir (str): The directory where the series will be downloaded.
-        filePattern (str): The desired pattern for the downloaded files.
-        overwrite (bool): Flag indicating whether to overwrite existing files.
-        api_headers (dict[str, str]): The headers to be included in the API request.
-        base_url (NBIA_ENDPOINTS): The base URL of the NBIA server.
-        log (Logger): The logger object for logging messages.
-        Progressbar (bool, optional): Flag indicating whether to display a progress bar. Defaults to False.
-
-    Returns:
-        bool: True if the series is downloaded and sorted successfully, False otherwise.
-    """
-    # create query_url
-    query_url: str = base_url.value + NBIA_ENDPOINTS.DOWNLOAD_SERIES.value
-
-    params = dict()
-    params["SeriesInstanceUID"] = SeriesInstanceUID
-
-    # create a temporary directory
-
-    with TemporaryDirectory() as tempDir:
-        log.debug(f"Downloading series: {SeriesInstanceUID}")
-        response = requests.get(url=query_url, headers=api_headers, params=params)
-
-        file = zipfile.ZipFile(io.BytesIO(response.content))
-        file.extractall(path=tempDir)
-
-        try:
-            validateMD5(seriesDir=tempDir)
-        except Exception as e:
-            log.error(f"Error validating MD5 hash: {e}")
-            return False
-
-        # Create an instance of DICOMSorter with the desired target pattern
-        sorter = DICOMSorter(
-            sourceDir=tempDir,
-            destinationDir=downloadDir,
-            targetPattern=filePattern,
-            truncateUID=True,
-            sanitizeFilename=True,
-        )
-        # sorter.sortDICOMFiles(option="move", overwrite=overwrite)
-        if not sorter.sortDICOMFiles(
-            shutil_option="move",
-            overwrite=overwrite,
-            progressbar=Progressbar,
-            n_parallel=1,
-        ):
-            log.error(
-                f"Error sorting DICOM files for series {SeriesInstanceUID}\n \
-                    failed files located at {tempDir}"
-            )
-            return False
+from nbiatoolkit import (
+    NBIA_BASE_URLS,
+    NBIA_ENDPOINT,
+    OAuth2,
+    RichProgressBar,
+    logger,
+)
+from nbiatoolkit.base_client import BaseClient
+from nbiatoolkit.settings import Settings
 
 
-class NBIAClient:
-    """A client for interacting with the NBIA API.
+@dataclass(unsafe_hash=True)
+class NBIAClient(BaseClient):
+    username: str = "nbia_guest"
+    password: str = ""
+    disable_progress_bar: bool = False
+    log_level: str = "INFO"
+    base_url: str = NBIA_BASE_URLS.NBIA.value
 
-    The NBIAClient class provides a high-level interface for querying the NBIA API and downloading DICOM series.
+    max_concurrent_requests: int | None = None
+    max_attempts: int | None = None
+    wait_multiplier: float | None = None
+    min_wait: int | None = None
+    max_wait: int | None = None
+    timeout_seconds: float | None = None
 
-    Args:
-        username (str, optional): The username for authentication. Defaults to "nbia_guest".
-        password (str, optional): The password for authentication. Defaults to an empty string.
-        log_level (str, optional): The log level for the logger. Defaults to "INFO".
-        return_type (Union[ReturnType, str], optional): The return type for API responses.
-            Defaults to ReturnType.LIST
+    OAuth_client: OAuth2 = field(init=False)
+    progress_bar: RichProgressBar = field(init=False)
 
-    Attributes:
-        OAuth_client (OAuth2): The OAuth2 client used for authentication.
-        headers (dict[str, str]): The API headers.
-        base_url (NBIA_ENDPOINTS): The base URL for API requests.
-        logger (Logger): The logger for logging client events.
-        return_type (str): The current return type for API responses.
-    """
-
-    def __init__(
-        self,
-        username: str = "nbia_guest",
-        password: str = "",
-        log_level: str = "INFO",
-        logger: Optional[Logger] = None,
-        return_type: Union[ReturnType, str] = ReturnType.LIST,
-    ) -> None:
-        self._log: Logger = (
-            setup_logger(
-                name="NBIAClient",
-                log_level=log_level,
-                console_logging=True,
-                log_file=None,
-            )
-            if logger is None
-            else logger
+    @classmethod
+    def from_settings(
+        cls,
+        settings: Settings,
+    ) -> NBIAClient:
+        """Create an NBIAClient instance using settings."""
+        # by default use the NBIA base URL
+        return cls(
+            username=settings.NBIA_USERNAME,
+            password=settings.NBIA_PASSWORD,
+            log_level=settings.log_level,
+            **settings.api.model_dump(),
         )
 
-        # Setup OAuth2 client
-        self._log.debug("Setting up OAuth2 client... with username %s", username)
-        self._oauth2_client = OAuth2(username=username, password=password)
-
-        self._base_url: NBIA_BASE_URLS = NBIA_BASE_URLS.NBIA
-        self._return_type: ReturnType = (
-            return_type
-            if isinstance(return_type, ReturnType)
-            else ReturnType(return_type)
+    def __post_init__(self) -> None:
+        # initialize ClientSession and Semaphore in BaseClient
+        super().__init__(
+            base_url=self.base_url,
+            max_concurrent_requests=self.max_concurrent_requests,
+            max_attempts=self.max_attempts,
+            wait_multiplier=self.wait_multiplier,
+            min_wait=self.min_wait,
+            max_wait=self.max_wait,
+            timeout_seconds=self.timeout_seconds,
         )
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
-        self._oauth2_client.logout()
+        self.OAuth_client = OAuth2(username=self.username, password=self.password)
+        self.progress_bar = RichProgressBar(
+            "[progress.description]{task.description}",
+            BarColumn(),
+            "[progress.percentage]{task.percentage:>3.0f}%",
+            SpinnerColumn(),
+            "Time elapsed:",
+            TimeElapsedColumn(),
+            transient=True,
+            disable=self.disable_progress_bar,
+        )
+        logger.setLevel(self.log_level)
 
     @property
-    def OAuth_client(self) -> OAuth2:
-        return self._oauth2_client
-
-    @property
-    def headers(self):
-
-        API_HEADERS: dict[str, str] = {
+    def headers(self) -> dict[str, str]:
+        return {
             "Authorization": f"Bearer {self.OAuth_client.access_token}",
             "Content-Type": "application/json",
         }
 
-        return API_HEADERS
+    ########## Collection Methods ###########
+    #########################################
 
-    # create a setter for the base_url in case user want to use NLST
-    @property
-    def base_url(self) -> NBIA_BASE_URLS:
-        return self._base_url
-
-    @base_url.setter
-    def base_url(self, nbia_url: NBIA_BASE_URLS) -> None:
-        self._base_url = nbia_url
-
-    @property
-    def logger(self) -> Logger:
-        return self._log
-
-    @logger.setter
-    def logger(self, logger: Logger) -> None:
-        self._log = logger
-
-    @property
-    def return_type(self) -> str:
-        return self._return_type.value
-
-    @return_type.setter
-    def return_type(self, return_type: str) -> None:
-        assert isinstance(return_type, str), "return_type must be a string"
-        self._return_type = ReturnType(return_type)
-
-    # Helper function for:
-    def _get_return(self, return_type: Optional[Union[ReturnType, str]]) -> ReturnType:
-        """
-        helper function to replace the following code:
-        returnType: ReturnType = (
-            ReturnType(return_type) if return_type is not None else self._return_type
+    async def _getCollections(self) -> list[dict]:
+        return await self.query_json(
+            NBIA_ENDPOINT.GET_COLLECTIONS.value,
         )
-        """
-        return ReturnType(return_type) if return_type is not None else self._return_type
 
-    def query_api(
-        self, endpoint: NBIA_ENDPOINTS, params: dict = {}
-    ) -> List[dict[Any, Any]]:
-        query_url: str = self._base_url.value + endpoint.value
+    def getCollections(self) -> list[dict]:
+        return asyncio.run(self._getCollections())
 
-        self._log.debug("Querying API endpoint: %s", query_url)
-        self._log.debug("Query parameters: %s", params)
-        response: requests.Response
+    ######### Patient Methods ###########
+    #####################################
 
-        try:
-            response = requests.get(url=query_url, headers=self.headers, params=params)
-            response.raise_for_status()  # Raise an HTTPError for bad responses
-            parsed_response: List[dict[Any, Any]] | bytes = parse_response(
-                response=response
+    async def _getPatients(self, params: dict | list[dict]) -> list[dict]:
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} patients requests"
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
-        except requests.exceptions.HTTPError as http_err:
-            self._log.error("HTTP error occurred: %s", http_err)
-            if response is None:
-                self._log.error("Response is None")
-                raise http_err
-            if response.status_code != 200:
-                self._log.error(
-                    "Error querying API: %s %s", response.status_code, response.reason
-                )
-                raise http_err
-        except requests.exceptions.RequestException as e:
-            self._log.error("Error querying API: %s", e)
-            raise e
-        except Exception as e:
-            self._log.error("Error querying API: %s", e)
-            raise e
 
-        return parsed_response
+            # Create tasks but control their execution through gather
+            tasks = [
+                self.query_json(NBIA_ENDPOINT.GET_PATIENTS.value, param)
+                for param in params
+            ]
+            responses = await asyncio.gather(*tasks)
 
-    def getCollections(
-        self, prefix: str = "", return_type: Optional[Union[ReturnType, str]] = None
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """
-        Retrieves the collections from the NBIA server.
+            # flatten the list of responses
+            patient_list = [item for sublist in responses for item in sublist]
+            logger.info(f"Completed {len(params)} patients requests")
+            return patient_list
+        # For a single parameter set
+        return await self.query_json(
+            NBIA_ENDPOINT.GET_PATIENTS.value,
+            params=params,
+        )
+
+    def getPatients(self, params: dict | list[dict]) -> list[dict]:
+        """Get patient metadata from NBIA."""
+        return asyncio.run(self._getPatients(params))
+
+    #### Study Methods ###########
+    ###############################
+
+    async def _getStudies(self, params: dict | list[dict]) -> list[dict]:
+        """Fetch study data, supporting single or multiple parameter sets."""
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} study requests"
+                f" with max concurrency of {self.max_concurrent_requests}"
+            )
+
+            # Create tasks but control their execution through gather
+            tasks = [
+                self.query_json(NBIA_ENDPOINT.GET_STUDIES.value, param)
+                for param in params
+            ]
+            responses = await asyncio.gather(*tasks)
+
+            # flatten the list of responses
+            study_list = [item for sublist in responses for item in sublist]
+            logger.info(f"Completed {len(params)} study requests")
+            return study_list
+        # For a single parameter set
+        return await self.query_json(
+            NBIA_ENDPOINT.GET_STUDIES.value,
+            params=params,
+        )
+
+    def getStudies(self, params: dict | list[dict]) -> list[dict]:
+        """Get study metadata from NBIA."""
+        return asyncio.run(self._getStudies(params))
+
+    #### Series Methods ###########
+    ###############################
+
+    async def _getSeries(self, params: dict | list[dict]) -> list[dict]:
+        """Fetch series data, supporting single or multiple parameter sets."""
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} series requests" +
+                f" with max concurrency of {self.max_concurrent_requests}"
+            )
+
+            # Create tasks but control their execution through gather
+            tasks = [
+                self.query_json(NBIA_ENDPOINT.GET_SERIES.value, param)
+                for param in params
+            ]
+            responses = await asyncio.gather(*tasks)
+
+            # flatten the list of responses
+            series_list = [item for sublist in responses for item in sublist]
+            logger.info(f"Completed {len(params)} series requests")
+            return series_list
+
+        # For a single parameter set
+        return await self.query_json(
+            NBIA_ENDPOINT.GET_SERIES.value,
+            params=params,
+        )
+
+    def getSeries(self, params: dict | list[dict]) -> list[dict]:
+        """Get series metadata from NBIA."""
+        return asyncio.run(self._getSeries(params))
+    
+    async def _getNewSeries(self, params: dict | list[dict]) -> list[dict]:
+        """Fetch series data, supporting single or multiple parameter sets."""
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} series requests"
+                f" with max concurrency of {self.max_concurrent_requests}"
+            )
+
+            # Create tasks but control their execution through gather
+            tasks = [
+                self.query_json(NBIA_ENDPOINT.GET_UPDATED_SERIES.value, param)
+                for param in params
+            ]
+            responses = await asyncio.gather(*tasks)
+
+            # flatten the list of responses
+            series_list = [item for sublist in responses for item in sublist]
+            logger.info(f"Completed {len(params)} series requests")
+            return series_list
+
+        # For a single parameter set
+        return await self.query_json(
+            NBIA_ENDPOINT.GET_UPDATED_SERIES.value,
+            params=params,
+        )
+
+    def getNewSeries(self, params: dict | list[dict]) -> list[dict]:
+        """Get series metadata from NBIA."""
+        return asyncio.run(self._getNewSeries(params))
+    
+    async def _getSeriesSize(self, params: dict | list[dict]) -> list[dict]:
+        """Fetch series data, supporting single or multiple parameter sets."""
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} series requests"
+                f" with max concurrency of {self.max_concurrent_requests}"
+            )
+
+            # Create tasks but control their execution through gather
+            tasks = [
+                self.query_json(NBIA_ENDPOINT.GET_SERIES_SIZE.value, param)
+                for param in params
+            ]
+            responses = await asyncio.gather(*tasks)
+
+            # flatten the list of responses
+            series_list = [item for sublist in responses for item in sublist]
+            logger.info(f"Completed {len(params)} series requests")
+            return series_list
+
+        # For a single parameter set
+        return await self.query_json(
+            NBIA_ENDPOINT.GET_SERIES_SIZE.value,
+            params=params,
+        )
+
+    def getSeriesSize(self, params: dict | list[dict]) -> list[dict]:
+        """Get series metadata from NBIA."""
+        return asyncio.run(self._getSeriesSize(params))
+
+    async def _download_series(self, SeriesInstanceUID: str) -> BytesIO:
+        """Download series metadata from NBIA."""
+        endpoint = NBIA_ENDPOINT.DOWNLOAD_SERIES.value
+        params = {"SeriesInstanceUID": SeriesInstanceUID}
+        return await self.query_bytes(endpoint, params=params)
+
+    def download_series(self, SeriesInstanceUID: str) -> BytesIO:
+        """Download series metadata from NBIA."""
+        return asyncio.run(self._download_series(SeriesInstanceUID))
+    
+    async def _download_single_image(self, SeriesInstanceUID: str, SOPInstanceUID: str) -> BytesIO:
+        """Download series metadata from NBIA."""
+        endpoint = NBIA_ENDPOINT.DOWNLOAD_IMAGE.value
+        params = {"SeriesInstanceUID": SeriesInstanceUID, "SOPInstanceUID": SOPInstanceUID}
+        return await self.query_bytes(endpoint, params=params)
+
+
+    def download_single_image(self, SeriesInstanceUID: str, SOPInstanceUID: str) -> BytesIO:
+        """Download single image from NBIAToolkit."""
+        return asyncio.run(self._download_single_image(SeriesInstanceUID, SOPInstanceUID))
+
+    async def _build_collection_database(
+        self, params: dict | list[dict]
+    ) -> list[tuple]:
+        """Fetch raw data for collection database(s).
 
         Args:
-            prefix (str, optional): Prefix to filter the collections by. Defaults to "".
-            return_type (Optional[Union[ReturnType, str]], optional):
-                Return type of the response. Defaults to None which uses the default return type.
+            params: Dict or list of dicts with collection parameters
 
         Returns:
-            List[dict[Any, Any]] | pd.DataFrame: List of collections or DataFrame containing the collections.
+            List of tuples containing (patients, studies, series) data
         """
-        returnType: ReturnType = self._get_return(return_type)
+        results = []
 
-        response: List[dict[Any, Any]]
-        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_COLLECTIONS)
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} collection database requests "
+                f" with max concurrency of {self.max_concurrent_requests}"
+            )
 
-        if prefix:
-            response = [
-                response_dict
-                for response_dict in response
-                if response_dict["Collection"].lower().startswith(prefix.lower())
+            # Process each collection's data concurrently
+            async def fetch_collection_data(param):
+                patient_task = self._getPatients(params=param)
+                study_task = self._getStudies(params=param)
+                series_task = self._getSeries(params=param)
+
+                # Run the tasks concurrently
+                return await asyncio.gather(patient_task, study_task, series_task)
+
+            # Create tasks for each collection
+            tasks = [fetch_collection_data(param) for param in params]
+            all_results = await asyncio.gather(*tasks)
+
+            for result in all_results:
+                patients, studies, series = result
+                results.append((patients, studies, series))
+
+            logger.info(f"Completed {len(params)} collection database requests")
+        else:
+            # Single collection case
+            patient_task = self._getPatients(params=params)
+            study_task = self._getStudies(params=params)
+            series_task = self._getSeries(params=params)
+
+            # Run the tasks concurrently
+            patients, studies, series = await asyncio.gather(
+                patient_task, study_task, series_task
+            )
+            results.append((patients, studies, series))
+
+        return results
+
+    def build_collection_database(
+        self, params: dict | list[dict]
+    ) -> pd.DataFrame | list[pd.DataFrame]:
+        """Given Collection(s), build database(s) of all patients, studies, and series.
+
+        Args:
+            params: Dict with 'Collection' key or list of such dicts
+
+        Returns:
+            Single DataFrame or list of DataFrames containing merged collection data
+        """
+        # Get raw data
+        raw_data_list = asyncio.run(self._build_collection_database(params))
+        logger.debug(f"Done retrieving. Processing {len(raw_data_list)} collections")
+        from nbiatoolkit.models.nbia_responses import (
+            Patient,
+            Series,
+            Study,
+        )
+
+        def process_collection_data(patients, studies, series):
+            """Process raw API data into a structured DataFrame."""
+            df_series = Series.from_dicts(series).df
+            df_studies = Study.from_dicts(studies).df
+            df_patients = Patient.from_dicts(patients).df
+
+            # Drop Collection, StudyDate, StudyDescription, and PatientID
+            # from the series DataFrame
+            df_series = df_series.drop(
+                columns=["Collection", "StudyDate", "StudyDescription", "PatientID"]
+            )
+
+            # Merge the series DataFrame with the studies DataFrame
+            # on StudyInstanceUID
+            df_series = df_series.merge(
+                df_studies,
+                how="left",
+                left_on="StudyInstanceUID",
+                right_on="StudyInstanceUID",
+            )
+
+            # drop {'Collection', 'PatientBirthDate', 'PatientName', 'PatientSex'}
+            # from the merged DataFrame
+            df_series = df_series.drop(
+                columns=["Collection", "PatientBirthDate", "PatientName", "PatientSex"]
+            )
+
+            # Merge the series DataFrame with the patients DataFrame
+            # on PatientID
+            df_series = df_series.merge(
+                df_patients,
+                how="left",
+                left_on="PatientID",
+                right_on="PatientId",
+            )
+            # drop 'PatientId' from the merged DataFrame
+            df_series = df_series.drop(columns=["PatientId"])
+
+            # column order
+            cols = [
+                "Collection",
+                "Patient*",
+                "Study*",
+                "Modality",
+                "Series*",
+                # and then the rest of the columns
             ]
 
-        return conv_response_list(response, returnType)
-
-    def getCollectionDescriptions(
-        self, collectionName: str, return_type: Optional[Union[ReturnType, str]] = None
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """
-        Retrieves the description of a collection from the NBIA server.
-
-        Args:
-            collectionName (str): The name of the collection.
-            return_type (Optional[Union[ReturnType, str]], optional):
-                Return type of the response. Defaults to None.
-
-        Returns:
-            List[dict[Any, Any]] | pd.DataFrame:
-                List of collection descriptions or DataFrame containing the collection descriptions.
-        """
-
-        returnType: ReturnType = self._get_return(return_type)
-        PARAMS: dict = self.parsePARAMS(params=locals())
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_COLLECTION_DESCRIPTIONS, params=PARAMS
-        )
-
-        assert (
-            len(response) == 1
-        ), "The response from the API is empty. Please check the collection name."
-
-        response[0] = {
-            "Collection": response[0]["collectionName"],
-            "Description": clean_html(response[0]["description"]),
-            "DescriptionURI": response[0]["descriptionURI"],
-            "LastUpdated": convertMillis(
-                millis=int(response[0]["collectionDescTimestamp"])
-            ),
-        }
-
-        return conv_response_list(response, returnType)
-
-    def getCollectionPatientCount(
-        self,
-        prefix: str = "",
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """Retrieves the patient count for collections.
-
-        Args:
-            prefix (str, optional):
-                Prefix to filter the collections by. Defaults to "".
-            return_type (Optional[Union[ReturnType, str]], optional):
-                Return type of the response. Defaults to None which uses the default return type.
-
-        Returns:
-            List[dict[Any, Any]] | pd.DataFrame:
-                List of collections and their patient counts or DataFrame containing the collections and their patient counts.
-        """
-
-        returnType: ReturnType = self._get_return(return_type)
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(NBIA_ENDPOINTS.GET_COLLECTION_PATIENT_COUNT)
-
-        parsed_response: List[dict[Any, Any]] = []
-
-        for collection in response:
-            Collection = collection["criteria"]
-            if Collection.lower().startswith(prefix.lower()):
-                parsed_response.append(
-                    {
-                        "Collection": Collection,
-                        "PatientCount": collection["count"],
-                    }
-                )
-
-        return conv_response_list(parsed_response, returnType)
-
-    def getModalityValues(
-        self,
-        Collection: str = "",
-        BodyPartExamined: str = "",
-        Counts: bool = False,
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """Retrieves possible modality values from the NBIA database.
-
-        Args:
-            Collection (str, optional): Collection name to filter by. Defaults to "".
-            BodyPartExamined (str, optional): BodyPart name to filter by. Defaults to "".
-            Counts (bool, optional): Flag to indicate whether to return patient counts. Defaults to False.
-            return_type (Optional[Union[ReturnType, str]], optional):
-                Return type of the response. Defaults to None which uses the default return type.
-
-        Returns:
-            List[dict[Any, Any]] | pd.DataFrame:
-                List of modality values or DataFrame containing the modality values.
-        """
-
-        returnType: ReturnType = self._get_return(return_type)
-
-        PARAMS: dict = self.parsePARAMS(params=locals())
-
-        endpoint = (
-            NBIA_ENDPOINTS.GET_MODALITY_PATIENT_COUNT
-            if Counts
-            else NBIA_ENDPOINTS.GET_MODALITY_VALUES
-        )
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(endpoint=endpoint, params=PARAMS)
-
-        if Counts:
-            for modality in response:
-                modality["Modality"] = modality["criteria"]
-                modality["PatientCount"] = modality["count"]
-                del modality["criteria"]
-                del modality["count"]
-
-        return conv_response_list(response, returnType)
-
-    def getPatients(
-        self,
-        Collection: str = "",
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """
-        Retrieves a list of patients from the NBIA API.
-
-        Args:
-            Collection (str, optional): The name of the collection to filter the patients. Defaults to "".
-            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
-
-        Returns:
-            List[dict[Any, Any]] | pd.DataFrame: A list of patient dictionaries or a pandas DataFrame, depending on the return type.
-
-        """
-        returnType: ReturnType = self._get_return(return_type)
-
-        PARAMS: dict = self.parsePARAMS(locals())
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_PATIENTS, params=PARAMS)
-
-        return conv_response_list(response, returnType)
-
-    def getNewPatients(
-        self,
-        Collection: str,
-        Date: Union[str, datetime],
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """
-        Retrieves new patients from the NBIA API based on the specified collection and date.
-
-        Args:
-            Collection (str): The name of the collection to retrieve new patients from.
-            Date (Union[str, datetime]): The date to filter the new patients. Can be a string in the format "YYYY/MM/DD" or a datetime object.
-            return_type (Optional[Union[ReturnType, str]]): The desired return type. Defaults to None.
-
-        Returns:
-            List[dict[Any, Any]] | pd.DataFrame: A list of dictionaries or a pandas DataFrame containing the new patients.
-
-        Raises:
-            AssertionError: If the Date argument is None.
-
-        """
-        returnType: ReturnType = self._get_return(return_type)
-
-        assert Date is not None
-
-        # convert date to %Y/%m/%d format
-        Date = convertDateFormat(input_date=Date, format="%Y/%m/%d")
-
-        PARAMS: dict = self.parsePARAMS(locals())
-
-        response: List[dict[Any, Any]]
-
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_NEW_PATIENTS_IN_COLLECTION, params=PARAMS
-        )
-        return conv_response_list(response, returnType)
-
-    def getPatientsByCollectionAndModality(
-        self,
-        Collection: str,
-        Modality: str,
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """
-        Retrieves patients by collection and modality.
-
-        Args:
-            Collection (str): The collection name.
-            Modality (str): The modality name.
-            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
-
-        Returns:
-            List[dict[Any, Any]] | pd.DataFrame: The list of patients or a pandas DataFrame, depending on the return type.
-
-        Raises:
-            AssertionError: If Collection or Modality is None.
-        """
-        assert Collection is not None
-        assert Modality is not None
-
-        returnType: ReturnType = self._get_return(return_type)
-
-        PARAMS: dict = self.parsePARAMS(locals())
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_PATIENT_BY_COLLECTION_AND_MODALITY,
-            params=PARAMS,
-        )
-
-        return conv_response_list(response, returnType)
-
-    def getBodyPartCounts(
-        self,
-        Collection: str = "",
-        Modality: str = "",
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        returnType: ReturnType = self._get_return(return_type)
-
-        PARAMS = self.parsePARAMS(locals())
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_BODY_PART_PATIENT_COUNT, params=PARAMS
-        )
-
-        return conv_response_list(response, returnType)
-
-    def getStudies(
-        self,
-        Collection: str,
-        PatientID: str = "",
-        StudyInstanceUID: str = "",
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        """
-        Retrieves studies from the NBIA API based on the specified parameters.
-
-        Args:
-            Collection (str): The name of the collection to retrieve studies from.
-            PatientID (str, optional): The patient ID to filter the studies by. Defaults to "".
-            StudyInstanceUID (str, optional): The study instance UID to filter the studies by. Defaults to "".
-            return_type (Optional[Union[ReturnType, str]], optional): The desired return type. Defaults to None.
-
-        Returns:
-            List[dict[Any, Any]] | pd.DataFrame: A list of dictionaries or a pandas DataFrame containing the retrieved studies.
-        """
-        returnType: ReturnType = self._get_return(return_type)
-
-        PARAMS: dict = self.parsePARAMS(locals())
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_STUDIES, params=PARAMS)
-
-        return conv_response_list(response, returnType)
-
-    def getSeries(
-        self,
-        Collection: str = "",
-        PatientID: str = "",
-        StudyInstanceUID: str = "",
-        Modality: str = "",
-        SeriesInstanceUID: str = "",
-        BodyPartExamined: str = "",
-        ManufacturerModelName: str = "",
-        Manufacturer: str = "",
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        returnType: ReturnType = self._get_return(return_type)
-
-        PARAMS: dict = self.parsePARAMS(locals())
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_SERIES, params=PARAMS)
-
-        return conv_response_list(response, returnType)
-
-    def getSeriesMetadata(
-        self,
-        SeriesInstanceUID: Union[str, list[str]],
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        returnType = self._get_return(return_type)
-
-        assert isinstance(
-            SeriesInstanceUID, (str, list)
-        ), "SeriesInstanceUID must be a string or list of strings"
-
-        if isinstance(SeriesInstanceUID, str):
-            SeriesInstanceUID = [SeriesInstanceUID]
-
-        metadata = []
-        for seriesUID in SeriesInstanceUID:
-            PARAMS = self.parsePARAMS({"SeriesInstanceUID": seriesUID})
-            response = self.query_api(
-                endpoint=NBIA_ENDPOINTS.GET_SERIES_METADATA, params=PARAMS
+            def reorder_columns(df: pd.DataFrame, patterns: list[str]) -> pd.DataFrame:
+                used_cols = set()
+                ordered_cols = []
+
+                for pat in patterns:
+                    # Convert wildcard * to regex equivalent
+                    regex = re.compile(f"^{pat.replace('*', '.*')}$")
+                    matching = [
+                        col
+                        for col in df.columns
+                        if regex.match(col) and col not in used_cols
+                    ]
+                    ordered_cols.extend(matching)
+                    used_cols.update(matching)
+
+                # Add remaining columns
+                remaining = [col for col in df.columns if col not in used_cols]
+                return df[ordered_cols + remaining]
+
+                # order rows by PatientID, StudyInstanceUID, and Modality
+
+            df_series = df_series.sort_values(
+                ["PatientID", "StudyInstanceUID", "Modality"],
+                ascending=[True, True, True],
+                ignore_index=True,
             )
 
-            metadata.extend(response)
+            return reorder_columns(df_series, cols)
 
-        return conv_response_list(metadata, returnType)
+        # Process each collection's data
+        results = [process_collection_data(*data) for data in raw_data_list]
 
-    def getNewSeries(
-        self,
-        Date: Union[str, datetime],
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        assert Date is not None and isinstance(
-            Date, (str, datetime)
-        ), "Date must be a string or datetime object"
+        # Return a single DataFrame for single input, list for multiple inputs
+        return results[0] if len(results) == 1 else results
 
-        returnType: ReturnType = self._get_return(return_type)
-        # for some reason this endpoint requires the date in %d/%m/%Y format
-        fromDate = convertDateFormat(input_date=Date, format="%d/%m/%Y")
-        PARAMS = self.parsePARAMS({"fromDate": fromDate})
-
-        response = self.query_api(
-            endpoint=NBIA_ENDPOINTS.GET_UPDATED_SERIES, params=PARAMS
-        )
-
-        return conv_response_list(response, returnType)
-
-    def getDICOMTags(
-        self,
-        SeriesInstanceUID: str,
-        return_type: Optional[Union[ReturnType, str]] = None,
-    ) -> List[dict[Any, Any]] | pd.DataFrame:
-        assert SeriesInstanceUID is not None and isinstance(
-            SeriesInstanceUID, str
-        ), "SeriesInstanceUID must be a string"
-
-        returnType: ReturnType = self._get_return(return_type)
-        PARAMS = self.parsePARAMS({"SeriesUID": SeriesInstanceUID})
-
-        response: List[dict[Any, Any]]
-        response = self.query_api(endpoint=NBIA_ENDPOINTS.GET_DICOM_TAGS, params=PARAMS)
-
-        return conv_response_list(response, returnType)
-
-    def getRefSeriesUIDs(
-        self,
-        SeriesInstanceUID: str,
-    ) -> List[str]:
-
-        tags_df = self.getDICOMTags(
-            SeriesInstanceUID=SeriesInstanceUID,
-            return_type=ReturnType.DATAFRAME,
-        )
-
-        if type(tags_df) != pd.DataFrame:
-            raise ValueError("DICOM Tags not df or not found in the response.")
-
-        return getReferencedSeriesUIDS(series_tags_df=tags_df)
-
-    def generateFilePathFromDICOMTags(
-        self,
-        SeriesInstanceUID: str,
-        filePattern: str = "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
-    ) -> str:
+    async def _getSOPIDs(self, params: dict | list[dict]) -> dict[str, list[dict]]:
+        """Fetch SOPInstanceUID data, supporting single or multiple parameter sets.
+        Returns a mapping of SeriesInstanceUID to list of SOP Instance UIDs
         """
-        Generates a file path from DICOM tags.
-
-        Args:
-            SeriesInstanceUID (str): The Series Instance UID of the DICOM series.
-            filePattern (str, optional): The file pattern to use for generating the file path. Defaults to "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm".
-
-        Returns:
-            str: The generated file path.
-
-        Note:
-            This only considers the first instance of the series.
-            Meant to be used to determine the dirname of the series files.
-        """
-        self.logger.debug("Getting DICOM tags for series %s", SeriesInstanceUID)
-        tags_df = self.getDICOMTags(
-            SeriesInstanceUID=SeriesInstanceUID,
-            return_type=ReturnType.DATAFRAME,
-        )
-
-        if type(tags_df) != pd.DataFrame:
-            raise ValueError("DICOM Tags not df or not found in the response.")
-
-        self.logger.debug("Generating file path from DICOM tags")
-        ds: Dataset = generateFileDatasetFromTags(tags_df=tags_df)
-        filePath: str = generateFilePathFromDICOMAttributes(
-            dataset=ds,
-            targetPattern=filePattern,
-            truncateUID=True,
-            sanitizeFilename=True,
-        )
-        self.logger.debug(
-            "Generated file path: %s for series %s", filePath, SeriesInstanceUID
-        )
-        return filePath
-
-    def downloadSeries(
-        self,
-        SeriesInstanceUID: Union[str, list],
-        downloadDir: str = "./NBIA-Download",
-        filePattern: str = "%PatientName/%Modality-%SeriesNumber-%SeriesInstanceUID/%InstanceNumber.dcm",
-        overwrite: bool = False,
-        nParallel: int = 1,
-        Progressbar: bool = False,
-    ) -> bool:
-        if isinstance(SeriesInstanceUID, str):
-            SeriesInstanceUID = [SeriesInstanceUID]
-
-        # Create a multiprocessing pool
-        pool = multiprocessing.Pool(processes=nParallel)
-
-        # Download each series using multiprocessing
-        results = []
-        for series in SeriesInstanceUID:
-            result = pool.apply_async(
-                func=downloadSingleSeries,
-                args=(
-                    series,
-                    downloadDir,
-                    filePattern,
-                    overwrite,
-                    self.headers,
-                    self._base_url,
-                    self._log,
-                    Progressbar,
-                ),
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} SOPInstanceUID requests "
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
-            results.append(result)
 
-        # Wait for all processes to complete
-        pool.close()
-        pool.join()
+            # Create tasks but control their execution through gather
+            tasks = [
+                self.query_json(NBIA_ENDPOINT.GET_SOP_INSTANCE_UIDS.value, param)
+                for param in params
+            ]
+            responses = await asyncio.gather(*tasks)
 
-        # Check if any process failed
-        for result in results:
-            if not result.successful():
-                return False
+            #  map the series instance UIDs to the list of responses
+            sop_map = {
+                param["SeriesInstanceUID"]: [
+                    item["SOPInstanceUID"] for item in sublist
+                ]  # Flatten and map
+                for param, sublist in zip(params, responses)
+            }
 
-        return True
+            logger.info(f"Completed {len(params)} SOPInstanceUID requests")
+            return sop_map
 
-    # parsePARAMS is a helper function that takes a locals() dict and returns
-    # a dict with only the non-empty values
-    def parsePARAMS(self, params: dict) -> dict:
-        self._log.debug("Parsing params: %s", params)
-        PARAMS = dict()
-        for key, value in params.items():
-            if (value != "") and (key != "self") and (key != "return_type"):
-                PARAMS[key] = value
-        return PARAMS
+        # For a single parameter set
+        result = await self.query_json(
+            NBIA_ENDPOINT.GET_SOP_INSTANCE_UIDS.value,
+            params=params,
+        )
+        return {params["SeriesInstanceUID"]: result}
+
+    def getSOPIDs(self, params: dict | list[dict]) -> dict[str, list[dict]]:
+        """Get SOPInstanceUID metadata from NBIA.
+        Returns a mapping of SeriesInstanceUID to list of SOP Instance UIDs
+        """
+        return asyncio.run(self._getSOPIDs(params))
+
+
+if __name__ == "__main__":
+    from rich import print
+
+    from nbiatoolkit import Settings
+
+    settings = Settings()
+
+    client = NBIAClient.from_settings(settings)
+
+    s = "1.3.6.1.4.1.14519.5.2.1.6834.5010.263257070197787007872578860295"
+    series_bytes = client.download_series(s)
+
+    # save the series bytes to a file
+    with open(f"series_{s}.zip", "wb") as f:
+        f.write(series_bytes.getbuffer())
+
+    # collections = client.getCollections()
+    # all_dbs = client.build_collection_database(params=collections)
+
+    # all_dbs = pd.concat(all_dbs, ignore_index=True)
+    # all_dbs.to_csv('data/all_series.csv', index=False)
+
+    # all_series = pd.read_csv('data/all_series.csv')
+    # sop_map = client.getSOPIDs(
+    # 	[{'SeriesInstanceUID': s} for s in all_series.SeriesInstanceUID.unique()[:100]]
+    # )
+
+    # all_series.SeriesInstanceUID.unique()
+
+    # all_series = all_dbs.copy()
+
+    # series = client.getSeries(params=collections[:1])
+    # # params = {'Collection': 'Vestibular-Schwannoma-SEG'}
+    # # series = client.getSeries(params=params)
+    # # params = [
+    # # 	{'Collection': 'Vestibular-Schwannoma-MC-RC'},
+    # # 	{'Collection': 'Vestibular-Schwannoma-SEG'},
+    # # ]
+    # # series = client.getSeries(params=params)
+
+    # from nbiatoolkit.models.nbia_responses import Series, SeriesList
+
+    # s: SeriesList = Series.from_dicts(series)

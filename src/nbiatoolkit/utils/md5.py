@@ -1,4 +1,5 @@
-import hashlib, os
+import hashlib
+import os
 
 
 # Define MD5HashMismatchError
@@ -18,7 +19,8 @@ def validateMD5(seriesDir: str) -> bool:
     md5File = os.path.join(seriesDir, "md5hashes.csv")
     if not os.path.isfile(md5File):
         # "MD5 hash file not found in download directory."
-        raise FileNotFoundError("MD5 hash file not found in download directory.")
+        msg = "MD5 hash file not found in download directory."
+        raise FileNotFoundError(msg)
 
     with open(md5File, "r") as f:
         lines = f.readlines()
@@ -26,14 +28,16 @@ def validateMD5(seriesDir: str) -> bool:
     for line in lines[1:]:
         filepath = os.path.join(seriesDir, line.split(",")[0])
         if not os.path.isfile(filepath):
-            raise FileNotFoundError(f"File not found in seriesDir: {filepath}")
+            msg = f"File not found in seriesDir: {filepath}"
+            raise FileNotFoundError(msg)
 
         md5hash = line.split(",")[1].strip().lower()
         md5 = calculateMD5(filepath)
 
         if md5 != md5hash:
             # f"MD5 hash mismatch for file: {filepath}"
-            raise MD5HashMismatchError(f"MD5 hash mismatch for file: {filepath}")
+            msg = f"MD5 hash mismatch for file: {filepath}"
+            raise MD5HashMismatchError(msg)
 
     # delete the md5 file if all hashes match
     os.remove(md5File)

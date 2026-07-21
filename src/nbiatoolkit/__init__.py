@@ -5,23 +5,27 @@
 # this file is run when the package is imported
 # this file is used to import all the modules in the package
 # this file is used to define the __all__ variable
+__version__ = "0.1.0"
+__author__ = "Jermiah Joseph"
+PACKAGE_NAME = "NBIATOOLKIT"
 
+APP_AUTHOR = __author__.replace(" ", "_").lower()
+APP_NAME = PACKAGE_NAME.replace("-", "_").lower()
 
 # import the modules
-from .nbia import NBIAClient, __version__, downloadSingleSeries
-from .nbia_cli import version
+from .logging_config import logger, RichProgressBar, console  # noqa
 from .auth import OAuth2
-from .logger.logger import setup_logger
-from .utils.nbia_endpoints import NBIA_ENDPOINTS
-from .dicomtags import *
+from .utils.nbia_endpoints import NBIA_BASE_URLS, NBIA_ENDPOINT
+from .settings import Settings
 
-# define the __all__ variable
 __all__ = [
-    "NBIAClient",
+    "logger",
+    "RichProgressBar",
+    "console",
     "OAuth2",
-    "setup_logger",
-    "NBIA_ENDPOINTS",
-    "version",
-    "__version__",
-    "downloadSingleSeries",
+    "NBIA_BASE_URLS",
+    "NBIA_ENDPOINT",
+    "Settings",
+    "NBIAClient",
 ]
+

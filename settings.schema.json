@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "APISettings": {
+      "description": "Settings that control API request behavior such as retries, timeouts, and concurrency.",
+      "properties": {
+        "max_attempts": {
+          "default": 10,
+          "description": "Maximum number of retry attempts for a failed API request. Used with exponential backoff strategy. Set this lower to fail faster on persistent errors.",
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "wait_multiplier": {
+          "default": 1.0,
+          "description": "Multiplier for exponential backoff wait time between retries. For example, if min_wait=1 and multiplier=2, retries will occur at 1s, 2s, 4s, etc.",
+          "title": "Wait Multiplier",
+          "type": "number"
+        },
+        "min_wait": {
+          "default": 1,
+          "description": "Minimum wait time (in seconds) before retrying a failed request.",
+          "title": "Min Wait",
+          "type": "integer"
+        },
+        "max_wait": {
+          "default": 25,
+          "description": "Maximum wait time (in seconds) between retry attempts.",
+          "title": "Max Wait",
+          "type": "integer"
+        },
+        "max_concurrent_requests": {
+          "default": 5,
+          "description": "Maximum number of concurrent API requests allowed. This value sets the size of the asyncio semaphore used to throttle parallel requests. Increase this for faster bulk processing, or lower it to avoid rate-limiting.",
+          "title": "Max Concurrent Requests",
+          "type": "integer"
+        },
+        "timeout_seconds": {
+          "default": 30.0,
+          "description": "Maximum total time (in seconds) to wait for a single API request to complete. Includes connection, read, and response time. Used to set aiohttp's ClientTimeout.",
+          "title": "Timeout Seconds",
+          "type": "number"
+        }
+      },
+      "title": "APISettings",
+      "type": "object"
+    },
+    "Login": {
+      "description": "Login Credentials",
+      "properties": {
+        "nbia_username": {
+          "default": "nbia_guest",
+          "description": "NBIA Username",
+          "title": "Nbia Username",
+          "type": "string"
+        },
+        "nbia_password": {
+          "default": "",
+          "description": "NBIA Password",
+          "title": "Nbia Password",
+          "type": "string"
+        }
+      },
+      "title": "Login",
+      "type": "object"
+    }
+  },
+  "description": "Order of precedence:\n\n1. '~/.config/nbiatoolkit/settings.toml'\n    [login]\n    nbia_username = \"username\"\n    nbia_password = \"password\"\n\n2. .env file\n    LOGIN__NBIA_USERNAME=\"username\"\n    LOGIN__NBIA_PASSWORD=\"password\"\n\n3. Environment Variables\n    export LOGIN__NBIA_USERNAME=\"username\"\n    export LOGIN__NBIA_PASSWORD=\"password\"\n\n# TODO: implement docker secrets /run/secrets/nbia_username /run/secrets/nbia_password",
+  "properties": {
+    "login": {
+      "$ref": "#/$defs/Login",
+      "default": {
+        "nbia_username": "nbia_guest",
+        "nbia_password": ""
+      }
+    },
+    "api": {
+      "$ref": "#/$defs/APISettings",
+      "default": {
+        "max_attempts": 10,
+        "wait_multiplier": 1.0,
+        "min_wait": 1,
+        "max_wait": 25,
+        "max_concurrent_requests": 5,
+        "timeout_seconds": 30.0
+      }
+    },
+    "log_level": {
+      "default": "INFO",
+      "description": "Logging level for the application. Set to DEBUG for verbose output, or INFO for standard logging.",
+      "title": "Log Level",
+      "type": "string"
+    }
+  },
+  "title": "Settings",
+  "type": "object"
+}

@@ -1,57 +1,56 @@
-[tool.poetry]
-name = "nbiatoolkit"
+[project]
+name = "nbia-toolkit"
 version = "1.3.1"
 description = "A python package to query the National Biomedical Imaging Archive (NBIA) database."
-authors = ["Jermiah Joseph"]
+authors = [{ name = "Jermiah Joseph" }]
 license = "MIT"
 readme = "README.md"
+requires-python = ">=3.10,<4"
+dependencies = [
+    # utility
+    "toml>=0.10.2",
+    "pybytesize",
+    "platformdirs>=4.3.7,<5",
+    "frozendict",
+    # api
+    "tenacity",
+    "async-lru",
+    "aiohttp>=3.11.7",
+    "requests>=2.31.0,<3",
+    "nest_asyncio",
+    # other
+    "cryptography>=43.0.3",
+    "pydantic-settings>=2.7.1",
+    # "click>=8.0.3",
+    "pydicom>=3.0",
+    "beautifulsoup4",
+    "pandas<3",
+    # "aiofiles>=24.1.0",
+    "rich",
+    # "med-imagetools",
+]
 
-[tool.poetry.scripts]
-dicomsort = "nbiatoolkit.nbia_cli:DICOMSorter_cli"
-NBIAToolkit = "nbiatoolkit:version"
-getCollections = "nbiatoolkit.nbia_cli:getCollections_cli"
-getBodyPartCounts = "nbiatoolkit.nbia_cli:getBodyPartCounts_cli"
-getPatients = "nbiatoolkit.nbia_cli:getPatients_cli"
-getNewPatients = "nbiatoolkit.nbia_cli:getNewPatients_cli"
-getStudies = "nbiatoolkit.nbia_cli:getStudies_cli"
-getSeries = "nbiatoolkit.nbia_cli:getSeries_cli"
-getNewSeries = "nbiatoolkit.nbia_cli:getNewSeries_cli"
-
-# setting requests to min 2.31 instead of hard lock
-[tool.poetry.dependencies]
-python = ">=3.09 || 3.12"
-requests = "^2.31.0"
-pydicom = "^2.4.0"
-tqdm = "^4.66.1"
-beautifulsoup4 = "^4.12.3"
-cryptography = "^42.0.2"
-pandas = "^2.2.0"
-pyarrow = "^15.0.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
-jupyter = "^1.0.0"
-pytest-cov = ">=4.0.0"
-pytest-xdist = ">=3.5.0"
-mkdocs = "1.5.3"
-sphinx_exec_code = "0.12"
-myst-nb = {version = "^1.0.0", python = "^3.9"}
-sphinx-autoapi = "^3.0.0"
-sphinx-rtd-theme = "^1.3.0"
-python-semantic-release = "^8.5.1"
-pre-commit = "^3.6.0"
+[project.urls]
+Home = "https://github.com/jjjermiah/nbia-toolkit"
+Documentation = "https://github.com/jjjermiah/nbia-toolkit"
+GitHub = "https://github.com/jjjermiah/nbia-toolkit"
+Issues = "https://github.com/jjjermiah/nbia-toolkit/issues"
+Changelog = "https://github.com/jjjermiah/nbia-toolkit/blob/main/docs/project_info/CHANGELOG.md"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.build]
+directory = "dist"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nbiatoolkit"]
+include = ["pyproject.toml", "README.md", "src/**"]
 
 [tool.semantic_release]
-version_variables = [
-    "src/nbiatoolkit/nbia.py:__version__",
-]
-version_toml = [
-    "pyproject.toml:tool.poetry.version",
-]
+version_variables = ["src/nbiatoolkit/nbia.py:__version__"]
+version_toml = ["pyproject.toml:project.version"]
 dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
@@ -66,7 +65,6 @@ exclude_commit_types = ["docs", "style", "refactor", "test", "chore"]
 [tool.semantic_release.branches.main]
 match = "(main|master|development)"
 
-
 [tool.semantic_release.commit_parser_options]
 allowed_tags = [
     "build",
@@ -78,17 +76,7 @@ allowed_tags = [
     "style",
     "refactor",
     "test",
-    "docs"
+    "docs",
 ]
-minor_tags = [
-    "feat"]
-patch_tags = [
-    "build",
-    "ci",
-    "perf",
-    "refactor",
-    "style",
-    "test",
-    "fix",
-    "docs"
-]
+minor_tags = ["feat"]
+patch_tags = ["build", "ci", "perf", "refactor", "style", "test", "fix", "docs"]

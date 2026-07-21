@@ -1,9 +1,9 @@
-from math import log
+from typing import List
+
+import pandas as pd
 import pydicom
 from pydicom.datadict import dictionary_VR, tag_for_keyword
-import pandas as pd
-from typing import List
-from typing import Any
+
 
 def convert_element_to_int(element_str: str) -> int:
     """
@@ -30,8 +30,9 @@ def convert_element_to_int(element_str: str) -> int:
 
     # Check if the element has the correct structure
     if len(elements) != 2:
+        msg = f"Invalid element format. Element must have the structure '(<INT>,<INT>)': {element_str}"
         raise ValueError(
-            f"Invalid element format. Element must have the structure '(<INT>,<INT>)': {element_str}"
+            msg
         )
 
     # Convert each element from string to integer
@@ -94,7 +95,8 @@ def LOOKUP_TAG(keyword: str) -> int:
     """
     tag: int | None = tag_for_keyword(keyword=keyword)
     if tag is None:
-        raise (ValueError(f"Tag not found for keyword: {keyword}"))
+        msg = f"Tag not found for keyword: {keyword}"
+        raise (ValueError(msg))
     return tag
 
 
@@ -139,7 +141,8 @@ def getSeriesModality(series_tags_df: pd.DataFrame) -> str:
     modality_tag = LOOKUP_TAG(keyword="Modality")
 
     if modality_tag is None:
-        raise ValueError("Modality tag not found in the DICOM dictionary.")
+        msg = "Modality tag not found in the DICOM dictionary."
+        raise ValueError(msg)
 
     modality_tag_element: str = convert_int_to_element(combined_int=modality_tag)
 
@@ -168,18 +171,22 @@ def subsetSeriesTags(series_tags_df: pd.DataFrame, element: str) -> pd.DataFrame
     """
 
     locs: pd.DataFrame
-    locs = series_tags_df[series_tags_df["element"].str.contains(element)]
+    escaped_element = element.replace("(", r"\(").replace(")", r"\)")
+    locs = series_tags_df[series_tags_df["element"].str.contains(escaped_element)]
 
     if len(locs) == 0:
-        raise ValueError("Element not found in the series tags.")
+        msg = "Element not found in the series tags."
+        raise ValueError(msg)
 
     if len(locs) == 1:
+        msg = "Only one element found in the series tags. Ensure element is a sequence"
         raise ValueError(
-            "Only one element found in the series tags. Ensure element is a sequence"
+            msg
         )
 
     if len(locs) > 2:
-        raise ValueError("More than two elements found in the series tags.")
+        msg = "More than two elements found in the series tags."
+        raise ValueError(msg)
 
     return series_tags_df.iloc[locs.index[0] : locs.index[1] + 1]
 
@@ -200,7 +207,8 @@ def getReferencedFrameOfReferenceSequence(series_tags_df: pd.DataFrame) -> pd.Da
     """
     modality = getSeriesModality(series_tags_df=series_tags_df)
     if modality != "RTSTRUCT":
-        raise ValueError("Series is not an RTSTRUCT.")
+        msg = "Series is not an RTSTRUCT."
+        raise ValueError(msg)
 
     tag: int = LOOKUP_TAG(keyword="ReferencedFrameOfReferenceSequence")
 
@@ -242,8 +250,9 @@ def getReferencedSeriesUIDS(series_tags_df: pd.DataFrame) -> List[str]:
         series_tags_df=series_tags_df
     )
 
+    escaped_element = SeriesInstanceUID_element.replace("(", r"\(").replace(")", r"\)")
     value: pd.DataFrame = search_space[
-        search_space["element"].str.contains(SeriesInstanceUID_element)
+        search_space["element"].str.contains(escaped_element)
     ]
 
     UIDS: list[str] = value["data"].to_list()
@@ -323,7 +332,8 @@ def extract_ROI_info(StructureSetROISequence) -> dict[str, dict[str, str]]:
     ].index
 
     if ROI_indices.empty:
-        raise ValueError("ROI Number not found in the StructureSetROISequence.")
+        msg = "ROI Number not found in the StructureSetROISequence."
+        raise ValueError(msg)
 
     # Iterate between the indices of the ROI numbers, to extract the ROI information
     # add to the dictionary where the key is the ROI number and the value is the ROI information
@@ -341,52 +351,6 @@ def extract_ROI_info(StructureSetROISequence) -> dict[str, dict[str, str]]:
 
     return ROISet
 
-def convert_dicom_value(val: str, vr: str) -> Any:
-    """
-    Convert a Dicom tag value to the correct datatype according to its Value-Representation(VR).
-
-    Parameters:
-    -----------
-
-    val : str
-        The value to be converted.
-    vr : str
-        The value-representation associated with val.
-    
-    Returns:
-    --------
-
-    val : Any
-        val converted to the correct data type according to vr.
-    """
-    vr = vr.upper()
-    try:
-        if val == '':
-            # if its an empty string just return None.
-            return None
-        # Multi-valued strings are separated by backslashes
-        values = val.split('\\') if isinstance(val, str) else [val]
-
-        if vr in {"IS", "SS", "US", "SL", "UL"}:
-            # Convert to int
-            result = [int(v) for v in values]
-            return result if len(result) > 1 else result[0]
-        
-        elif vr in {"DS", "FL", "FD"}:
-            # Convert to float
-            result = [float(v) for v in values]
-            return result if len(result) > 1 else result[0]
-        
-        elif vr in {"OB", "OW", "OF", "UN", "OL", "OB OR OW"}:
-            # Interpret as hex values (e.g., "FF\\00\\A3")
-            byte_vals = bytes(int(v, 16) for v in values)
-            return byte_vals
-        else:
-            # Leave things like DA, TM, PN, LO, etc. as-is
-            return val
-        
-    except Exception as e:
-        raise ValueError(f"Failed to convert value '{val}' with VR '{vr}': {e}")
 
 def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
     """
@@ -401,40 +365,32 @@ def generateFileDatasetFromTags(tags_df: pd.DataFrame) -> pydicom.Dataset:
 
     # Create a new FileDataset
     ds = pydicom.Dataset()
-    ds.ensure_file_meta()
+
     for _, row in tags_df.iterrows():
-        try:
-            tag = convert_element_to_int(row["element"])
-            value = row["data"]
-            if tag == -1:
-                continue
-            # Get Value Representation based on tag id.
-            VR = element_VR_lookup(row["element"])[1]
-            if len(VR) > 2: 
-                # If the DICOM tag is invalid, we skip it.
-                if VR == "Unknown,KeyError":
-                    continue
-                # If the VR is "US or SS", we determine which VR fits the actual value.
-                elif VR == "US or SS":
-                    if int(value) < 0:
-                        VR = "SS"
-                    else:
-                        VR = "US"
-                else:
-                    # if VR is something with multiple values we will just pretend its the latter one.
-                    VR = VR[-2:]
-            
-            value = convert_dicom_value(value, VR)
-            
-            # tags with a prefix of 0002 are metadata. 
-            if tag >> 16 == 0x0002: 
-                ds.file_meta.add_new(tag=tag, VR=VR, value=value)
-            else:
-                ds.add_new(tag=tag, VR=VR, value=value)
-        except Exception:
-            # if a tag fails to be parsed just skip!
-            pass
-    # Add DICOM header
-    ds.preamble=b"\0" * 128
+        tag = convert_element_to_int(row["element"])
+        value = row["data"]
+        if tag == -1:
+            continue
+        VR = element_VR_lookup(row["element"])[1]
+
+        ds.add_new(tag=tag, VR=VR, value=value)
+
     return ds
 
+
+# def getRTSTRUCT_ROI_info(seriesUID: str) -> dict[str, dict[str, str]]:
+#     """
+#     Given a SeriesInstanceUID of an RTSTRUCT, retrieves the ROI information.
+
+#     Args:
+#         seriesUID (str): The SeriesInstanceUID of the RTSTRUCT.
+
+#     Returns:
+#         dict[str, dict[str, str]]: A dictionary containing the ROI information.
+#     """
+
+#     RTSTRUCT_Tags = client.getDICOMTags(seriesUID)
+
+#     StructureSetROISequence = getSequenceElement(sequence_tags_df=RTSTRUCT_Tags, element_keyword="StructureSetROISequence")
+
+#     return extract_ROI_info(StructureSetROISequence)

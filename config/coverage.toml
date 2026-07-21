@@ -1,0 +1,33 @@
+[tool.coverage.run]
+# Specify the source code directories to measure
+# Ensures coverage only tracks relevant package code
+source = ["nbiatoolkit"]
+
+# Omit specific files or directories from coverage
+# Excludes non-relevant files from coverage reporting
+omit = [
+    "tests/*",
+]
+
+[tool.coverage.report]
+# Exclude lines matching these patterns
+# Ignores specific patterns from coverage calculations
+exclude_lines = [
+    # Standard pragma to ignore code blocks
+    "pragma: no cover",
+    
+    # Don't complain about missing debug-only code
+    "def __repr__",
+    "if self.debug",
+    
+    # Don't complain if tests don't hit defensive assertion code
+    "raise AssertionError",
+    "raise NotImplementedError",
+    
+    # Don't complain if non-runnable code isn't run
+    "if __name__ == .__main__.:",
+    
+    # Type checking related
+    "if TYPE_CHECKING:",
+    "pass",
+]
