@@ -223,6 +223,35 @@ class NBIAClient(BaseClient):
         """Get series metadata from NBIA."""
         return asyncio.run(self._getNewSeries(params))
     
+    async def _getSeriesSize(self, params: dict | list[dict]) -> list[dict]:
+        """Fetch series data, supporting single or multiple parameter sets."""
+        if isinstance(params, list):
+            logger.info(
+                f"Starting {len(params)} series requests"
+                "with max concurrency of {self.max_concurrent_requests}"
+            )
+
+            # Create tasks but control their execution through gather
+            tasks = [
+                self.query_json(NBIA_ENDPOINT.GET_SERIES_SIZE.value, param)
+                for param in params
+            ]
+            responses = await asyncio.gather(*tasks)
+
+            # flatten the list of responses
+            series_list = [item for sublist in responses for item in sublist]
+            logger.info(f"Completed {len(params)} series requests")
+            return series_list
+
+        # For a single parameter set
+        return await self.query_json(
+            NBIA_ENDPOINT.GET_SERIES_SIZE.value,
+            params=params,
+        )
+
+    def getSeriesSize(self, params: dict | list[dict]) -> list[dict]:
+        """Get series metadata from NBIA."""
+        return asyncio.run(self._getSeriesSize(params))
 
     async def _download_series(self, SeriesInstanceUID: str) -> BytesIO:
         """Download series metadata from NBIA."""

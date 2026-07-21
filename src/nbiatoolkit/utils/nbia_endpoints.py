@@ -32,6 +32,7 @@ class NBIA_ENDPOINTS(StrEnum):  # noqa: N801
 
     GET_SERIES: str = "v2/getSeries"
     GET_UPDATED_SERIES: str = "v2/getUpdatedSeries"  # ?fromDate=01/01/2024
+    GET_SERIES_SIZE: str = "v2/getSeriesSize"
 
     GET_SERIES_METADATA: str = "v1/getSeriesMetaData"
     DOWNLOAD_SERIES_MD5: str = "v2/getImageWithMD5Hash"
