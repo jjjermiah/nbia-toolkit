@@ -208,23 +208,23 @@ class BaseClient(ABC):
 		self,
 		endpoint: str,
 		params: dict[str, str] | None = None,
-	) -> bytes:
+	) -> tuple[int, bytes]:
 		url = self.base_url + endpoint
 		# logger.debug(
 		# 	'Making request to %s with %s', url, dict(params) if params else {}
 		# )
 
-		result = await self.async_get_request(
+		status, result = await self.async_get_request(
 			url=url,
 			headers=self.headers,
 			params=params or {},
 		)
 
-		if not result:
-			msg = f'Request to {url} failed or returned empty.'
+		if 200 > status <= 300:
+			msg = f'Request to {url} failed with status code {status}'
 			logger.error(msg)
 			raise FailedQueryError(endpoint, self.base_url, params or {})
-		return result
+		return status, result
 
 	@freezeargs
 	@alru_cache(maxsize=128)
@@ -251,7 +251,7 @@ class BaseClient(ABC):
 		    If the request fails or returns empty
 		"""
 
-		raw_bytes = await self._request(endpoint, params)
+		status, raw_bytes = await self._request(endpoint, params)
 		return await self.parse_json_response(raw_bytes)
 
 	async def query_bytes(
@@ -276,8 +276,8 @@ class BaseClient(ABC):
 		FailedQueryError
 		    If the request fails or returns empty
 		"""
-		raw_bytes = await self._request(endpoint, params)
-		if not raw_bytes:
+		status, raw_bytes = await self._request(endpoint, params)
+		if 200 > status <= 300:
 			msg = f'Request to {self.base_url + endpoint} failed or returned empty.'
 			logger.error(msg)
 			raise FailedQueryError(endpoint, self.base_url, params or {})
@@ -285,7 +285,7 @@ class BaseClient(ABC):
 
 	async def async_get_request(
 		self, url: str, headers: Dict[str, Any], params: Dict[str, Any]
-	) -> Optional[bytes]:
+	) -> tuple[int, bytes]:
 		"""Make an async GET request with retry logic.
 
 		Parameters
@@ -310,7 +310,7 @@ class BaseClient(ABC):
 			),
 			retry=retry_if_exception_type(aiohttp.ClientError),
 		)
-		async def _get_request() -> bytes | None:
+		async def _get_request() -> tuple[int, bytes] | None:
 			"""Inner function to make the actual GET request with retry logic."""
 			try:
 				# Track that a new request is being initiated
@@ -336,14 +336,14 @@ class BaseClient(ABC):
 							) as response,
 						):
 							if 200 <= response.status < 300:  # noqa
-								return await response.read()
+								return await response.status, response.read()
 							else:
 								msg = (
 									f'Failed with status code {response.status}. '
 									f'Headers: {response.headers}'
 								)
 								logger.error(msg)
-								return None
+								return await response.status, response.read()
 					finally:
 						# Decrement active requests and hide progress if needed
 						self._active_requests -= 1
