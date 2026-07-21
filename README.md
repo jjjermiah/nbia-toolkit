@@ -1,3 +1,7 @@
+# WARNING: This branch is dedicated to developing indexing features for the Med-ImageNet project. Changes may be experimental and are intended for this project-specific workflow only.
+
+---
+
 # *NBIA Toolkit*
 
 ## A python package that provides programmatic access to query and download images from the National Biomedical Imaging Archive (**NBIA**) and The Cancer Imaging Archive (**TCIA**) databases.
