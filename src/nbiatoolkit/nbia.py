@@ -104,7 +104,7 @@ class NBIAClient(BaseClient):
         if isinstance(params, list):
             logger.info(
                 f"Starting {len(params)} patients requests"
-                f"with max concurrency of {self.max_concurrent_requests}"
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
 
             # Create tasks but control their execution through gather
@@ -136,7 +136,7 @@ class NBIAClient(BaseClient):
         if isinstance(params, list):
             logger.info(
                 f"Starting {len(params)} study requests"
-                f"with max concurrency of {self.max_concurrent_requests}"
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
 
             # Create tasks but control their execution through gather
@@ -167,8 +167,8 @@ class NBIAClient(BaseClient):
         """Fetch series data, supporting single or multiple parameter sets."""
         if isinstance(params, list):
             logger.info(
-                f"Starting {len(params)} series requests"
-                "with max concurrency of {self.max_concurrent_requests}"
+                f"Starting {len(params)} series requests" +
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
 
             # Create tasks but control their execution through gather
@@ -198,7 +198,7 @@ class NBIAClient(BaseClient):
         if isinstance(params, list):
             logger.info(
                 f"Starting {len(params)} series requests"
-                "with max concurrency of {self.max_concurrent_requests}"
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
 
             # Create tasks but control their execution through gather
@@ -228,7 +228,7 @@ class NBIAClient(BaseClient):
         if isinstance(params, list):
             logger.info(
                 f"Starting {len(params)} series requests"
-                "with max concurrency of {self.max_concurrent_requests}"
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
 
             # Create tasks but control their execution through gather
@@ -290,7 +290,7 @@ class NBIAClient(BaseClient):
         if isinstance(params, list):
             logger.info(
                 f"Starting {len(params)} collection database requests "
-                f"with max concurrency of {self.max_concurrent_requests}"
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
 
             # Process each collection's data concurrently
@@ -435,7 +435,7 @@ class NBIAClient(BaseClient):
         if isinstance(params, list):
             logger.info(
                 f"Starting {len(params)} SOPInstanceUID requests "
-                f"with max concurrency of {self.max_concurrent_requests}"
+                f" with max concurrency of {self.max_concurrent_requests}"
             )
 
             # Create tasks but control their execution through gather

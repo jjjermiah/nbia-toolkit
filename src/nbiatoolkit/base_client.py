@@ -90,9 +90,9 @@ class FailedQueryError(Exception):
 	>>> raise FailedQueryError('/patients', 'https://api.example.com', {'id': '123'})
 	"""
 
-	def __init__(self, endpoint: str, base_url: str, params: dict) -> None:
+	def __init__(self, endpoint: str, base_url: str, params: dict, status: int) -> None:
 		message = (
-			f'Query failed for endpoint: {endpoint} at {base_url} with params: {params}'
+			f'Query failed for endpoint: {endpoint} at {base_url} with params: {params} (Status: {status})'
 		)
 		super().__init__(message)
 
@@ -208,7 +208,7 @@ class BaseClient(ABC):
 		self,
 		endpoint: str,
 		params: dict[str, str] | None = None,
-	) -> tuple[int, bytes]:
+	) -> tuple[int, Optional[bytes]]:
 		url = self.base_url + endpoint
 		# logger.debug(
 		# 	'Making request to %s with %s', url, dict(params) if params else {}
@@ -220,10 +220,10 @@ class BaseClient(ABC):
 			params=params or {},
 		)
 
-		if 200 > status <= 300:
-			msg = f'Request to {url} failed with status code {status}'
+		if not (200 <= status < 300):
+			msg = f'Request to {url} failed or returned emptycode {status}'
 			logger.error(msg)
-			raise FailedQueryError(endpoint, self.base_url, params or {})
+			raise FailedQueryError(endpoint, self.base_url, params or {}, status)
 		return status, result
 
 	@freezeargs
@@ -252,6 +252,10 @@ class BaseClient(ABC):
 		"""
 
 		status, raw_bytes = await self._request(endpoint, params)
+		if not raw_bytes:
+			msg = f'Request to {self.base_url + endpoint} failed or returned empty with status {status}.'
+			logger.error(msg)
+			raise FailedQueryError(endpoint, self.base_url, params or {}, status)
 		return await self.parse_json_response(raw_bytes)
 
 	async def query_bytes(
@@ -277,15 +281,15 @@ class BaseClient(ABC):
 		    If the request fails or returns empty
 		"""
 		status, raw_bytes = await self._request(endpoint, params)
-		if 200 > status <= 300:
+		if not raw_bytes:
 			msg = f'Request to {self.base_url + endpoint} failed or returned empty.'
 			logger.error(msg)
-			raise FailedQueryError(endpoint, self.base_url, params or {})
+			raise FailedQueryError(endpoint, self.base_url, params or {}, status)
 		return await self.parse_bytes(raw_bytes)
 
 	async def async_get_request(
 		self, url: str, headers: Dict[str, Any], params: Dict[str, Any]
-	) -> tuple[int, bytes]:
+	) -> tuple[int, Optional[bytes]]:
 		"""Make an async GET request with retry logic.
 
 		Parameters
@@ -310,7 +314,7 @@ class BaseClient(ABC):
 			),
 			retry=retry_if_exception_type(aiohttp.ClientError),
 		)
-		async def _get_request() -> tuple[int, bytes] | None:
+		async def _get_request() -> tuple[int, Optional[bytes]] | None:
 			"""Inner function to make the actual GET request with retry logic."""
 			try:
 				# Track that a new request is being initiated
@@ -338,12 +342,22 @@ class BaseClient(ABC):
 							if 200 <= response.status < 300:  # noqa
 								return response.status, await response.read()
 							else:
-								msg = (
-									f'Failed with status code {response.status}. '
-									f'Headers: {response.headers}'
+								if response.status >= 500 or response.status == 429:
+									raise aiohttp.ClientResponseError(
+										response.request_info,
+										response.history,
+										status=response.status,
+										message=f"Retryable HTTP error: {response.status}",
+										headers=response.headers,
+									)
+
+								logger.error(
+									"Non-retryable HTTP error %s. Headers: %s",
+									response.status,
+									response.headers,
 								)
-								logger.error(msg)
-								return response.status, await response.read()
+
+								return response.status, None
 					finally:
 						# Decrement active requests and hide progress if needed
 						self._active_requests -= 1
@@ -357,17 +371,29 @@ class BaseClient(ABC):
 			except aiohttp.ClientResponseError as e:
 				# Mark request as completed even if it failed
 				self._update_request_counts(completed=True)
-				logger.error(f'Request failed: {e.status}. Error: {e.message}')
+				logger.warning(
+					"Retryable request failure: %s %s",
+					e.status,
+					e.message,
+				)
 				raise
 			except aiohttp.ClientError as e:
 				# Mark request as completed even if it failed
 				self._update_request_counts(completed=True)
-				logger.error(f'Client error: {str(e)}')
+				logger.warning(
+					"Retryable request failure: %s %s",
+					e.status,
+					e.message,
+				)
 				raise
 			except AsyncioTimeoutError:
 				# Mark request as completed even if it timed out
 				self._update_request_counts(completed=True)
-				logger.error('Request timed out')
+				logger.warning(
+					"Retryable request failure: %s %s",
+					e.status,
+					e.message,
+				)
 				raise
 
 		return await _get_request()
@@ -398,7 +424,7 @@ class BaseClient(ABC):
 		try:
 			json_response = json.loads(content_str)
 		except Exception as e:
-			logger.error(f'Error decoding JSON response: {e}')
+			logger.error(f'Error decoding JSON response: {e}, {response}')
 			return []
 
 		match json_response:
