@@ -336,14 +336,14 @@ class BaseClient(ABC):
 							) as response,
 						):
 							if 200 <= response.status < 300:  # noqa
-								return await response.status, response.read()
+								return response.status, await response.read()
 							else:
 								msg = (
 									f'Failed with status code {response.status}. '
 									f'Headers: {response.headers}'
 								)
 								logger.error(msg)
-								return await response.status, response.read()
+								return response.status, await response.read()
 					finally:
 						# Decrement active requests and hide progress if needed
 						self._active_requests -= 1
